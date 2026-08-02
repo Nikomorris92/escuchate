@@ -1,65 +1,58 @@
-import Image from "next/image";
+import Link from 'next/link'
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="page-container" style={{ background: '#1e3a5f', minHeight: '100dvh' }}>
+      <div style={{ width: '100%', maxWidth: '480px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '2rem', color: '#ffffff' }}>
+          Escúchate
+        </h1>
+
+        <blockquote style={{
+          margin: '0 0 2.5rem',
+          padding: '1.5rem',
+          textAlign: 'center',
+        }}>
+          <p style={{ fontSize: '1.0625rem', color: 'rgba(255,255,255,0.85)', lineHeight: '1.75', fontStyle: 'italic', margin: '0 0 0.75rem' }}>
+            "El genio es aquel que tiene la valentía y el coraje de escuchar su propio corazón."
           </p>
+          <cite style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', fontStyle: 'normal', fontWeight: '500' }}>
+            — John Demartini
+          </cite>
+        </blockquote>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <Link href="/signup" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '0.875rem 1.5rem', background: '#ffffff', color: '#1e3a5f',
+            borderRadius: '0.75rem', fontWeight: '600', fontSize: '0.9375rem',
+            textDecoration: 'none',
+          }}>
+            Empezar
+          </Link>
+          <Link href="/login" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '0.625rem 1rem', color: 'rgba(255,255,255,0.6)',
+            fontSize: '0.875rem', textDecoration: 'none',
+          }}>
+            Ya tengo cuenta
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+
+        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', textAlign: 'center', lineHeight: '1.5', marginTop: '2rem' }}>
+          Esta app no es un servicio médico ni terapéutico.<br />
+          Si estás siguiendo una terapia o tratamiento, sigue haciéndolo.
+        </p>
+
+        <div style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem' }}>
+          <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.375rem' }}>
+            Contacto
+          </p>
+          <a href="mailto:escuchateatimismo@gmail.com" style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>
+            escuchateatimismo@gmail.com
           </a>
         </div>
-      </main>
+      </div>
     </div>
-  );
+  )
 }

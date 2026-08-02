@@ -1,0 +1,77 @@
+ESCÚCHATE — HANDOFF PER NUOVA SESSIONE
+=======================================
+
+PROGETTO
+--------
+App di crescita personale in spagnolo (poi inglese).
+Non è un'app medica/terapeutica — disclaimer presente in tutta l'app.
+Tono: intimo, diretto, mai clinico.
+
+CARTELLA PROGETTO
+-----------------
+/Users/nicolamorea/ESCUCHATE/escuchate
+
+STACK
+-----
+- Next.js (App Router) + TypeScript
+- Tailwind CSS
+- Supabase (auth + PostgreSQL con Row Level Security)
+
+SUPABASE CREDENZIALI (già nel .env.local)
+-----------------------------------------
+URL: https://ddgvquflzeokhfcygifj.supabase.co
+ANON KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZ3ZxdWZsemVva2hmY3lnaWZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzMDI4MTMsImV4cCI6MjA5OTg3ODgxM30.VxlO5qWuMJcOTbF8oIb89UgFpPgU7N8dGdTTuCRDUGI
+
+SCHEMA SQL SUPABASE
+-------------------
+File: supabase-schema.sql nella root del progetto.
+STATO: DA ESEGUIRE su Supabase → SQL Editor → Run.
+(Crea le tabelle user_profiles, level_progress, RLS policies, funzione increment_score)
+
+COSA È STATO COSTRUITO
+----------------------
+src/types/index.ts          — tipi TypeScript (Area, QuizQuestion, UserProfile, LevelProgress)
+src/lib/areas.ts            — contenuto delle 10 aree in spagnolo (titolo, insegnamenti, riflessione)
+src/lib/quiz.ts             — 10 domande quiz + funzione computeAreaOrder
+src/lib/supabase/client.ts  — client Supabase lato browser
+src/lib/supabase/server.ts  — client Supabase lato server
+src/middleware.ts           — protezione route (redirect a /login se non autenticato)
+
+src/app/page.tsx                        — Landing pubblica (Empezar / Ya tengo cuenta)
+src/app/(auth)/login/page.tsx           — Login email + password
+src/app/(auth)/signup/page.tsx          — Registrazione
+src/app/(app)/onboarding/page.tsx       — Quiz 10 domande → schermata risultato con ordine aree
+src/app/(app)/dashboard/page.tsx        — Dashboard: livello attuale + progressione completa + punteggio
+src/app/(app)/journey/page.tsx          — Redirect al prossimo livello da completare
+src/app/(app)/journey/[area]/page.tsx   — Pagina livello: insegnamenti → riflessione (min 40 parole) → completamento
+src/app/api/auth/signout/route.ts       — Logout
+
+DESIGN SYSTEM (globals.css)
+---------------------------
+Colori: sabbia (#f5f0e8), inchiostro (#1a1714), accent arancio (#c4783a)
+Classi custom: .page-container, .card, .btn-primary, .btn-ghost, .input-field,
+               .quiz-option, .progress-bar, .teaching-item, .reflection-textarea,
+               .word-count, .disclaimer
+
+MECCANICA PUNTEGGIO
+-------------------
+- Soglia minima riflessione: 40 parole
+- Punteggio: 10 pts base + proporzionale fino a 150 parole (max ~50 pts per livello)
+- Unlock percorso avanzato: 300 pts totali
+- Niente streak, niente notifiche, niente classifiche
+
+PROSSIMI PASSI
+--------------
+1. Eseguire supabase-schema.sql su Supabase (SQL Editor)
+2. Avviare il server: npm run dev (porta 3001)
+3. Testare il flusso: signup → quiz → risultato → livello → riflessione → dashboard
+4. Aggiungere la lingua inglese (stessa struttura, testi tradotti)
+5. Percorso avanzato (nuovi temi da aggiungere nel tempo)
+6. Deploy su Vercel o Railway
+
+NOTE IMPORTANTI
+---------------
+- Il server gira su porta 3001 (3000 è occupata da Padella Bangkok)
+- .env.local è già configurato con le credenziali Supabase
+- Nessuna modifica è stata fatta al progetto Padella Bangkok
+- Il progetto Padella è in: /Users/nicolamorea/Desktop/PADELLA WEB NEW
