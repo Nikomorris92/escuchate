@@ -17,12 +17,28 @@ interface UserRow {
   created_at: string
 }
 
+interface StripeCustomer {
+  id: string
+  email: string
+  name: string
+  subscriptions: {
+    id: string
+    status: string
+    amount: number
+    current_period_end: number
+    latest_payment_intent: string | null
+  }[]
+}
+
 export default function AdminPage() {
   const router = useRouter()
   const [authorized, setAuthorized] = useState(false)
   const [loading, setLoading] = useState(true)
   const [users, setUsers] = useState<UserRow[]>([])
+  const [stripeCustomers, setStripeCustomers] = useState<StripeCustomer[]>([])
   const [stats, setStats] = useState({ total: 0, quizDone: 0, advanced: 0 })
+  const [refunding, setRefunding] = useState<string | null>(null)
+  const [refundMsg, setRefundMsg] = useState<{ id: string; msg: string } | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -50,10 +66,34 @@ export default function AdminPage() {
         })
       }
 
+      // Fetch Stripe customers
+      const res = await fetch('/api/admin/customers')
+      if (res.ok) {
+        const json = await res.json()
+        setStripeCustomers(json.customers ?? [])
+      }
+
       setLoading(false)
     }
     init()
   }, [router])
+
+  async function handleRefund(paymentIntentId: string, customerId: string) {
+    if (!confirm('¿Confirmas el reembolso?')) return
+    setRefunding(paymentIntentId)
+    const res = await fetch('/api/admin/refund', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paymentIntentId }),
+    })
+    const json = await res.json()
+    setRefunding(null)
+    setRefundMsg({
+      id: customerId,
+      msg: json.success ? '✓ Reembolso completado' : `Error: ${json.error}`,
+    })
+    setTimeout(() => setRefundMsg(null), 4000)
+  }
 
   if (loading) {
     return (
@@ -89,6 +129,69 @@ export default function AdminPage() {
             <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.5)', margin: '0.25rem 0 0' }}>{s.label}</p>
           </div>
         ))}
+      </div>
+
+      {/* Stripe Pagamenti */}
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
+          Pagamenti Stripe
+        </h2>
+        {stripeCustomers.length === 0 ? (
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Nessun pagamento ancora.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {stripeCustomers.map((c) => (
+              <div key={c.id} style={{
+                padding: '0.875rem 1rem',
+                background: 'rgba(255,255,255,0.05)',
+                borderRadius: '0.75rem',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div>
+                    <p style={{ fontSize: '0.875rem', color: '#ffffff', margin: 0, fontWeight: '500' }}>{c.email}</p>
+                    {c.name && <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', margin: '0.2rem 0 0' }}>{c.name}</p>}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+                    {c.subscriptions.map((sub) => (
+                      <div key={sub.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <span style={{
+                          fontSize: '0.75rem',
+                          padding: '0.2rem 0.6rem',
+                          borderRadius: '9999px',
+                          background: sub.status === 'active' ? 'rgba(34,197,94,0.15)' : 'rgba(196,120,58,0.15)',
+                          color: sub.status === 'active' ? '#4ade80' : '#c4783a',
+                        }}>
+                          {sub.status === 'active' ? 'Activo' : sub.status} — €{(sub.amount / 100).toFixed(2)}
+                        </span>
+                        {sub.latest_payment_intent && (
+                          <button
+                            onClick={() => handleRefund(sub.latest_payment_intent!, c.id)}
+                            disabled={refunding === sub.latest_payment_intent}
+                            style={{
+                              fontSize: '0.75rem',
+                              padding: '0.25rem 0.75rem',
+                              borderRadius: '0.5rem',
+                              background: 'rgba(239,68,68,0.15)',
+                              border: '1px solid rgba(239,68,68,0.3)',
+                              color: '#f87171',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            {refunding === sub.latest_payment_intent ? 'Rimborso…' : 'Rimborsa'}
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    {refundMsg?.id === c.id && (
+                      <p style={{ fontSize: '0.75rem', color: '#4ade80', margin: 0 }}>{refundMsg.msg}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Aree */}
