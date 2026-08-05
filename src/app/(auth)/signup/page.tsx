@@ -23,7 +23,7 @@ export default function SignupPage() {
 
     setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
       setError('Algo ha fallado. Intenta de nuevo.')
@@ -31,7 +31,28 @@ export default function SignupPage() {
       return
     }
 
-    router.push('/onboarding')
+    // Se l'utente ha fatto il quiz prima del pagamento, salva i dati
+    const quizAreaOrder = localStorage.getItem('quiz_area_order')
+    const quizIntro = localStorage.getItem('quiz_intro')
+
+    if (data.user && quizAreaOrder) {
+      const areaOrder = JSON.parse(quizAreaOrder)
+      await supabase.from('user_profiles').upsert({
+        id: data.user.id,
+        quiz_completed: true,
+        area_order: areaOrder,
+        current_level: 0,
+        total_score: 0,
+        advanced_unlocked: false,
+        intro_reflection: quizIntro ?? '',
+      })
+      localStorage.removeItem('quiz_answers')
+      localStorage.removeItem('quiz_area_order')
+      localStorage.removeItem('quiz_intro')
+      router.push('/dashboard')
+    } else {
+      router.push('/onboarding')
+    }
     router.refresh()
   }
 

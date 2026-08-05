@@ -1,6 +1,6 @@
 import type { Area } from '@/types'
 
-const AREA_FEEDBACK: Record<Area, string> = {
+export const AREA_FEEDBACK: Record<Area, string> = {
   acceptance:
     'Hay algo en ti que todavía estás combatiendo. Una parte que juzgas, que quisieras que fuera diferente. Ese esfuerzo cansa — y suele ser el primero que hay que soltar.',
   discipline:
