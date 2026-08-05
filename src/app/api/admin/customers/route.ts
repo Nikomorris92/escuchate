@@ -30,7 +30,7 @@ export async function GET() {
             id: sub.id,
             status: sub.status,
             amount: sub.items.data[0]?.price.unit_amount ?? 0,
-            current_period_end: sub.current_period_end,
+            current_period_end: (sub as unknown as Record<string, number>).current_period_end ?? 0,
             latest_payment_intent: invoice?.payment_intent
               ? typeof invoice.payment_intent === 'string'
                 ? invoice.payment_intent
