@@ -47,6 +47,7 @@ export default function MuroPage() {
         .from('level_progress')
         .select('id, area, reflection_text, shared_name, completed_at, user_id')
         .eq('is_shared', true)
+        .eq('approved', true)
         .order('completed_at', { ascending: false })
         .limit(50)
 

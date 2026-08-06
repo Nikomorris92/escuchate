@@ -51,6 +51,7 @@ interface MuroReflection {
   reflection_text: string
   shared_name: string | null
   completed_at: string
+  approved: boolean
   comments?: MuroComment[]
   showComments?: boolean
 }
@@ -67,6 +68,7 @@ export default function AdminPage() {
   const [search, setSearch] = useState('')
   const [muroReflections, setMuroReflections] = useState<MuroReflection[]>([])
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [approvingId, setApprovingId] = useState<string | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -100,7 +102,7 @@ export default function AdminPage() {
 
       const { data: muroData } = await supabase
         .from('level_progress')
-        .select('id, area, reflection_text, shared_name, completed_at')
+        .select('id, area, reflection_text, shared_name, completed_at, approved')
         .eq('is_shared', true)
         .order('completed_at', { ascending: false })
         .limit(100)
@@ -110,6 +112,17 @@ export default function AdminPage() {
     }
     init()
   }, [router])
+
+  async function approveReflection(id: string) {
+    setApprovingId(id)
+    await fetch('/api/admin/approve-reflection', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    setMuroReflections(prev => prev.map(r => r.id === id ? { ...r, approved: true } : r))
+    setApprovingId(null)
+  }
 
   async function loadMuroComments(reflectionId: string) {
     const supabase = createClient()
@@ -281,85 +294,155 @@ export default function AdminPage() {
       {/* Moderazione Muro */}
       <div className="card" style={{ marginBottom: '2rem' }}>
         <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
-          Muro de reflexiones ({muroReflections.length})
+          Muro de reflexiones
         </h2>
-        {muroReflections.length === 0 ? (
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Nessuna riflessione condivisa.</p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {muroReflections.map((r) => (
-              <div key={r.id} style={{
-                padding: '1rem',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '0.75rem',
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem' }}>
-                  <div style={{ flex: 1 }}>
-                    <span style={{ fontSize: '0.6875rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                      {r.area} · {r.shared_name || 'Anónimo'}
-                    </span>
-                    <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.8)', margin: '0.375rem 0 0', lineHeight: '1.6' }}>
-                      "{r.reflection_text}"
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => deleteContent('reflection', r.id)}
-                    disabled={deletingId === r.id}
-                    style={{
-                      fontSize: '0.75rem', padding: '0.25rem 0.625rem',
-                      borderRadius: '0.5rem', flexShrink: 0,
-                      background: 'rgba(239,68,68,0.12)',
-                      border: '1px solid rgba(239,68,68,0.25)',
-                      color: '#f87171', cursor: 'pointer',
-                    }}
-                  >
-                    🗑 Elimina
-                  </button>
+
+        {/* In attesa di approvazione */}
+        {(() => {
+          const pending = muroReflections.filter(r => !r.approved)
+          return (
+            <div style={{ marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.75rem', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem', fontWeight: '600' }}>
+                ⏳ In attesa ({pending.length})
+              </p>
+              {pending.length === 0 ? (
+                <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.875rem' }}>Nessuna in attesa.</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {pending.map((r) => (
+                    <div key={r.id} style={{
+                      padding: '1rem',
+                      background: 'rgba(245,158,11,0.06)',
+                      border: '1px solid rgba(245,158,11,0.25)',
+                      borderRadius: '0.75rem',
+                    }}>
+                      <span style={{ fontSize: '0.6875rem', color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        {r.area} · {r.shared_name || 'Anónimo'}
+                      </span>
+                      <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)', margin: '0.375rem 0 0.875rem', lineHeight: '1.6' }}>
+                        "{r.reflection_text}"
+                      </p>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          onClick={() => approveReflection(r.id)}
+                          disabled={approvingId === r.id}
+                          style={{
+                            fontSize: '0.8125rem', padding: '0.375rem 1rem',
+                            borderRadius: '0.5rem', fontWeight: '600',
+                            background: 'rgba(34,197,94,0.15)',
+                            border: '1px solid rgba(34,197,94,0.35)',
+                            color: '#4ade80', cursor: 'pointer',
+                          }}
+                        >
+                          {approvingId === r.id ? '…' : '✓ Approva'}
+                        </button>
+                        <button
+                          onClick={() => deleteContent('reflection', r.id)}
+                          disabled={deletingId === r.id}
+                          style={{
+                            fontSize: '0.8125rem', padding: '0.375rem 1rem',
+                            borderRadius: '0.5rem',
+                            background: 'rgba(239,68,68,0.12)',
+                            border: '1px solid rgba(239,68,68,0.25)',
+                            color: '#f87171', cursor: 'pointer',
+                          }}
+                        >
+                          🗑 Rifiuta
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              )}
+            </div>
+          )
+        })()}
 
-                {/* Commenti */}
-                <button
-                  onClick={() => loadMuroComments(r.id)}
-                  style={{ marginTop: '0.625rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                >
-                  {r.showComments ? '▲ Nascondi commenti' : `▼ Commenti (${r.comments?.length ?? 0})`}
-                </button>
-
-                {r.showComments && r.comments && r.comments.length > 0 && (
-                  <div style={{ marginTop: '0.625rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    {r.comments.map((c) => (
-                      <div key={c.id} style={{
-                        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem',
-                        padding: '0.625rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem',
-                      }}>
+        {/* Approvate */}
+        {(() => {
+          const approved = muroReflections.filter(r => r.approved)
+          return (
+            <div>
+              <p style={{ fontSize: '0.75rem', color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem', fontWeight: '600' }}>
+                ✓ Pubblicate ({approved.length})
+              </p>
+              {approved.length === 0 ? (
+                <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.875rem' }}>Nessuna approvata ancora.</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {approved.map((r) => (
+                    <div key={r.id} style={{
+                      padding: '1rem',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: '0.75rem',
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem' }}>
                         <div style={{ flex: 1 }}>
-                          <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.35)' }}>{c.author_name || 'Anónimo'}</span>
-                          <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.7)', margin: '0.2rem 0 0', lineHeight: '1.5' }}>
-                            {c.comment_text}
+                          <span style={{ fontSize: '0.6875rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                            {r.area} · {r.shared_name || 'Anónimo'}
+                          </span>
+                          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.8)', margin: '0.375rem 0 0', lineHeight: '1.6' }}>
+                            "{r.reflection_text}"
                           </p>
                         </div>
                         <button
-                          onClick={() => deleteContent('comment', c.id, r.id)}
-                          disabled={deletingId === c.id}
+                          onClick={() => deleteContent('reflection', r.id)}
+                          disabled={deletingId === r.id}
                           style={{
-                            fontSize: '0.6875rem', padding: '0.2rem 0.5rem', flexShrink: 0,
-                            borderRadius: '0.375rem',
-                            background: 'rgba(239,68,68,0.1)',
-                            border: '1px solid rgba(239,68,68,0.2)',
+                            fontSize: '0.75rem', padding: '0.25rem 0.625rem',
+                            borderRadius: '0.5rem', flexShrink: 0,
+                            background: 'rgba(239,68,68,0.12)',
+                            border: '1px solid rgba(239,68,68,0.25)',
                             color: '#f87171', cursor: 'pointer',
                           }}
                         >
                           🗑
                         </button>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                      <button
+                        onClick={() => loadMuroComments(r.id)}
+                        style={{ marginTop: '0.625rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                      >
+                        {r.showComments ? '▲ Nascondi commenti' : `▼ Commenti (${r.comments?.length ?? 0})`}
+                      </button>
+                      {r.showComments && r.comments && r.comments.length > 0 && (
+                        <div style={{ marginTop: '0.625rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          {r.comments.map((c) => (
+                            <div key={c.id} style={{
+                              display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem',
+                              padding: '0.625rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem',
+                            }}>
+                              <div style={{ flex: 1 }}>
+                                <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.35)' }}>{c.author_name || 'Anónimo'}</span>
+                                <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.7)', margin: '0.2rem 0 0', lineHeight: '1.5' }}>
+                                  {c.comment_text}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => deleteContent('comment', c.id, r.id)}
+                                disabled={deletingId === c.id}
+                                style={{
+                                  fontSize: '0.6875rem', padding: '0.2rem 0.5rem', flexShrink: 0,
+                                  borderRadius: '0.375rem',
+                                  background: 'rgba(239,68,68,0.1)',
+                                  border: '1px solid rgba(239,68,68,0.2)',
+                                  color: '#f87171', cursor: 'pointer',
+                                }}
+                              >
+                                🗑
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })()}
       </div>
 
       {/* Utenti Supabase */}
