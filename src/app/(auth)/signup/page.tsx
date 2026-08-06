@@ -73,6 +73,12 @@ export default function SignupPage() {
     const quizAreaOrder = localStorage.getItem('quiz_area_order')
     const quizIntro = localStorage.getItem('quiz_intro')
 
+    fetch('/api/welcome-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    }).catch(() => {})
+
     if (data.user && quizAreaOrder) {
       const areaOrder = JSON.parse(quizAreaOrder)
       await supabase.from('user_profiles').upsert({
