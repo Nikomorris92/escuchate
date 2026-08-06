@@ -38,6 +38,23 @@ interface StripeCustomer {
   charges: Charge[]
 }
 
+interface MuroComment {
+  id: string
+  comment_text: string
+  author_name: string | null
+  created_at: string
+}
+
+interface MuroReflection {
+  id: string
+  area: string
+  reflection_text: string
+  shared_name: string | null
+  completed_at: string
+  comments?: MuroComment[]
+  showComments?: boolean
+}
+
 export default function AdminPage() {
   const router = useRouter()
   const [authorized, setAuthorized] = useState(false)
@@ -48,6 +65,8 @@ export default function AdminPage() {
   const [refunding, setRefunding] = useState<string | null>(null)
   const [refundMsg, setRefundMsg] = useState<Record<string, string>>({})
   const [search, setSearch] = useState('')
+  const [muroReflections, setMuroReflections] = useState<MuroReflection[]>([])
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -79,10 +98,48 @@ export default function AdminPage() {
         setStripeCustomers(json.customers ?? [])
       }
 
+      const { data: muroData } = await supabase
+        .from('level_progress')
+        .select('id, area, reflection_text, shared_name, completed_at')
+        .eq('is_shared', true)
+        .order('completed_at', { ascending: false })
+        .limit(100)
+      setMuroReflections((muroData ?? []).map(r => ({ ...r, comments: [], showComments: false })))
+
       setLoading(false)
     }
     init()
   }, [router])
+
+  async function loadMuroComments(reflectionId: string) {
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('reflection_comments')
+      .select('id, comment_text, author_name, created_at')
+      .eq('reflection_id', reflectionId)
+      .order('created_at', { ascending: true })
+    setMuroReflections(prev => prev.map(r =>
+      r.id === reflectionId ? { ...r, comments: data ?? [], showComments: !r.showComments } : r
+    ))
+  }
+
+  async function deleteContent(type: 'reflection' | 'comment', id: string, parentId?: string) {
+    if (!confirm('¿Eliminar este contenido?')) return
+    setDeletingId(id)
+    await fetch('/api/admin/delete-content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, id }),
+    })
+    if (type === 'reflection') {
+      setMuroReflections(prev => prev.filter(r => r.id !== id))
+    } else {
+      setMuroReflections(prev => prev.map(r =>
+        r.id === parentId ? { ...r, comments: r.comments?.filter(c => c.id !== id) } : r
+      ))
+    }
+    setDeletingId(null)
+  }
 
   async function handleRefund(chargeId: string) {
     if (!confirm('¿Confirmas el reembolso?')) return
@@ -207,6 +264,90 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Moderazione Muro */}
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
+          Muro de reflexiones ({muroReflections.length})
+        </h2>
+        {muroReflections.length === 0 ? (
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Nessuna riflessione condivisa.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {muroReflections.map((r) => (
+              <div key={r.id} style={{
+                padding: '1rem',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '0.75rem',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem' }}>
+                  <div style={{ flex: 1 }}>
+                    <span style={{ fontSize: '0.6875rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      {r.area} · {r.shared_name || 'Anónimo'}
+                    </span>
+                    <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.8)', margin: '0.375rem 0 0', lineHeight: '1.6' }}>
+                      "{r.reflection_text}"
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => deleteContent('reflection', r.id)}
+                    disabled={deletingId === r.id}
+                    style={{
+                      fontSize: '0.75rem', padding: '0.25rem 0.625rem',
+                      borderRadius: '0.5rem', flexShrink: 0,
+                      background: 'rgba(239,68,68,0.12)',
+                      border: '1px solid rgba(239,68,68,0.25)',
+                      color: '#f87171', cursor: 'pointer',
+                    }}
+                  >
+                    🗑 Elimina
+                  </button>
+                </div>
+
+                {/* Commenti */}
+                <button
+                  onClick={() => loadMuroComments(r.id)}
+                  style={{ marginTop: '0.625rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                >
+                  {r.showComments ? '▲ Nascondi commenti' : `▼ Commenti (${r.comments?.length ?? 0})`}
+                </button>
+
+                {r.showComments && r.comments && r.comments.length > 0 && (
+                  <div style={{ marginTop: '0.625rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {r.comments.map((c) => (
+                      <div key={c.id} style={{
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem',
+                        padding: '0.625rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem',
+                      }}>
+                        <div style={{ flex: 1 }}>
+                          <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.35)' }}>{c.author_name || 'Anónimo'}</span>
+                          <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.7)', margin: '0.2rem 0 0', lineHeight: '1.5' }}>
+                            {c.comment_text}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => deleteContent('comment', c.id, r.id)}
+                          disabled={deletingId === c.id}
+                          style={{
+                            fontSize: '0.6875rem', padding: '0.2rem 0.5rem', flexShrink: 0,
+                            borderRadius: '0.375rem',
+                            background: 'rgba(239,68,68,0.1)',
+                            border: '1px solid rgba(239,68,68,0.2)',
+                            color: '#f87171', cursor: 'pointer',
+                          }}
+                        >
+                          🗑
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Utenti Supabase */}
