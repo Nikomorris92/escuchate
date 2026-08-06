@@ -221,19 +221,31 @@ export default function AdminPage() {
                           <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>
                             €{(ch.amount / 100).toFixed(2)}
                           </span>
-                          <button
-                            onClick={() => handleRefund(ch.id)}
-                            disabled={refunding === ch.id}
-                            style={{
+                          {ch.refunded ? (
+                            <span style={{
                               fontSize: '0.75rem', padding: '0.25rem 0.75rem',
                               borderRadius: '0.5rem',
-                              background: 'rgba(239,68,68,0.15)',
-                              border: '1px solid rgba(239,68,68,0.3)',
-                              color: '#f87171', cursor: 'pointer',
-                            }}
-                          >
-                            {refunding === ch.id ? 'Rimborso…' : 'Rimborsa'}
-                          </button>
+                              background: 'rgba(239,68,68,0.12)',
+                              border: '1px solid rgba(239,68,68,0.25)',
+                              color: '#f87171', fontWeight: '600',
+                            }}>
+                              Rimborsado
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleRefund(ch.id)}
+                              disabled={refunding === ch.id}
+                              style={{
+                                fontSize: '0.75rem', padding: '0.25rem 0.75rem',
+                                borderRadius: '0.5rem',
+                                background: 'rgba(239,68,68,0.15)',
+                                border: '1px solid rgba(239,68,68,0.3)',
+                                color: '#f87171', cursor: 'pointer',
+                              }}
+                            >
+                              {refunding === ch.id ? 'Rimborso…' : 'Rimborsa'}
+                            </button>
+                          )}
                         </div>
                         {refundMsg[ch.id] && (
                           <p style={{ fontSize: '0.75rem', color: '#4ade80', margin: 0 }}>{refundMsg[ch.id]}</p>

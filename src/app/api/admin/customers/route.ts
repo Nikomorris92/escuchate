@@ -26,7 +26,7 @@ export async function GET() {
       }))
 
       const charges = chargesRes.data
-        .filter((ch) => !ch.refunded && ch.paid)
+        .filter((ch) => ch.paid)
         .map((ch) => ({
           id: ch.id,
           amount: ch.amount,
