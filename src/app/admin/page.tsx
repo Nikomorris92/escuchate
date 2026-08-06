@@ -17,23 +17,45 @@ interface UserRow {
   created_at: string
 }
 
+interface Charge {
+  id: string
+  amount: number
+  refunded: boolean
+  created: number
+}
+
+interface Subscription {
+  id: string
+  status: string
+  amount: number
+}
+
+interface StripeCustomer {
+  id: string
+  email: string
+  name: string
+  subscriptions: Subscription[]
+  charges: Charge[]
+}
+
 export default function AdminPage() {
   const router = useRouter()
   const [authorized, setAuthorized] = useState(false)
   const [loading, setLoading] = useState(true)
   const [users, setUsers] = useState<UserRow[]>([])
+  const [stripeCustomers, setStripeCustomers] = useState<StripeCustomer[]>([])
   const [stats, setStats] = useState({ total: 0, quizDone: 0, advanced: 0 })
+  const [refunding, setRefunding] = useState<string | null>(null)
+  const [refundMsg, setRefundMsg] = useState<Record<string, string>>({})
 
   useEffect(() => {
     async function init() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
-
       if (!user || user.email !== ADMIN_EMAIL) {
         router.push('/')
         return
       }
-
       setAuthorized(true)
 
       const { data } = await supabase
@@ -50,29 +72,41 @@ export default function AdminPage() {
         })
       }
 
+      const res = await fetch('/api/admin/customers')
+      if (res.ok) {
+        const json = await res.json()
+        setStripeCustomers(json.customers ?? [])
+      }
+
       setLoading(false)
     }
     init()
   }, [router])
 
-  if (loading) {
-    return (
-      <div className="page-container">
-        <p style={{ color: 'rgba(255,255,255,0.6)' }}>Cargando…</p>
-      </div>
-    )
+  async function handleRefund(chargeId: string) {
+    if (!confirm('¿Confirmas el reembolso?')) return
+    setRefunding(chargeId)
+    const res = await fetch('/api/admin/refund', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chargeId }),
+    })
+    const json = await res.json()
+    setRefunding(null)
+    setRefundMsg((prev) => ({
+      ...prev,
+      [chargeId]: json.success ? '✓ Reembolso completado' : `Error: ${json.error}`,
+    }))
   }
 
+  if (loading) return <div className="page-container"><p style={{ color: 'rgba(255,255,255,0.6)' }}>Cargando…</p></div>
   if (!authorized) return null
 
   return (
     <div style={{ minHeight: '100dvh', padding: '2rem 1.5rem', maxWidth: '900px', margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ffffff' }}>Panel Admin</h1>
-        <button
-          onClick={() => router.push('/')}
-          style={{ color: 'rgba(255,255,255,0.5)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}
-        >
+        <button onClick={() => router.push('/')} style={{ color: 'rgba(255,255,255,0.5)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}>
           ← Volver
         </button>
       </div>
@@ -91,25 +125,69 @@ export default function AdminPage() {
         ))}
       </div>
 
-      {/* Rimborsi */}
-      <div className="card" style={{ marginBottom: '2rem', padding: '1.25rem' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '0.5rem' }}>Rimborsi Stripe</h2>
-        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', marginBottom: '0.75rem' }}>
-          Per rimborsare un utente vai direttamente su Stripe Dashboard.
-        </p>
-        <a
-          href="https://dashboard.stripe.com/payments"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.08)',
-            border: '1px solid rgba(255,255,255,0.15)', borderRadius: '0.625rem',
-            color: '#ffffff', fontSize: '0.875rem', textDecoration: 'none',
-          }}
-        >
-          Apri Stripe Payments →
-        </a>
+      {/* Stripe Clienti */}
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
+          Pagamenti Stripe
+        </h2>
+        {stripeCustomers.filter(c => c.charges.length > 0 || c.subscriptions.length > 0).length === 0 ? (
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Nessun pagamento ancora.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+            {stripeCustomers.filter(c => c.charges.length > 0 || c.subscriptions.length > 0).map((c) => (
+              <div key={c.id} style={{
+                padding: '1rem',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '0.75rem',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div>
+                    <p style={{ fontSize: '0.875rem', fontWeight: '600', color: '#ffffff', margin: 0 }}>{c.email}</p>
+                    {c.name && <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', margin: '0.2rem 0 0' }}>{c.name}</p>}
+                    {c.subscriptions.map(sub => (
+                      <span key={sub.id} style={{
+                        display: 'inline-block', marginTop: '0.375rem',
+                        fontSize: '0.6875rem', padding: '0.15rem 0.5rem', borderRadius: '9999px',
+                        background: sub.status === 'active' ? 'rgba(34,197,94,0.15)' : 'rgba(196,120,58,0.15)',
+                        color: sub.status === 'active' ? '#4ade80' : '#c4783a',
+                      }}>
+                        {sub.status === 'active' ? 'Activo' : sub.status} — €{(sub.amount / 100).toFixed(2)}/año
+                      </span>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+                    {c.charges.map(ch => (
+                      <div key={ch.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>
+                            €{(ch.amount / 100).toFixed(2)}
+                          </span>
+                          <button
+                            onClick={() => handleRefund(ch.id)}
+                            disabled={refunding === ch.id}
+                            style={{
+                              fontSize: '0.75rem', padding: '0.25rem 0.75rem',
+                              borderRadius: '0.5rem',
+                              background: 'rgba(239,68,68,0.15)',
+                              border: '1px solid rgba(239,68,68,0.3)',
+                              color: '#f87171', cursor: 'pointer',
+                            }}
+                          >
+                            {refunding === ch.id ? 'Rimborso…' : 'Rimborsa'}
+                          </button>
+                        </div>
+                        {refundMsg[ch.id] && (
+                          <p style={{ fontSize: '0.75rem', color: '#4ade80', margin: 0 }}>{refundMsg[ch.id]}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Aree */}
@@ -130,7 +208,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Utenti */}
+      {/* Utenti Supabase */}
       <div className="card">
         <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
           Usuarios registrados
