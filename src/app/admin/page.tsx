@@ -60,7 +60,7 @@ export default function AdminPage() {
       setAuthorized(true)
 
       const { data } = await supabase
-        .from('user_profiles')
+        .from('admin_users')
         .select('*')
         .order('created_at', { ascending: false })
 
