@@ -47,6 +47,7 @@ export default function AdminPage() {
   const [stats, setStats] = useState({ total: 0, quizDone: 0, advanced: 0 })
   const [refunding, setRefunding] = useState<string | null>(null)
   const [refundMsg, setRefundMsg] = useState<Record<string, string>>({})
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     async function init() {
@@ -210,14 +211,32 @@ export default function AdminPage() {
 
       {/* Utenti Supabase */}
       <div className="card">
-        <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
-          Usuarios registrados
-        </h2>
-        {users.length === 0 ? (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', margin: 0 }}>
+            Usuarios registrados
+          </h2>
+          <input
+            type="text"
+            placeholder="Buscar por email…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '0.5rem',
+              padding: '0.375rem 0.75rem',
+              color: '#ffffff',
+              fontSize: '0.8125rem',
+              outline: 'none',
+              width: '200px',
+            }}
+          />
+        </div>
+        {users.filter(u => !search || (u.email ?? '').toLowerCase().includes(search.toLowerCase())).length === 0 ? (
           <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Ningún usuario todavía.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {users.map((u) => (
+            {users.filter(u => !search || (u.email ?? '').toLowerCase().includes(search.toLowerCase())).map((u) => (
               <div key={u.id} className="teaching-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <span style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)' }}>{u.email || u.id.slice(0, 8)}</span>
                 <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>

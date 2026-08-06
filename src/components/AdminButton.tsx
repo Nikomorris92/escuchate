@@ -2,10 +2,23 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+
+const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
 export default function AdminButton() {
   const pathname = usePathname()
-  if (pathname?.startsWith('/admin')) return null
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsAdmin(user?.email === ADMIN_EMAIL)
+    })
+  }, [])
+
+  if (!isAdmin || pathname?.startsWith('/admin')) return null
 
   return (
     <Link
@@ -29,7 +42,6 @@ export default function AdminButton() {
         fontSize: '0.875rem',
         textDecoration: 'none',
         backdropFilter: 'blur(8px)',
-        transition: 'background 0.15s ease',
       }}
     >
       A
