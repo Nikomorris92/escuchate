@@ -4,8 +4,11 @@ import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { useLang } from '@/lib/LangContext'
+import { t } from '@/lib/i18n'
 
 function SuccessBanner() {
+  const { lang } = useLang()
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -30,10 +33,10 @@ function SuccessBanner() {
       <span style={{ fontSize: '1.25rem' }}>✓</span>
       <div>
         <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#4ade80', margin: 0 }}>
-          ¡Suscripción completada con éxito!
+          {t(lang, 'signup_success')}
         </p>
         <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.6)', margin: '0.2rem 0 0' }}>
-          Crea tu cuenta para acceder a tu recorrido.
+          {t(lang, 'signup_success_sub')}
         </p>
       </div>
     </div>
@@ -42,6 +45,7 @@ function SuccessBanner() {
 
 export default function SignupPage() {
   const router = useRouter()
+  const { lang } = useLang()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -52,7 +56,7 @@ export default function SignupPage() {
     setError('')
 
     if (password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres.')
+      setError(t(lang, 'signup_error_short'))
       return
     }
 
@@ -61,7 +65,7 @@ export default function SignupPage() {
     const { data, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
-      setError('Algo ha fallado. Intenta de nuevo.')
+      setError(t(lang, 'signup_error'))
       setLoading(false)
       return
     }
@@ -97,17 +101,17 @@ export default function SignupPage() {
       </Suspense>
       <div className="card">
         <h1 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
-          Crea tu cuenta
+          {t(lang, 'signup_title')}
         </h1>
         <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.75rem' }}>
-          Empieza con 11 preguntas. Dura 2 minutos.
+          {t(lang, 'signup_subtitle')}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           <input
             className="input-field"
             type="email"
-            placeholder="Tu email"
+            placeholder={t(lang, 'signup_email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -116,7 +120,7 @@ export default function SignupPage() {
           <input
             className="input-field"
             type="password"
-            placeholder="Contraseña (mín. 8 caracteres)"
+            placeholder={t(lang, 'signup_password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -128,19 +132,18 @@ export default function SignupPage() {
           )}
 
           <button className="btn-primary" type="submit" disabled={loading}>
-            {loading ? 'Creando cuenta…' : 'Crear cuenta'}
+            {loading ? t(lang, 'signup_loading') : t(lang, 'signup_submit')}
           </button>
         </form>
 
-        <p className="disclaimer">
-          Esta app no es un servicio médico ni terapéutico.<br />
-          Si estás siguiendo una terapia o tratamiento, sigue haciéndolo.
+        <p className="disclaimer" style={{ whiteSpace: 'pre-line' }}>
+          {t(lang, 'signup_disclaimer')}
         </p>
 
         <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>
-          ¿Ya tienes cuenta?{' '}
+          {t(lang, 'signup_have_account')}{' '}
           <Link href="/login" style={{ color: '#ffffff', fontWeight: '500' }}>
-            Entrar
+            {t(lang, 'signup_login')}
           </Link>
         </p>
       </div>

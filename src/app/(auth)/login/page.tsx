@@ -5,9 +5,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { useLang } from '@/lib/LangContext'
+import { t } from '@/lib/i18n'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { lang } = useLang()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -22,7 +25,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      setError('Email o contraseña incorrectos.')
+      setError(t(lang, 'login_error'))
       setLoading(false)
       return
     }
@@ -38,17 +41,17 @@ export default function LoginPage() {
       </div>
       <div className="card">
         <h1 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
-          Bienvenido de nuevo
+          {t(lang, 'login_title')}
         </h1>
         <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.75rem' }}>
-          Tu reflexión te espera.
+          {t(lang, 'login_subtitle')}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           <input
             className="input-field"
             type="email"
-            placeholder="Tu email"
+            placeholder={t(lang, 'login_email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -57,7 +60,7 @@ export default function LoginPage() {
           <input
             className="input-field"
             type="password"
-            placeholder="Contraseña"
+            placeholder={t(lang, 'login_password')}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -69,14 +72,21 @@ export default function LoginPage() {
           )}
 
           <button className="btn-primary" type="submit" disabled={loading}>
-            {loading ? 'Entrando…' : 'Entrar'}
+            {loading ? t(lang, 'login_loading') : t(lang, 'login_submit')}
           </button>
         </form>
 
         <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>
-          ¿No tienes cuenta?{' '}
+          {t(lang, 'login_no_account')}{' '}
           <Link href="/signup" style={{ color: '#ffffff', fontWeight: '500' }}>
-            Crear una
+            {t(lang, 'login_create')}
+          </Link>
+        </p>
+
+        <p style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
+          {t(lang, 'login_forgot')}{' '}
+          <Link href="/forgot-password" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            {t(lang, 'login_reset')}
           </Link>
         </p>
       </div>
