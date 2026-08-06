@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
 export async function POST(request: NextRequest) {
@@ -13,6 +12,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { chargeId } = await request.json()
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
   try {
     const refund = await stripe.refunds.create({ charge: chargeId })

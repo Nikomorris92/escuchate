@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
 export async function GET() {
@@ -12,6 +11,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
   const customersRes = await stripe.customers.list({ limit: 100 })
 
   const customers = await Promise.all(
