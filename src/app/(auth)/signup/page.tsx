@@ -1,13 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
+  const [showSuccess, setShowSuccess] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('payment') === 'success') {
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 5000)
+    }
+  }, [searchParams])
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -58,6 +67,26 @@ export default function SignupPage() {
 
   return (
     <div className="page-container">
+      {showSuccess && (
+        <div style={{
+          position: 'fixed', top: '1.5rem', left: '50%', transform: 'translateX(-50%)',
+          zIndex: 100, background: '#1a4a2e', border: '1px solid #4ade80',
+          borderRadius: '0.875rem', padding: '1rem 1.5rem',
+          display: 'flex', alignItems: 'center', gap: '0.75rem',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+          animation: 'fadeIn 0.3s ease',
+        }}>
+          <span style={{ fontSize: '1.25rem' }}>✓</span>
+          <div>
+            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#4ade80', margin: 0 }}>
+              ¡Suscripción completada con éxito!
+            </p>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.6)', margin: '0.2rem 0 0' }}>
+              Crea tu cuenta para acceder a tu recorrido.
+            </p>
+          </div>
+        </div>
+      )}
       <div className="card">
         <h1 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
           Crea tu cuenta
