@@ -116,6 +116,17 @@ export default function JourneyAreaPage() {
       is_shared: true,
       shared_name: sharedName.trim() || null,
     }).eq('id', lastInsertId)
+
+    fetch('/api/notify-share', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        reflectionText: reflection,
+        area: area.title,
+        sharedName: sharedName.trim() || null,
+      }),
+    }).catch(() => {})
+
     setShared(true)
     setSharing(false)
   }
