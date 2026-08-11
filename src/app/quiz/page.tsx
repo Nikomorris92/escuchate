@@ -83,6 +83,21 @@ export default function QuizPage() {
   if (phase === 'result') {
     const topAreas = areaOrder.slice(0, 3)
 
+    if (topAreas.length === 0) {
+      return (
+        <div className="page-container">
+          <div className="card" style={{ textAlign: 'center' }}>
+            <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1rem' }}>
+              Algo ha fallado al calcular tu resultado. Inténtalo de nuevo.
+            </p>
+            <button className="btn-primary" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
