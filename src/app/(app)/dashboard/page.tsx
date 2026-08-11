@@ -137,6 +137,26 @@ export default async function DashboardPage() {
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
         </Link>
 
+        <Link href="/coaching" style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '1rem 1.25rem',
+          background: 'rgba(196,120,58,0.08)',
+          border: '1px solid rgba(196,120,58,0.2)',
+          borderRadius: '0.875rem',
+          textDecoration: 'none',
+          marginBottom: '1rem',
+        }}>
+          <div>
+            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
+              Mi progreso — Coaching
+            </p>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
+              Puntúa tus áreas y ve tu evolución
+            </p>
+          </div>
+          <span style={{ color: 'rgba(196,120,58,0.7)', fontSize: '1rem' }}>→</span>
+        </Link>
+
         <form action="/api/auth/signout" method="post" style={{ textAlign: 'center' }}>
           <button type="submit" className="btn-ghost">
             Cerrar sesión

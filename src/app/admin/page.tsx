@@ -38,6 +38,16 @@ interface StripeCustomer {
   charges: Charge[]
 }
 
+interface CoachingRating {
+  id: string
+  area: string
+  rating: number
+  note: string | null
+  created_at: string
+  user_email?: string
+  user_id: string
+}
+
 interface MuroComment {
   id: string
   comment_text: string
@@ -69,6 +79,7 @@ export default function AdminPage() {
   const [muroReflections, setMuroReflections] = useState<MuroReflection[]>([])
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [approvingId, setApprovingId] = useState<string | null>(null)
+  const [coachingRatings, setCoachingRatings] = useState<CoachingRating[]>([])
 
   useEffect(() => {
     async function init() {
@@ -107,6 +118,12 @@ export default function AdminPage() {
         .order('completed_at', { ascending: false })
         .limit(100)
       setMuroReflections((muroData ?? []).map(r => ({ ...r, comments: [], showComments: false })))
+
+      const { data: coachingData } = await supabase
+        .from('coaching_ratings')
+        .select('id, user_id, area, rating, note, created_at')
+        .order('created_at', { ascending: false })
+      setCoachingRatings(coachingData ?? [])
 
       setLoading(false)
     }
@@ -289,6 +306,76 @@ export default function AdminPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Coaching — Indice di successo */}
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
+          Coaching — Progreso por alumno
+        </h2>
+        {coachingRatings.length === 0 ? (
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>Ningún voto registrado todavía.</p>
+        ) : (() => {
+          const byUser: Record<string, CoachingRating[]> = {}
+          coachingRatings.forEach(r => {
+            if (!byUser[r.user_id]) byUser[r.user_id] = []
+            byUser[r.user_id].push(r)
+          })
+          return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              {Object.entries(byUser).map(([userId, userRatings]) => {
+                const userEmail = users.find(u => u.id === userId)?.email ?? userId.slice(0, 8)
+                const byArea: Record<string, CoachingRating[]> = {}
+                userRatings.forEach(r => {
+                  if (!byArea[r.area]) byArea[r.area] = []
+                  byArea[r.area].push(r)
+                })
+
+                return (
+                  <div key={userId} style={{
+                    padding: '1rem',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '0.75rem',
+                  }}>
+                    <p style={{ fontSize: '0.875rem', fontWeight: '600', color: '#ffffff', marginBottom: '0.875rem' }}>
+                      {userEmail}
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {Object.entries(byArea).map(([area, areaRatings]) => {
+                        const sorted = [...areaRatings].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                        const first = sorted[0].rating
+                        const last = sorted[sorted.length - 1].rating
+                        const delta = last - first
+                        return (
+                          <div key={area} style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                            padding: '0.5rem 0.75rem',
+                            background: 'rgba(255,255,255,0.04)',
+                            borderRadius: '0.5rem',
+                          }}>
+                            <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.7)', flex: 1 }}>{area}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                              <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>
+                                {first} → {last}
+                              </span>
+                              <span style={{
+                                fontSize: '0.8125rem', fontWeight: '700', minWidth: '2.5rem', textAlign: 'right',
+                                color: delta > 0 ? '#4ade80' : delta < 0 ? '#f87171' : 'rgba(255,255,255,0.4)',
+                              }}>
+                                {delta > 0 ? `+${delta}` : delta === 0 ? '=' : delta}
+                              </span>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })()}
       </div>
 
       {/* Moderazione Muro */}
