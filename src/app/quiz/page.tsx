@@ -27,11 +27,14 @@ export default function QuizPage() {
     } else {
       const order = computeAreaOrder(newAnswers) as Area[]
       setAreaOrder(order)
-      // Save to localStorage for after signup
-      localStorage.setItem('quiz_answers', JSON.stringify(newAnswers))
-      localStorage.setItem('quiz_area_order', JSON.stringify(order))
-      localStorage.setItem('quiz_intro', introText)
       setPhase('result')
+      try {
+        localStorage.setItem('quiz_answers', JSON.stringify(newAnswers))
+        localStorage.setItem('quiz_area_order', JSON.stringify(order))
+        localStorage.setItem('quiz_intro', introText)
+      } catch {
+        // localStorage non disponibile (incognito Safari) — i dati rimangono in memoria
+      }
     }
   }
 
