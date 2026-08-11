@@ -22,12 +22,21 @@ export default function CoachingPage() {
   const [saving, setSaving] = useState<string | null>(null)
   const [saved, setSaved] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isCoachingClient, setIsCoachingClient] = useState(false)
 
   useEffect(() => {
     async function load() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
+
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('is_coaching_client')
+        .eq('id', user.id)
+        .single()
+
+      setIsCoachingClient(profile?.is_coaching_client ?? false)
 
       const { data } = await supabase
         .from('coaching_ratings')
@@ -69,6 +78,33 @@ export default function CoachingPage() {
   if (loading) return (
     <div className="page-container">
       <p style={{ color: 'rgba(255,255,255,0.4)' }}>Cargando…</p>
+    </div>
+  )
+
+  if (!isCoachingClient) return (
+    <div className="page-container">
+      <div className="card" style={{ textAlign: 'center', maxWidth: '400px' }}>
+        <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔒</p>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.75rem' }}>
+          Acceso reservado
+        </h2>
+        <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          Esta sección es exclusiva para alumnos del programa de coaching 1:1 con Nicola.
+        </p>
+        <a href="mailto:escuchateatimismo@gmail.com" style={{
+          display: 'inline-block', padding: '0.75rem 1.5rem',
+          background: 'rgba(196,120,58,0.15)', border: '1px solid rgba(196,120,58,0.3)',
+          borderRadius: '0.75rem', color: '#c4783a', fontWeight: '600',
+          fontSize: '0.9375rem', textDecoration: 'none',
+        }}>
+          Contactar a Nicola
+        </a>
+        <div style={{ marginTop: '1.25rem' }}>
+          <Link href="/dashboard" style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)' }}>
+            ← Volver al dashboard
+          </Link>
+        </div>
+      </div>
     </div>
   )
 
