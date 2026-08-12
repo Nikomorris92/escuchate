@@ -20,7 +20,7 @@ function areaFeedback(areaId: string, lang: 'es' | 'en') {
     const key = `quiz_feedback_${areaId}` as Parameters<typeof t>[1]
     return t('en', key)
   }
-  return AREA_FEEDBACK[areaId] ?? ''
+  return AREA_FEEDBACK[areaId as keyof typeof AREA_FEEDBACK] ?? ''
 }
 
 export default function InicioPage() {
