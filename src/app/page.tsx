@@ -50,7 +50,7 @@ export default function HomePage() {
         </blockquote>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <a href="/quiz" style={{
+          <a href="/signup" style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: '0.875rem 1.5rem', background: '#ffffff', color: '#1e3a5f',
             borderRadius: '0.75rem', fontWeight: '600', fontSize: '0.9375rem',
