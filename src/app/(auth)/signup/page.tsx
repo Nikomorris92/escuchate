@@ -109,17 +109,10 @@ export default function SignupPage() {
         localStorage.removeItem('quiz_intro')
       } catch { /* incognito */ }
 
-      // Se viene dal quiz, lancia Stripe
+      // Se viene dal quiz, vai alla pagina checkout (sessione già stabile lì)
       if (fromQuiz) {
-        try {
-          const res = await fetch('/api/checkout', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ areaOrder }),
-          })
-          const { url } = await res.json()
-          if (url) { window.location.href = url; return }
-        } catch { /* fallback al dashboard */ }
+        router.push('/checkout')
+        return
       }
 
       router.push('/dashboard')
