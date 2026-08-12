@@ -14,6 +14,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [done, setDone] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -40,8 +41,8 @@ export default function SignupPage() {
       body: JSON.stringify({ email }),
     }).catch(() => {})
 
-    // Dopo la registrazione → quiz
-    window.location.href = '/quiz'
+    setDone(true)
+    setTimeout(() => { window.location.href = '/quiz' }, 1500)
   }
 
   return (
@@ -78,10 +79,12 @@ export default function SignupPage() {
             <p style={{ fontSize: '0.875rem', color: '#c4783a' }}>{error}</p>
           )}
 
-          <button className="btn-primary" type="submit" disabled={loading}>
-            {loading
+          <button className="btn-primary" type="submit" disabled={loading || done}>
+            {done
+              ? '¡Empezamos! →'
+              : loading
               ? (lang === 'en' ? 'Creating account…' : 'Creando cuenta…')
-              : (lang === 'en' ? 'Create profile →' : 'Crear perfil →')}
+              : (lang === 'en' ? 'Create account →' : 'Crear cuenta →')}
           </button>
         </form>
 

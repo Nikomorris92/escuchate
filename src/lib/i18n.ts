@@ -5,7 +5,7 @@ export const translations = {
     // Home
     home_quote: '"El genio es aquel que tiene la valentía y el coraje de escuchar su propio corazón."',
     home_author: 'John Demartini',
-    home_start: 'Empezar',
+    home_start: 'Crear cuenta',
     home_login: 'Ya tengo cuenta',
     home_disclaimer: 'Esta app no es un servicio médico ni terapéutico.\nSi estás siguiendo una terapia o tratamiento, sigue haciéndolo.',
     home_contact: 'Contacto',
