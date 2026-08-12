@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     line_items: [{ price: PRICE_ID, quantity: 1 }],
-    success_url: `https://escuchateati.com/signup?payment=success&qid=${data.id}`,
-    cancel_url: `https://escuchateati.com/quiz`,
+    success_url: `https://www.escuchateati.com/signup?payment=success&qid=${data.id}`,
+    cancel_url: `https://www.escuchateati.com/quiz`,
     allow_promotion_codes: true,
   })
 
