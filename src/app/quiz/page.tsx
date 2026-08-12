@@ -137,10 +137,26 @@ export default function QuizPage() {
   async function handlePay() {
     setPaying(true)
     try {
+      // Salva dati quiz sul profilo utente (l'utente è già loggato)
+      const { createClient } = await import('@/lib/supabase/client')
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('user_profiles').upsert({
+          id: user.id,
+          quiz_completed: true,
+          area_order: areaOrder,
+          current_level: 0,
+          total_score: 0,
+          advanced_unlocked: false,
+          intro_reflection: introText,
+        })
+      }
+
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ areaOrder, introText }),
+        body: JSON.stringify({}),
       })
       const { url } = await res.json()
       if (url) window.location.href = url
