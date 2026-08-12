@@ -88,9 +88,14 @@ export default function InicioPage() {
   const topAreas = areaOrder.slice(0, 3)
 
   function formatDate(iso: string) {
-    return new Date(iso).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', {
+    const d = new Date(iso)
+    const date = d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', {
       day: 'numeric', month: 'long', year: 'numeric',
     })
+    const time = d.toLocaleTimeString(lang === 'en' ? 'en-GB' : 'es-ES', {
+      hour: '2-digit', minute: '2-digit',
+    })
+    return `${date} · ${time}`
   }
 
   if (loading) {
