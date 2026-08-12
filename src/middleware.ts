@@ -2,6 +2,11 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  // Supabase SSR internals may POST to /login during session sync
+  if (request.method === 'POST' && request.nextUrl.pathname === '/login') {
+    return NextResponse.json({ ok: true })
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
