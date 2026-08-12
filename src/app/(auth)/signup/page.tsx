@@ -70,17 +70,43 @@ export default function SignupPage() {
       return
     }
 
-    const quizAreaOrder = localStorage.getItem('quiz_area_order')
-    const quizIntro = localStorage.getItem('quiz_intro')
-
     fetch('/api/welcome-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
     }).catch(() => {})
 
-    if (data.user && quizAreaOrder) {
-      const areaOrder = JSON.parse(quizAreaOrder)
+    // Legge dati quiz: prima da URL (qid), poi da localStorage (fallback)
+    const params = new URLSearchParams(window.location.search)
+    const qid = params.get('qid')
+
+    let areaOrder: string[] | null = null
+    let quizIntro = ''
+
+    if (qid && data.user) {
+      const { data: pending } = await supabase
+        .from('quiz_pending')
+        .select('area_order, intro_text')
+        .eq('id', qid)
+        .single()
+      if (pending) {
+        areaOrder = pending.area_order
+        quizIntro = pending.intro_text ?? ''
+        await supabase.from('quiz_pending').delete().eq('id', qid)
+      }
+    }
+
+    if (!areaOrder) {
+      try {
+        const stored = localStorage.getItem('quiz_area_order')
+        if (stored) {
+          areaOrder = JSON.parse(stored)
+          quizIntro = localStorage.getItem('quiz_intro') ?? ''
+        }
+      } catch { /* incognito */ }
+    }
+
+    if (data.user && areaOrder) {
       await supabase.from('user_profiles').upsert({
         id: data.user.id,
         quiz_completed: true,
@@ -88,11 +114,13 @@ export default function SignupPage() {
         current_level: 0,
         total_score: 0,
         advanced_unlocked: false,
-        intro_reflection: quizIntro ?? '',
+        intro_reflection: quizIntro,
       })
-      localStorage.removeItem('quiz_answers')
-      localStorage.removeItem('quiz_area_order')
-      localStorage.removeItem('quiz_intro')
+      try {
+        localStorage.removeItem('quiz_answers')
+        localStorage.removeItem('quiz_area_order')
+        localStorage.removeItem('quiz_intro')
+      } catch { /* incognito */ }
       router.push('/dashboard')
     } else {
       router.push('/onboarding')

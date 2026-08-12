@@ -14,6 +14,7 @@ export default function QuizPage() {
   const [currentQ, setCurrentQ] = useState(0)
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [areaOrder, setAreaOrder] = useState<Area[]>([])
+  const [paying, setPaying] = useState(false)
 
   const question = QUIZ_QUESTIONS[currentQ]
   const progress = (currentQ / QUIZ_QUESTIONS.length) * 100
@@ -38,8 +39,19 @@ export default function QuizPage() {
     }
   }
 
-  function handlePay() {
-    window.location.href = 'https://buy.stripe.com/6oU00igJt65aegI0yN0Ny00'
+  async function handlePay() {
+    setPaying(true)
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ areaOrder, introText }),
+      })
+      const { url } = await res.json()
+      if (url) window.location.href = url
+    } catch {
+      setPaying(false)
+    }
   }
 
   /* ── INTRO ── */
@@ -163,8 +175,8 @@ export default function QuizPage() {
             Accede a tu recorrido personalizado por <strong style={{ color: '#ffffff' }}>€20,55/año</strong> — menos de 2€ al mes.
           </p>
 
-          <button className="btn-primary" onClick={handlePay} style={{ width: '100%', marginBottom: '0.75rem' }}>
-            Empezar mi recorrido →
+          <button className="btn-primary" onClick={handlePay} disabled={paying} style={{ width: '100%', marginBottom: '0.75rem' }}>
+            {paying ? 'Preparando pago…' : 'Empezar mi recorrido →'}
           </button>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textAlign: 'center' }}>
             Pago seguro con Stripe · Cancela cuando quieras
