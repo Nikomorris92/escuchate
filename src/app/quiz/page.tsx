@@ -2,12 +2,16 @@
 
 import { useState } from 'react'
 import { QUIZ_QUESTIONS, computeAreaOrder } from '@/lib/quiz'
-import { AREA_MAP } from '@/lib/areas'
+import { AREA_MAP, AREA_TITLES_EN } from '@/lib/areas'
 import { useLang } from '@/lib/LangContext'
 import { t } from '@/lib/i18n'
 import type { Area } from '@/types'
 
 type Phase = 'intro' | 'quiz' | 'result'
+
+function areaTitle(areaId: string, lang: ReturnType<typeof useLang>['lang']) {
+  return lang === 'en' ? (AREA_TITLES_EN[areaId] ?? AREA_MAP[areaId]?.title) : AREA_MAP[areaId]?.title
+}
 
 // Mappa area → chiave feedback in i18n
 const FEEDBACK_KEY: Record<string, Parameters<typeof t>[1]> = {
@@ -231,7 +235,7 @@ export default function QuizPage() {
                   </span>
                 </div>
                 <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.5rem' }}>
-                  {AREA_MAP[areaId]?.title}
+                  {areaTitle(areaId, lang)}
                 </p>
                 <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.65)', lineHeight: '1.65', margin: 0 }}>
                   {FEEDBACK_KEY[areaId] ? t(lang, FEEDBACK_KEY[areaId]) : ''}
@@ -248,7 +252,7 @@ export default function QuizPage() {
               {areaOrder.map((areaId, i) => (
                 <div key={areaId} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.875rem', color: i < 3 ? '#ffffff' : 'rgba(255,255,255,0.4)', fontWeight: i === 0 ? '600' : '400' }}>
                   <span style={{ width: '1.25rem', textAlign: 'right', flexShrink: 0, color: 'rgba(255,255,255,0.3)' }}>{i + 1}.</span>
-                  <span>{AREA_MAP[areaId]?.title}</span>
+                  <span>{areaTitle(areaId, lang)}</span>
                 </div>
               ))}
             </div>
