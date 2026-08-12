@@ -27,15 +27,15 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  const publicPaths = ['/login', '/signup', '/', '/preview', '/auth/confirm', '/auth/reset-password', '/quiz', '/api/checkout']
+  const publicPaths = ['/login', '/signup', '/', '/preview', '/auth/confirm', '/auth/reset-password', '/quiz', '/api/checkout', '/checkout']
   const isPublic = publicPaths.some((p) => pathname === p)
 
   if (!user && !isPublic) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL('/login', request.url), 302)
   }
 
   if (user && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    return NextResponse.redirect(new URL('/dashboard', request.url), 302)
   }
 
   return supabaseResponse
