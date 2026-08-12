@@ -50,6 +50,12 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [fromQuiz, setFromQuiz] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setFromQuiz(params.get('from') === 'quiz')
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -62,9 +68,9 @@ export default function SignupPage() {
 
     setLoading(true)
     const supabase = createClient()
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { data, error: signupError } = await supabase.auth.signUp({ email, password })
 
-    if (error) {
+    if (signupError || !data.user) {
       setError(t(lang, 'signup_error'))
       setLoading(false)
       return
@@ -76,37 +82,18 @@ export default function SignupPage() {
       body: JSON.stringify({ email }),
     }).catch(() => {})
 
-    // Legge dati quiz: prima da URL (qid), poi da localStorage (fallback)
-    const params = new URLSearchParams(window.location.search)
-    const qid = params.get('qid')
-
+    // Legge dati quiz da localStorage
     let areaOrder: string[] | null = null
     let quizIntro = ''
-
-    if (qid && data.user) {
-      const { data: pending } = await supabase
-        .from('quiz_pending')
-        .select('area_order, intro_text')
-        .eq('id', qid)
-        .single()
-      if (pending) {
-        areaOrder = pending.area_order
-        quizIntro = pending.intro_text ?? ''
-        await supabase.from('quiz_pending').delete().eq('id', qid)
+    try {
+      const stored = localStorage.getItem('quiz_area_order')
+      if (stored) {
+        areaOrder = JSON.parse(stored)
+        quizIntro = localStorage.getItem('quiz_intro') ?? ''
       }
-    }
+    } catch { /* incognito */ }
 
-    if (!areaOrder) {
-      try {
-        const stored = localStorage.getItem('quiz_area_order')
-        if (stored) {
-          areaOrder = JSON.parse(stored)
-          quizIntro = localStorage.getItem('quiz_intro') ?? ''
-        }
-      } catch { /* incognito */ }
-    }
-
-    if (data.user && areaOrder) {
+    if (areaOrder) {
       await supabase.from('user_profiles').upsert({
         id: data.user.id,
         quiz_completed: true,
@@ -121,6 +108,20 @@ export default function SignupPage() {
         localStorage.removeItem('quiz_area_order')
         localStorage.removeItem('quiz_intro')
       } catch { /* incognito */ }
+
+      // Se viene dal quiz, lancia Stripe
+      if (fromQuiz) {
+        try {
+          const res = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ areaOrder }),
+          })
+          const { url } = await res.json()
+          if (url) { window.location.href = url; return }
+        } catch { /* fallback al dashboard */ }
+      }
+
       router.push('/dashboard')
     } else {
       router.push('/onboarding')
@@ -138,7 +139,9 @@ export default function SignupPage() {
           {t(lang, 'signup_title')}
         </h1>
         <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.75rem' }}>
-          {t(lang, 'signup_subtitle')}
+          {fromQuiz
+            ? (lang === 'en' ? 'Create your account to access your personalized journey.' : 'Crea tu cuenta para acceder a tu recorrido personalizado.')
+            : t(lang, 'signup_subtitle')}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
@@ -166,7 +169,11 @@ export default function SignupPage() {
           )}
 
           <button className="btn-primary" type="submit" disabled={loading}>
-            {loading ? t(lang, 'signup_loading') : t(lang, 'signup_submit')}
+            {loading
+              ? (lang === 'en' ? 'Creating account…' : 'Creando cuenta…')
+              : (fromQuiz
+                ? (lang === 'en' ? 'Create account and pay →' : 'Crear cuenta y pagar →')
+                : t(lang, 'signup_submit'))}
           </button>
         </form>
 

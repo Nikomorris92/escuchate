@@ -134,19 +134,12 @@ export default function QuizPage() {
     }
   }
 
-  async function handlePay() {
-    setPaying(true)
+  function handleSignup() {
     try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ areaOrder, introText }),
-      })
-      const { url } = await res.json()
-      if (url) window.location.href = url
-    } catch {
-      setPaying(false)
-    }
+      localStorage.setItem('quiz_area_order', JSON.stringify(areaOrder))
+      localStorage.setItem('quiz_intro', introText)
+    } catch { /* incognito */ }
+    window.location.href = '/signup?from=quiz'
   }
 
   /* ── INTRO ── */
@@ -267,8 +260,8 @@ export default function QuizPage() {
             dangerouslySetInnerHTML={{ __html: t(lang, 'quiz_result_cta_text').replace('€20.55/year', '<strong style="color:#ffffff">€20.55/year</strong>').replace('€20,55/año', '<strong style="color:#ffffff">€20,55/año</strong>') }}
           />
 
-          <button className="btn-primary" onClick={handlePay} disabled={paying} style={{ width: '100%', marginBottom: '0.75rem' }}>
-            {paying ? t(lang, 'quiz_result_cta_loading') : t(lang, 'quiz_result_cta_btn')}
+          <button className="btn-primary" onClick={handleSignup} style={{ width: '100%', marginBottom: '0.75rem' }}>
+            {t(lang, 'quiz_result_cta_btn')}
           </button>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textAlign: 'center' }}>
             {t(lang, 'quiz_result_cta_secure')}
