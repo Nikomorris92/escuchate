@@ -2,11 +2,6 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  // Supabase SSR internals may POST to /login during session sync
-  if (request.method === 'POST' && request.nextUrl.pathname === '/login') {
-    return NextResponse.json({ ok: true })
-  }
-
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -32,15 +27,15 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  const publicPaths = ['/login', '/signup', '/', '/preview', '/auth/confirm', '/auth/reset-password', '/quiz', '/api/checkout', '/checkout']
+  const publicPaths = ['/login', '/signup', '/', '/preview', '/auth/confirm', '/auth/reset-password', '/quiz', '/api/checkout']
   const isPublic = publicPaths.some((p) => pathname === p)
 
   if (!user && !isPublic) {
-    return NextResponse.redirect(new URL('/login', request.url), 302)
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   if (user && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url), 302)
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return supabaseResponse
