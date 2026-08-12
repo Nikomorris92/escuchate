@@ -3,12 +3,102 @@
 import { useState } from 'react'
 import { QUIZ_QUESTIONS, computeAreaOrder } from '@/lib/quiz'
 import { AREA_MAP } from '@/lib/areas'
-import { AREA_FEEDBACK } from '@/lib/feedback'
+import { useLang } from '@/lib/LangContext'
+import { t } from '@/lib/i18n'
 import type { Area } from '@/types'
 
 type Phase = 'intro' | 'quiz' | 'result'
 
+// Mappa area → chiave feedback in i18n
+const FEEDBACK_KEY: Record<string, Parameters<typeof t>[1]> = {
+  acceptance: 'quiz_feedback_acceptance',
+  discipline: 'quiz_feedback_discipline',
+  no_complaining: 'quiz_feedback_no_complaining',
+  obstacle: 'quiz_feedback_obstacle',
+  leap: 'quiz_feedback_leap',
+  gratitude: 'quiz_feedback_gratitude',
+  observe: 'quiz_feedback_observe',
+  here_now: 'quiz_feedback_here_now',
+  voices: 'quiz_feedback_voices',
+  mirror: 'quiz_feedback_mirror',
+  healthy_relationships: 'quiz_feedback_healthy_relationships',
+}
+
+// Domande e opzioni tradotte
+function getQuestions(lang: ReturnType<typeof useLang>['lang']) {
+  const q = (key: Parameters<typeof t>[1]) => t(lang, key)
+  return [
+    {
+      id: 1,
+      area: 'acceptance',
+      question: q('quiz_q1'),
+      options: [q('quiz_opt_almost_never'), q('quiz_opt_sometimes'), q('quiz_opt_often'), q('quiz_opt_almost_always')],
+    },
+    {
+      id: 2,
+      area: 'discipline',
+      question: q('quiz_q2'),
+      options: [q('quiz_opt_almost_never'), q('quiz_opt_sometimes'), q('quiz_opt_often'), q('quiz_opt_almost_always')],
+    },
+    {
+      id: 3,
+      area: 'no_complaining',
+      question: q('quiz_q3'),
+      options: [q('quiz_opt_almost_never'), q('quiz_opt_sometimes'), q('quiz_opt_often'), q('quiz_opt_almost_always')],
+    },
+    {
+      id: 4,
+      area: 'leap',
+      question: q('quiz_q4'),
+      options: [q('quiz_opt_almost_never'), q('quiz_opt_sometimes'), q('quiz_opt_often'), q('quiz_opt_almost_always')],
+    },
+    {
+      id: 5,
+      area: 'gratitude',
+      question: q('quiz_q5'),
+      options: [q('quiz_opt_nothing'), q('quiz_opt_almost_nothing'), q('quiz_opt_something'), q('quiz_opt_a_lot')],
+    },
+    {
+      id: 6,
+      area: 'observe',
+      question: q('quiz_q6'),
+      options: [q('quiz_opt_almost_never'), q('quiz_opt_sometimes'), q('quiz_opt_often'), q('quiz_opt_almost_always')],
+    },
+    {
+      id: 7,
+      area: 'obstacle',
+      question: q('quiz_q7'),
+      options: [q('quiz_opt_nothing'), q('quiz_opt_little'), q('quiz_opt_quite'), q('quiz_opt_a_lot')],
+    },
+    {
+      id: 8,
+      area: 'here_now',
+      question: q('quiz_q8'),
+      options: [q('quiz_opt_almost_never'), q('quiz_opt_sometimes'), q('quiz_opt_often'), q('quiz_opt_almost_always')],
+    },
+    {
+      id: 9,
+      area: 'voices',
+      question: q('quiz_q9'),
+      options: [q('quiz_opt_nothing'), q('quiz_opt_almost_nothing'), q('quiz_opt_quite'), q('quiz_opt_a_lot')],
+    },
+    {
+      id: 10,
+      area: 'mirror',
+      question: q('quiz_q10'),
+      options: [q('quiz_opt_nothing'), q('quiz_opt_little'), q('quiz_opt_quite'), q('quiz_opt_a_lot')],
+    },
+    {
+      id: 11,
+      area: 'healthy_relationships',
+      question: q('quiz_q11'),
+      options: [q('quiz_opt_nothing'), q('quiz_opt_almost_nothing'), q('quiz_opt_enough'), q('quiz_opt_a_lot')],
+    },
+  ]
+}
+
 export default function QuizPage() {
+  const { lang } = useLang()
   const [phase, setPhase] = useState<Phase>('intro')
   const [introText, setIntroText] = useState('')
   const [currentQ, setCurrentQ] = useState(0)
@@ -16,14 +106,15 @@ export default function QuizPage() {
   const [areaOrder, setAreaOrder] = useState<Area[]>([])
   const [paying, setPaying] = useState(false)
 
-  const question = QUIZ_QUESTIONS[currentQ]
-  const progress = (currentQ / QUIZ_QUESTIONS.length) * 100
+  const questions = getQuestions(lang)
+  const question = questions[currentQ]
+  const progress = (currentQ / questions.length) * 100
 
   function handleAnswer(value: number) {
     const newAnswers = { ...answers, [question.id]: value }
     setAnswers(newAnswers)
 
-    if (currentQ < QUIZ_QUESTIONS.length - 1) {
+    if (currentQ < questions.length - 1) {
       setCurrentQ(currentQ + 1)
     } else {
       const order = computeAreaOrder(newAnswers) as Area[]
@@ -34,7 +125,7 @@ export default function QuizPage() {
         localStorage.setItem('quiz_area_order', JSON.stringify(order))
         localStorage.setItem('quiz_intro', introText)
       } catch {
-        // localStorage non disponibile (incognito Safari) — i dati rimangono in memoria
+        // localStorage non disponibile (incognito Safari)
       }
     }
   }
@@ -60,21 +151,20 @@ export default function QuizPage() {
       <div className="page-container">
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1.5rem' }}>
-            Antes de empezar
+            {t(lang, 'quiz_intro_label')}
           </p>
           <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ffffff', lineHeight: '1.4', marginBottom: '1.25rem' }}>
-            ¿Cómo te hablas a ti mismo?
+            {t(lang, 'quiz_intro_title')}
           </h2>
           <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.75', marginBottom: '2rem' }}>
-            Las palabras que usas contigo mismo, en silencio, cada día — ¿son las de un amigo, o las de un juez?{' '}
-            Todo lo que encontrarás aquí parte de esta relación: la que tienes contigo mismo.
+            {t(lang, 'quiz_intro_text')}
           </p>
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', fontStyle: 'italic', marginBottom: '0.75rem' }}>
-            Escribe, con tus palabras, cómo te hablas a ti mismo cuando algo va mal.
+            {t(lang, 'quiz_intro_placeholder_label')}
           </p>
           <textarea
             className="reflection-textarea"
-            placeholder="Sin límite de palabras. Esto es solo tuyo."
+            placeholder={t(lang, 'quiz_intro_placeholder')}
             value={introText}
             onChange={(e) => setIntroText(e.target.value)}
             style={{ minHeight: '140px' }}
@@ -84,10 +174,10 @@ export default function QuizPage() {
             style={{ marginTop: '1.5rem' }}
             onClick={() => setPhase('quiz')}
           >
-            Continuar al cuestionario →
+            {t(lang, 'quiz_intro_btn')}
           </button>
           <p className="disclaimer">
-            Esta reflexión se guardará y podrás releerla más adelante para ver cómo has cambiado.
+            {t(lang, 'quiz_intro_disclaimer')}
           </p>
         </div>
       </div>
@@ -103,10 +193,10 @@ export default function QuizPage() {
         <div className="page-container">
           <div className="card" style={{ textAlign: 'center' }}>
             <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1rem' }}>
-              Algo ha fallado al calcular tu resultado. Inténtalo de nuevo.
+              {t(lang, 'quiz_result_error')}
             </p>
             <button className="btn-primary" onClick={() => window.location.reload()}>
-              Reintentar
+              {t(lang, 'quiz_result_retry')}
             </button>
           </div>
         </div>
@@ -117,14 +207,13 @@ export default function QuizPage() {
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            Lo que vemos en ti
+            {t(lang, 'quiz_result_label')}
           </p>
 
           <h2 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff', marginBottom: '1.5rem', lineHeight: '1.4' }}>
-            Estas son las áreas donde más puedes crecer
+            {t(lang, 'quiz_result_title')}
           </h2>
 
-          {/* Feedback top 3 aree */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
             {topAreas.map((areaId, i) => (
               <div key={areaId} style={{
@@ -138,23 +227,22 @@ export default function QuizPage() {
                     fontSize: '0.6875rem', fontWeight: '700', color: i === 0 ? '#c4783a' : 'rgba(255,255,255,0.35)',
                     textTransform: 'uppercase', letterSpacing: '0.08em',
                   }}>
-                    {i === 0 ? 'Prioridad 1' : `Prioridad ${i + 1}`}
+                    {i === 0 ? t(lang, 'quiz_result_priority1') : `${t(lang, 'quiz_result_priority')} ${i + 1}`}
                   </span>
                 </div>
                 <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.5rem' }}>
                   {AREA_MAP[areaId]?.title}
                 </p>
                 <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.65)', lineHeight: '1.65', margin: 0 }}>
-                  {AREA_FEEDBACK[areaId]}
+                  {FEEDBACK_KEY[areaId] ? t(lang, FEEDBACK_KEY[areaId]) : ''}
                 </p>
               </div>
             ))}
           </div>
 
-          {/* Percorso completo */}
           <div style={{ marginBottom: '2rem', padding: '1.25rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.875rem' }}>
             <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Tu recorrido completo ({areaOrder.length} áreas)
+              {t(lang, 'quiz_result_journey_label')} ({areaOrder.length})
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
               {areaOrder.map((areaId, i) => (
@@ -169,17 +257,17 @@ export default function QuizPage() {
           <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '0 0 2rem' }} />
 
           <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
-            ¿Listo para trabajar en ti?
+            {t(lang, 'quiz_result_cta_title')}
           </h3>
-          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', marginBottom: '1.5rem', lineHeight: '1.65' }}>
-            Accede a tu recorrido personalizado por <strong style={{ color: '#ffffff' }}>€20,55/año</strong> — menos de 2€ al mes.
-          </p>
+          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', marginBottom: '1.5rem', lineHeight: '1.65' }}
+            dangerouslySetInnerHTML={{ __html: t(lang, 'quiz_result_cta_text').replace('€20.55/year', '<strong style="color:#ffffff">€20.55/year</strong>').replace('€20,55/año', '<strong style="color:#ffffff">€20,55/año</strong>') }}
+          />
 
           <button className="btn-primary" onClick={handlePay} disabled={paying} style={{ width: '100%', marginBottom: '0.75rem' }}>
-            {paying ? 'Preparando pago…' : 'Empezar mi recorrido →'}
+            {paying ? t(lang, 'quiz_result_cta_loading') : t(lang, 'quiz_result_cta_btn')}
           </button>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textAlign: 'center' }}>
-            Pago seguro con Stripe · Cancela cuando quieras
+            {t(lang, 'quiz_result_cta_secure')}
           </p>
         </div>
       </div>
@@ -193,7 +281,7 @@ export default function QuizPage() {
         <div style={{ marginBottom: '1.75rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
             <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
-              {currentQ + 1} / {QUIZ_QUESTIONS.length}
+              {currentQ + 1} / {questions.length}
             </span>
           </div>
           <div className="progress-bar">
@@ -219,7 +307,7 @@ export default function QuizPage() {
 
         {currentQ > 0 && (
           <button className="btn-ghost" style={{ width: '100%', marginTop: '1rem' }} onClick={() => setCurrentQ(currentQ - 1)}>
-            ← Anterior
+            {t(lang, 'quiz_prev')}
           </button>
         )}
       </div>
