@@ -304,3 +304,17 @@ export const AREA_MAP = Object.fromEntries(AREAS.map((a) => [a.id, a])) as Recor
   string,
   AreaDefinition
 >
+
+export const AREA_TITLES_EN: Record<string, string> = {
+  acceptance: 'Acceptance',
+  discipline: 'Discipline',
+  no_complaining: 'Stop Complaining',
+  leap: 'Fear',
+  gratitude: 'Gratitude',
+  observe: 'Emotions',
+  obstacle: 'The Obstacle',
+  here_now: 'Here & Now',
+  voices: 'The Voices',
+  mirror: 'The Mirror',
+  healthy_relationships: 'Healthy Relationships',
+}
