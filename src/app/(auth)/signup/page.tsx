@@ -10,6 +10,7 @@ import { t } from '@/lib/i18n'
 export default function SignupPage() {
   const router = useRouter()
   const { lang } = useLang()
+  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -20,6 +21,10 @@ export default function SignupPage() {
     e.preventDefault()
     setError('')
 
+    if (!fullName.trim()) {
+      setError(lang === 'en' ? 'Please enter your name.' : 'Por favor, escribe tu nombre.')
+      return
+    }
     if (password.length < 8) {
       setError(t(lang, 'signup_error_short'))
       return
@@ -27,12 +32,16 @@ export default function SignupPage() {
 
     setLoading(true)
     const supabase = createClient()
-    const { error: signupError } = await supabase.auth.signUp({ email, password })
+    const { data, error: signupError } = await supabase.auth.signUp({ email, password })
 
     if (signupError) {
       setError(t(lang, 'signup_error'))
       setLoading(false)
       return
+    }
+
+    if (data.user) {
+      await supabase.from('user_profiles').upsert({ id: data.user.id, full_name: fullName.trim() })
     }
 
     fetch('/api/welcome-email', {
@@ -56,6 +65,15 @@ export default function SignupPage() {
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+          <input
+            className="input-field"
+            type="text"
+            placeholder={lang === 'en' ? 'First and last name' : 'Nombre y apellido'}
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            required
+            autoComplete="name"
+          />
           <input
             className="input-field"
             type="email"
