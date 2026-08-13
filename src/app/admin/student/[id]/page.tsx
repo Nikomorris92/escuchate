@@ -32,6 +32,14 @@ interface JournalEntry {
   created_at: string
 }
 
+interface Rating {
+  id: string
+  area: string
+  rating: number
+  note: string | null
+  created_at: string
+}
+
 export default function StudentDetailPage() {
   const params = useParams()
   const router = useRouter()
@@ -43,8 +51,9 @@ export default function StudentDetailPage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null)
   const [reflections, setReflections] = useState<Reflection[]>([])
   const [journals, setJournals] = useState<JournalEntry[]>([])
+  const [ratings, setRatings] = useState<Rating[]>([])
   const [completedAreas, setCompletedAreas] = useState<Set<string>>(new Set())
-  const [activeTab, setActiveTab] = useState<'progress' | 'reflections' | 'journal'>('progress')
+  const [activeTab, setActiveTab] = useState<'progress' | 'reflections' | 'journal' | 'ratings'>('progress')
 
   useEffect(() => {
     async function load() {
@@ -53,11 +62,11 @@ export default function StudentDetailPage() {
       if (!user || user.email !== ADMIN_EMAIL) { router.push('/'); return }
       setAuthorized(true)
 
-      const [profileRes, reflRes, journalRes, usersRes] = await Promise.all([
+      const [profileRes, reflRes, journalRes, ratingsRes] = await Promise.all([
         supabase.from('user_profiles').select('id, full_name, area_order, total_score, quiz_completed').eq('id', studentId).single(),
         supabase.rpc('get_student_reflections', { student_id: studentId }),
         supabase.rpc('get_student_journal', { student_id: studentId }),
-        supabase.from('admin_users').select('id, email').eq('id', studentId).single(),
+        supabase.rpc('get_student_ratings', { student_id: studentId }),
       ])
 
       if (profileRes.data) setProfile(profileRes.data)
@@ -66,19 +75,16 @@ export default function StudentDetailPage() {
         setCompletedAreas(new Set(reflRes.data.map((r: Reflection) => r.area)))
       }
       if (journalRes.data) setJournals(journalRes.data)
-      if (usersRes.data) setStudentEmail(usersRes.data.email ?? '')
+      if (ratingsRes.data) setRatings(ratingsRes.data)
 
-      // Marca come lette tutte le notifiche di questo alunno
-      const { data: unread } = await supabase
-        .from('admin_notifications')
-        .select('id')
-        .eq('user_id', studentId)
-        .eq('read', false)
+      // Cerca email dell'alunno
+      const { data: authUser } = await supabase.from('admin_users').select('id, email').eq('id', studentId).single()
+      if (authUser) setStudentEmail(authUser.email ?? '')
+
+      // Marca notifiche come lette
+      const { data: unread } = await supabase.from('admin_notifications').select('id').eq('user_id', studentId).eq('read', false)
       if (unread && unread.length > 0) {
-        await supabase
-          .from('admin_notifications')
-          .update({ read: true })
-          .eq('user_id', studentId)
+        await supabase.from('admin_notifications').update({ read: true }).eq('user_id', studentId)
       }
 
       setLoading(false)
@@ -93,6 +99,16 @@ export default function StudentDetailPage() {
   const completedCount = completedAreas.size
   const totalAreas = areaOrder.length
   const percentage = totalAreas > 0 ? Math.round((completedCount / totalAreas) * 100) : 0
+
+  // Calcola media voti per area
+  const ratingsByArea: Record<string, Rating[]> = {}
+  ratings.forEach(r => {
+    if (!ratingsByArea[r.area]) ratingsByArea[r.area] = []
+    ratingsByArea[r.area].push(r)
+  })
+  const globalAvg = ratings.length > 0
+    ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
+    : null
 
   const tabStyle = (tab: typeof activeTab) => ({
     padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: '500',
@@ -120,13 +136,20 @@ export default function StudentDetailPage() {
             </h1>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', margin: 0 }}>{studentEmail}</p>
           </div>
-          <span style={{
-            padding: '0.375rem 1rem', borderRadius: '9999px',
-            background: 'rgba(196,120,58,0.15)', border: '1px solid rgba(196,120,58,0.3)',
-            color: '#c4783a', fontSize: '0.875rem', fontWeight: '600',
-          }}>
-            {profile?.total_score ?? 0} pts
-          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
+            <span style={{
+              padding: '0.375rem 1rem', borderRadius: '9999px',
+              background: 'rgba(196,120,58,0.15)', border: '1px solid rgba(196,120,58,0.3)',
+              color: '#c4783a', fontSize: '0.875rem', fontWeight: '600',
+            }}>
+              {profile?.total_score ?? 0} pts
+            </span>
+            {globalAvg && (
+              <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
+                Media voti: <strong style={{ color: '#ffffff' }}>{globalAvg}/10</strong>
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Barra progresso */}
@@ -150,13 +173,16 @@ export default function StudentDetailPage() {
       </div>
 
       {/* Tab */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         <button style={tabStyle('progress')} onClick={() => setActiveTab('progress')}>Percorso</button>
         <button style={tabStyle('reflections')} onClick={() => setActiveTab('reflections')}>
           Riflessioni ({reflections.length})
         </button>
         <button style={tabStyle('journal')} onClick={() => setActiveTab('journal')}>
           📓 Quaderno ({journals.length})
+        </button>
+        <button style={tabStyle('ratings')} onClick={() => setActiveTab('ratings')}>
+          ⭐ Voti ({ratings.length})
         </button>
       </div>
 
@@ -256,6 +282,94 @@ export default function StudentDetailPage() {
               </p>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Tab: Voti */}
+      {activeTab === 'ratings' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+          {ratings.length === 0 ? (
+            <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '2rem 0' }}>Nessun voto ancora.</p>
+          ) : (
+            <>
+              {/* Media globale */}
+              {globalAvg && (
+                <div style={{
+                  padding: '1rem 1.25rem',
+                  background: 'rgba(196,120,58,0.08)',
+                  border: '1px solid rgba(196,120,58,0.2)',
+                  borderRadius: '0.875rem',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                }}>
+                  <span style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)' }}>Media globale</span>
+                  <span style={{ fontSize: '1.75rem', fontWeight: '700', color: '#c4783a' }}>{globalAvg}<span style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.4)' }}>/10</span></span>
+                </div>
+              )}
+
+              {/* Voti per area */}
+              {Object.entries(ratingsByArea).map(([areaId, areaRatings]) => {
+                const sorted = [...areaRatings].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                const avg = (areaRatings.reduce((s, r) => s + r.rating, 0) / areaRatings.length).toFixed(1)
+                const first = sorted[0].rating
+                const last = sorted[sorted.length - 1].rating
+                const delta = last - first
+
+                return (
+                  <div key={areaId} style={{
+                    padding: '1.125rem',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '0.875rem',
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                      <div>
+                        <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
+                          {AREA_MAP[areaId]?.title ?? areaId}
+                        </p>
+                        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', margin: 0 }}>
+                          {areaRatings.length} {areaRatings.length === 1 ? 'voto' : 'voti'} · media {avg}/10
+                        </p>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{ fontSize: '1.5rem', fontWeight: '700', color: '#c4783a' }}>{last}</span>
+                        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>/10</span>
+                        {areaRatings.length >= 2 && (
+                          <p style={{
+                            fontSize: '0.75rem', margin: '0.1rem 0 0', fontWeight: '600',
+                            color: delta > 0 ? '#4ade80' : delta < 0 ? '#f87171' : 'rgba(255,255,255,0.4)',
+                          }}>
+                            {delta > 0 ? `+${delta}` : delta === 0 ? '=' : delta} vs inizio
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Storico */}
+                    <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+                      {sorted.map((r) => (
+                        <div key={r.id} style={{
+                          padding: '0.25rem 0.625rem', borderRadius: '0.375rem',
+                          background: 'rgba(255,255,255,0.06)',
+                          fontSize: '0.8125rem',
+                        }}>
+                          <span style={{ color: '#c4783a', fontWeight: '600' }}>{r.rating}</span>
+                          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.6875rem', marginLeft: '0.25rem' }}>
+                            {new Date(r.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {areaRatings[0]?.note && (
+                      <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.625rem', fontStyle: 'italic' }}>
+                        "{sorted[sorted.length - 1].note}"
+                      </p>
+                    )}
+                  </div>
+                )
+              })}
+            </>
+          )}
         </div>
       )}
     </div>
