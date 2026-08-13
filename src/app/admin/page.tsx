@@ -173,10 +173,7 @@ export default function AdminPage() {
         .limit(100)
       setMuroReflections((muroData ?? []).map(r => ({ ...r, comments: [], showComments: false })))
 
-      const { data: coachingData } = await supabase
-        .from('coaching_ratings')
-        .select('id, user_id, area, rating, note, created_at')
-        .order('created_at', { ascending: false })
+      const { data: coachingData } = await supabase.rpc('get_all_coaching_ratings')
       setCoachingRatings(coachingData ?? [])
 
       // Coaching clients
