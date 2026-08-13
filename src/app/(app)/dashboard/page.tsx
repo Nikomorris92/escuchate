@@ -179,6 +179,21 @@ export default async function DashboardPage() {
           </Link>
         )}
 
+        {user.email === 'nicola.morea92@gmail.com' && (
+          <Link href="/admin" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '0.875rem 1.25rem',
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '0.875rem',
+            textDecoration: 'none',
+            marginBottom: '1rem',
+          }}>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', margin: 0 }}>Panel Admin</p>
+            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>→</span>
+          </Link>
+        )}
+
         <form action="/api/auth/signout" method="post" style={{ textAlign: 'center' }}>
           <button type="submit" className="btn-ghost">
             Cerrar sesión
