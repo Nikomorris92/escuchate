@@ -182,8 +182,8 @@ export default function AdminPage() {
         setCoachingClients(clientsData.map((c: { id: string; full_name: string | null; area_order: string[]; completed_areas: string[] | null }) => ({
           id: c.id,
           full_name: c.full_name ?? null,
-          area_order: c.area_order ?? [],
-          completed_areas: c.completed_areas ?? [],
+          area_order: Array.isArray(c.area_order) ? c.area_order : [],
+          completed_areas: Array.isArray(c.completed_areas) ? c.completed_areas : [],
         })))
       }
 
@@ -284,8 +284,8 @@ export default function AdminPage() {
         setCoachingClients(clientsData.map((c: { id: string; full_name: string | null; area_order: string[]; completed_areas: string[] | null }) => ({
           id: c.id,
           full_name: c.full_name ?? null,
-          area_order: c.area_order ?? [],
-          completed_areas: c.completed_areas ?? [],
+          area_order: Array.isArray(c.area_order) ? c.area_order : [],
+          completed_areas: Array.isArray(c.completed_areas) ? c.completed_areas : [],
         })))
       }
       setActivateEmail('')
