@@ -177,25 +177,14 @@ export default function AdminPage() {
       setCoachingRatings(coachingData ?? [])
 
       // Coaching clients
-      const { data: clientsData } = await supabase
-        .from('user_profiles')
-        .select('id, full_name, area_order')
-        .eq('is_coaching_client', true)
-
+      const { data: clientsData } = await supabase.rpc('get_coaching_clients')
       if (clientsData) {
-        const withCompleted = await Promise.all(clientsData.map(async (c) => {
-          const { data: progress } = await supabase
-            .from('level_progress')
-            .select('area')
-            .eq('user_id', c.id)
-          return {
-            id: c.id,
-            full_name: c.full_name ?? null,
-            area_order: c.area_order ?? [],
-            completed_areas: [...new Set((progress ?? []).map((p: { area: string }) => p.area))],
-          }
-        }))
-        setCoachingClients(withCompleted)
+        setCoachingClients(clientsData.map((c: { id: string; full_name: string | null; area_order: string[]; completed_areas: string[] | null }) => ({
+          id: c.id,
+          full_name: c.full_name ?? null,
+          area_order: c.area_order ?? [],
+          completed_areas: c.completed_areas ?? [],
+        })))
       }
 
       // Notifiche admin
@@ -290,22 +279,14 @@ export default function AdminPage() {
       setActivateMsg(`✓ Coaching attivato per ${activateEmail}`)
       // Ricarica lista coaching clients
       const supabase = createClient()
-      const { data: clientsData } = await supabase
-        .from('user_profiles')
-        .select('id, full_name, area_order')
-        .eq('is_coaching_client', true)
+      const { data: clientsData } = await supabase.rpc('get_coaching_clients')
       if (clientsData) {
-        const withCompleted = await Promise.all(clientsData.map(async (c) => {
-          const { data: progress } = await supabase
-            .from('level_progress').select('area').eq('user_id', c.id)
-          return {
-            id: c.id,
-            full_name: c.full_name ?? null,
-            area_order: c.area_order ?? [],
-            completed_areas: [...new Set((progress ?? []).map((p: { area: string }) => p.area))],
-          }
-        }))
-        setCoachingClients(withCompleted)
+        setCoachingClients(clientsData.map((c: { id: string; full_name: string | null; area_order: string[]; completed_areas: string[] | null }) => ({
+          id: c.id,
+          full_name: c.full_name ?? null,
+          area_order: c.area_order ?? [],
+          completed_areas: c.completed_areas ?? [],
+        })))
       }
       setActivateEmail('')
     } else {
