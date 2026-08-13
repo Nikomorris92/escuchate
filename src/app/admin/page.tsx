@@ -313,23 +313,28 @@ export default function AdminPage() {
         <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
           Attiva coaching 1:1
         </h2>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <input
-            type="email"
-            className="input-field"
+            type="text"
             placeholder="Email del cliente…"
             value={activateEmail}
             onChange={(e) => setActivateEmail(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && activateCoaching()}
-            style={{ flex: 1 }}
+            style={{
+              width: '100%', padding: '0.75rem 1rem',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '0.75rem', color: '#ffffff',
+              fontSize: '0.9375rem', outline: 'none',
+              boxSizing: 'border-box',
+            }}
           />
           <button
             className="btn-primary"
             onClick={activateCoaching}
             disabled={activating || !activateEmail.trim()}
-            style={{ flexShrink: 0, whiteSpace: 'nowrap' }}
           >
-            {activating ? 'Attivando…' : 'Attiva coaching'}
+            {activating ? 'Attivando…' : 'Attiva coaching →'}
           </button>
         </div>
         {activateMsg && (
