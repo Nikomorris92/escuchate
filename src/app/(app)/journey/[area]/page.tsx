@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { AREA_MAP } from '@/lib/areas'
 import { AREA_COMPLETION_FEEDBACK } from '@/lib/feedback'
 import { createClient } from '@/lib/supabase/client'
+import { useLang } from '@/lib/LangContext'
 
 const MIN_WORDS = 30
 const MAX_SCORE_WORDS = 150
@@ -30,6 +31,7 @@ export default function JourneyAreaPage() {
   const areaId = params.area as string
   const area = AREA_MAP[areaId]
 
+  const { lang } = useLang()
   const [phase, setPhase] = useState<Phase>('teachings')
   const [reflection, setReflection] = useState('')
   const [practiceNote, setPracticeNote] = useState('')
@@ -486,16 +488,20 @@ export default function JourneyAreaPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <span style={{ fontSize: '1rem' }}>📓</span>
               <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600', margin: 0 }}>
-                Tu quaderno · Follow up 1:1
+                {lang === 'en' ? 'Your journal · Follow up 1:1' : 'Tu cuaderno · Follow up 1:1'}
               </p>
             </div>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.45)', marginBottom: '1rem', lineHeight: '1.6' }}>
-              Scrivi come stai lavorando su quest'area. Nicola lo leggerà prima della tua sessione.
+              {lang === 'en'
+                ? 'Write how you are working on this area. Nicola will read it before your session.'
+                : 'Escribe cómo estás trabajando en esta área. Nicola lo leerá antes de tu sesión.'}
             </p>
             <textarea
               className="reflection-textarea"
               style={{ minHeight: '100px', marginBottom: '0.75rem' }}
-              placeholder={`Come stai lavorando su ${area.title} questa settimana?`}
+              placeholder={lang === 'en'
+                ? `How are you working on ${area.title} this week?`
+                : `¿Cómo estás trabajando en ${area.title} esta semana?`}
               value={journalText}
               onChange={(e) => setJournalText(e.target.value)}
             />
@@ -505,13 +511,15 @@ export default function JourneyAreaPage() {
               disabled={savingJournal || !journalText.trim()}
               style={{ width: '100%', marginBottom: journalEntries.length > 0 ? '1.5rem' : 0 }}
             >
-              {journalSaved ? '✓ Guardado' : savingJournal ? 'Guardando…' : 'Guardar entrada'}
+              {journalSaved ? '✓ Guardado' : savingJournal
+                ? (lang === 'en' ? 'Saving…' : 'Guardando…')
+                : (lang === 'en' ? 'Save entry' : 'Guardar entrada')}
             </button>
 
             {journalEntries.length > 0 && (
               <div>
                 <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-                  Entradas anteriores
+                  {lang === 'en' ? 'Previous entries' : 'Entradas anteriores'}
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {journalEntries.map((e) => (
