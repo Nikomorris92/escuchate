@@ -67,6 +67,28 @@ interface JournalEntry {
   created_at: string
 }
 
+interface CoachingClient {
+  id: string
+  area_order: string[]
+  completed_areas: string[]
+}
+
+interface StudentReflection {
+  id: string
+  area: string
+  reflection_text: string
+  score: number
+  completed_at: string
+}
+
+interface StudentJournal {
+  id: string
+  area: string
+  content: string
+  entry_date: string
+  created_at: string
+}
+
 interface MuroComment {
   id: string
   comment_text: string
@@ -105,6 +127,11 @@ export default function AdminPage() {
   const [activating, setActivating] = useState(false)
   const [activateMsg, setActivateMsg] = useState('')
   const [selectedJournalUser, setSelectedJournalUser] = useState<string | null>(null)
+  const [coachingClients, setCoachingClients] = useState<CoachingClient[]>([])
+  const [expandedStudent, setExpandedStudent] = useState<string | null>(null)
+  const [studentReflections, setStudentReflections] = useState<Record<string, StudentReflection[]>>({})
+  const [studentJournals, setStudentJournals] = useState<Record<string, StudentJournal[]>>({})
+  const [loadingStudent, setLoadingStudent] = useState<string | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -149,6 +176,27 @@ export default function AdminPage() {
         .select('id, user_id, area, rating, note, created_at')
         .order('created_at', { ascending: false })
       setCoachingRatings(coachingData ?? [])
+
+      // Coaching clients
+      const { data: clientsData } = await supabase
+        .from('user_profiles')
+        .select('id, area_order')
+        .eq('is_coaching_client', true)
+
+      if (clientsData) {
+        const withCompleted = await Promise.all(clientsData.map(async (c) => {
+          const { data: progress } = await supabase
+            .from('level_progress')
+            .select('area')
+            .eq('user_id', c.id)
+          return {
+            id: c.id,
+            area_order: c.area_order ?? [],
+            completed_areas: [...new Set((progress ?? []).map((p: { area: string }) => p.area))],
+          }
+        }))
+        setCoachingClients(withCompleted)
+      }
 
       // Notifiche admin
       const { data: notifData } = await supabase
@@ -209,6 +257,23 @@ export default function AdminPage() {
       ))
     }
     setDeletingId(null)
+  }
+
+  async function loadStudentData(userId: string) {
+    if (studentReflections[userId]) {
+      setExpandedStudent(expandedStudent === userId ? null : userId)
+      return
+    }
+    setLoadingStudent(userId)
+    setExpandedStudent(userId)
+    const supabase = createClient()
+    const [reflRes, journalRes] = await Promise.all([
+      supabase.rpc('get_student_reflections', { student_id: userId }),
+      supabase.rpc('get_student_journal', { student_id: userId }),
+    ])
+    setStudentReflections(prev => ({ ...prev, [userId]: reflRes.data ?? [] }))
+    setStudentJournals(prev => ({ ...prev, [userId]: journalRes.data ?? [] }))
+    setLoadingStudent(null)
   }
 
   async function activateCoaching() {
@@ -343,6 +408,162 @@ export default function AdminPage() {
           </p>
         )}
       </div>
+
+      {/* Alunni coaching */}
+      {coachingClients.length > 0 && (
+        <div className="card" style={{ marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1.25rem' }}>
+            👤 Alunni coaching ({coachingClients.length})
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {coachingClients.map((client) => {
+              const email = users.find(u => u.id === client.id)?.email ?? client.id.slice(0, 8)
+              const completedCount = client.completed_areas.length
+              const totalAreas = client.area_order.length
+              const isExpanded = expandedStudent === client.id
+              const reflections = studentReflections[client.id] ?? []
+              const journals = studentJournals[client.id] ?? []
+
+              return (
+                <div key={client.id} style={{
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '0.875rem',
+                  overflow: 'hidden',
+                }}>
+                  {/* Header alunno */}
+                  <button
+                    onClick={() => loadStudentData(client.id)}
+                    style={{
+                      width: '100%', display: 'flex', alignItems: 'center',
+                      justifyContent: 'space-between', padding: '1rem 1.25rem',
+                      background: isExpanded ? 'rgba(196,120,58,0.08)' : 'rgba(255,255,255,0.04)',
+                      border: 'none', cursor: 'pointer', textAlign: 'left',
+                    }}
+                  >
+                    <div>
+                      <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.25rem' }}>
+                        {email}
+                      </p>
+                      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
+                          {completedCount}/{totalAreas} aree completate
+                        </span>
+                        {/* Barra progresso */}
+                        <div style={{ width: '80px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }}>
+                          <div style={{
+                            height: '100%', borderRadius: '2px', background: '#c4783a',
+                            width: totalAreas > 0 ? `${(completedCount / totalAreas) * 100}%` : '0%',
+                          }} />
+                        </div>
+                      </div>
+                    </div>
+                    <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>
+                      {loadingStudent === client.id ? '…' : isExpanded ? '▲' : '▼'}
+                    </span>
+                  </button>
+
+                  {/* Dettaglio alunno */}
+                  {isExpanded && (
+                    <div style={{ padding: '1.25rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+
+                      {/* Percorso aree */}
+                      <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+                        Percorso
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.5rem' }}>
+                        {client.area_order.map((areaId) => {
+                          const done = client.completed_areas.includes(areaId)
+                          return (
+                            <span key={areaId} style={{
+                              fontSize: '0.75rem', padding: '0.2rem 0.625rem',
+                              borderRadius: '9999px',
+                              background: done ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.06)',
+                              border: `1px solid ${done ? 'rgba(74,222,128,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                              color: done ? '#4ade80' : 'rgba(255,255,255,0.4)',
+                            }}>
+                              {done ? '✓ ' : ''}{areaId}
+                            </span>
+                          )
+                        })}
+                      </div>
+
+                      {/* Riflessioni */}
+                      {reflections.length > 0 && (
+                        <div style={{ marginBottom: '1.5rem' }}>
+                          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+                            Riflessioni ({reflections.length})
+                          </p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            {reflections.map((r) => (
+                              <div key={r.id} style={{
+                                padding: '0.875rem 1rem',
+                                background: 'rgba(255,255,255,0.04)',
+                                border: '1px solid rgba(255,255,255,0.07)',
+                                borderRadius: '0.75rem',
+                              }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
+                                  <span style={{ fontSize: '0.6875rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600' }}>
+                                    {r.area}
+                                  </span>
+                                  <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)' }}>
+                                    {new Date(r.completed_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                    {' · '}{r.score} pts
+                                  </span>
+                                </div>
+                                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.65', margin: 0 }}>
+                                  {r.reflection_text}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Journal 1:1 */}
+                      {journals.length > 0 && (
+                        <div>
+                          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+                            📓 Quaderno Follow up ({journals.length})
+                          </p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            {journals.map((j) => (
+                              <div key={j.id} style={{
+                                padding: '0.875rem 1rem',
+                                background: 'rgba(196,120,58,0.05)',
+                                border: '1px solid rgba(196,120,58,0.15)',
+                                borderRadius: '0.75rem',
+                              }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
+                                  <span style={{ fontSize: '0.6875rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600' }}>
+                                    {j.area}
+                                  </span>
+                                  <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)' }}>
+                                    {new Date(j.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                    {' · '}{new Date(j.created_at).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                </div>
+                                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.65', margin: 0 }}>
+                                  {j.content}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {reflections.length === 0 && journals.length === 0 && (
+                        <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '1rem 0' }}>
+                          Nessuna riflessione o nota ancora.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Quaderni coaching */}
       {journalEntries.length > 0 && (
