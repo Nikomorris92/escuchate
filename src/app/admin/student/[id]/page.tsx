@@ -68,6 +68,19 @@ export default function StudentDetailPage() {
       if (journalRes.data) setJournals(journalRes.data)
       if (usersRes.data) setStudentEmail(usersRes.data.email ?? '')
 
+      // Marca come lette tutte le notifiche di questo alunno
+      const { data: unread } = await supabase
+        .from('admin_notifications')
+        .select('id')
+        .eq('user_id', studentId)
+        .eq('read', false)
+      if (unread && unread.length > 0) {
+        await supabase
+          .from('admin_notifications')
+          .update({ read: true })
+          .eq('user_id', studentId)
+      }
+
       setLoading(false)
     }
     load()

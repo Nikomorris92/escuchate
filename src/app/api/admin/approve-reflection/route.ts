@@ -11,10 +11,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { id } = await request.json()
-  const { error } = await supabase
-    .from('level_progress')
-    .update({ approved: true })
-    .eq('id', id)
+  const { error } = await supabase.rpc('approve_reflection', { reflection_id: id })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })
