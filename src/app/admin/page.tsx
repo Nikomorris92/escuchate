@@ -299,11 +299,8 @@ export default function AdminPage() {
   }
 
   async function markNotificationsRead(ids: string[]) {
-    await fetch('/api/admin/coaching-journal', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids }),
-    })
+    const supabase = createClient()
+    await supabase.from('admin_notifications').update({ read: true }).in('id', ids)
     setNotifications(prev => prev.map(n => ids.includes(n.id) ? { ...n, read: true } : n))
   }
 
