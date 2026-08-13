@@ -22,6 +22,8 @@ function computeScore(wordCount: number): number {
 
 type Phase = 'teachings' | 'exercise' | 'exercise2' | 'reflection' | 'done'
 
+type JournalEntry = { id: string; content: string; entry_date: string; created_at: string }
+
 export default function JourneyAreaPage() {
   const params = useParams()
   const router = useRouter()
@@ -41,24 +43,55 @@ export default function JourneyAreaPage() {
   const [sharedName, setSharedName] = useState('')
   const [sharing, setSharing] = useState(false)
 
+  // Coaching journal
+  const [isCoachingClient, setIsCoachingClient] = useState(false)
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
+  const [journalText, setJournalText] = useState('')
+  const [savingJournal, setSavingJournal] = useState(false)
+  const [journalSaved, setJournalSaved] = useState(false)
+
   const wordCount = countWords(reflection)
   const sufficient = wordCount >= MIN_WORDS
 
   useEffect(() => {
-    async function checkAlreadyDone() {
+    async function init() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
-      const { data } = await supabase
-        .from('level_progress')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('area', areaId)
-        .limit(1)
-      if (data && data.length > 0) setAlreadyDone(true)
+
+      const [progressRes, profileRes, journalRes] = await Promise.all([
+        supabase.from('level_progress').select('id').eq('user_id', user.id).eq('area', areaId).limit(1),
+        supabase.from('user_profiles').select('is_coaching_client').eq('id', user.id).single(),
+        fetch(`/api/coaching/journal?area=${areaId}`),
+      ])
+
+      if (progressRes.data && progressRes.data.length > 0) setAlreadyDone(true)
+      if (profileRes.data?.is_coaching_client) {
+        setIsCoachingClient(true)
+        const json = await journalRes.json()
+        setJournalEntries(json.entries ?? [])
+      }
     }
-    checkAlreadyDone()
+    init()
   }, [areaId])
+
+  async function saveJournalEntry() {
+    if (!journalText.trim()) return
+    setSavingJournal(true)
+    const res = await fetch('/api/coaching/journal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ area: areaId, content: journalText }),
+    })
+    const json = await res.json()
+    if (json.entry) {
+      setJournalEntries(prev => [json.entry, ...prev])
+      setJournalText('')
+      setJournalSaved(true)
+      setTimeout(() => setJournalSaved(false), 2000)
+    }
+    setSavingJournal(false)
+  }
 
   if (!area) {
     return (
@@ -446,6 +479,63 @@ export default function JourneyAreaPage() {
         <button className="btn-primary" onClick={() => setPhase(area.practicalExercise ? 'exercise' : 'reflection')}>
           {area.practicalExercise ? 'Ir a los ejercicios →' : 'Ir a la reflexión →'}
         </button>
+
+        {/* Quaderno coaching — visibile solo ai clienti 1:1 */}
+        {isCoachingClient && (
+          <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+              <span style={{ fontSize: '1rem' }}>📓</span>
+              <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600', margin: 0 }}>
+                Tu quaderno · Follow up 1:1
+              </p>
+            </div>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.45)', marginBottom: '1rem', lineHeight: '1.6' }}>
+              Scrivi come stai lavorando su quest'area. Nicola lo leggerà prima della tua sessione.
+            </p>
+            <textarea
+              className="reflection-textarea"
+              style={{ minHeight: '100px', marginBottom: '0.75rem' }}
+              placeholder={`Come stai lavorando su ${area.title} questa settimana?`}
+              value={journalText}
+              onChange={(e) => setJournalText(e.target.value)}
+            />
+            <button
+              className="btn-primary"
+              onClick={saveJournalEntry}
+              disabled={savingJournal || !journalText.trim()}
+              style={{ width: '100%', marginBottom: journalEntries.length > 0 ? '1.5rem' : 0 }}
+            >
+              {journalSaved ? '✓ Guardado' : savingJournal ? 'Guardando…' : 'Guardar entrada'}
+            </button>
+
+            {journalEntries.length > 0 && (
+              <div>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+                  Entradas anteriores
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {journalEntries.map((e) => (
+                    <div key={e.id} style={{
+                      padding: '1rem',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: '0.75rem',
+                    }}>
+                      <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.5rem' }}>
+                        {new Date(e.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        {' · '}
+                        {new Date(e.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                      <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.65', margin: 0 }}>
+                        {e.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

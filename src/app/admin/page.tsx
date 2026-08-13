@@ -48,6 +48,25 @@ interface CoachingRating {
   user_id: string
 }
 
+interface AdminNotification {
+  id: string
+  type: string
+  user_email: string
+  area: string | null
+  message: string
+  read: boolean
+  created_at: string
+}
+
+interface JournalEntry {
+  id: string
+  user_id: string
+  area: string
+  content: string
+  entry_date: string
+  created_at: string
+}
+
 interface MuroComment {
   id: string
   comment_text: string
@@ -80,6 +99,12 @@ export default function AdminPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [approvingId, setApprovingId] = useState<string | null>(null)
   const [coachingRatings, setCoachingRatings] = useState<CoachingRating[]>([])
+  const [notifications, setNotifications] = useState<AdminNotification[]>([])
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
+  const [activateEmail, setActivateEmail] = useState('')
+  const [activating, setActivating] = useState(false)
+  const [activateMsg, setActivateMsg] = useState('')
+  const [selectedJournalUser, setSelectedJournalUser] = useState<string | null>(null)
 
   useEffect(() => {
     async function init() {
@@ -124,6 +149,21 @@ export default function AdminPage() {
         .select('id, user_id, area, rating, note, created_at')
         .order('created_at', { ascending: false })
       setCoachingRatings(coachingData ?? [])
+
+      // Notifiche admin
+      const { data: notifData } = await supabase
+        .from('admin_notifications')
+        .select('id, type, user_email, area, message, read, created_at')
+        .order('created_at', { ascending: false })
+        .limit(50)
+      setNotifications(notifData ?? [])
+
+      // Journal entries
+      const journalRes = await fetch('/api/admin/coaching-journal')
+      if (journalRes.ok) {
+        const json = await journalRes.json()
+        setJournalEntries(json.entries ?? [])
+      }
 
       setLoading(false)
     }
@@ -171,6 +211,34 @@ export default function AdminPage() {
     setDeletingId(null)
   }
 
+  async function activateCoaching() {
+    if (!activateEmail.trim()) return
+    setActivating(true)
+    setActivateMsg('')
+    const res = await fetch('/api/admin/activate-coaching', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-email': ADMIN_EMAIL },
+      body: JSON.stringify({ email: activateEmail.trim() }),
+    })
+    const json = await res.json()
+    if (json.success) {
+      setActivateMsg(`✓ Coaching attivato per ${activateEmail}`)
+      setActivateEmail('')
+    } else {
+      setActivateMsg(`Errore: ${json.error}`)
+    }
+    setActivating(false)
+  }
+
+  async function markNotificationsRead(ids: string[]) {
+    await fetch('/api/admin/coaching-journal', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    })
+    setNotifications(prev => prev.map(n => ids.includes(n.id) ? { ...n, read: true } : n))
+  }
+
   async function handleRefund(chargeId: string) {
     if (!confirm('¿Confirmas el reembolso?')) return
     setRefunding(chargeId)
@@ -198,6 +266,159 @@ export default function AdminPage() {
           ← Volver
         </button>
       </div>
+
+      {/* Notifiche non lette */}
+      {notifications.filter(n => !n.read).length > 0 && (
+        <div className="card" style={{ marginBottom: '2rem', border: '1px solid rgba(196,120,58,0.4)', background: 'rgba(196,120,58,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#c4783a', margin: 0 }}>
+              🔔 Nuovi aggiornamenti ({notifications.filter(n => !n.read).length})
+            </h2>
+            <button
+              onClick={() => markNotificationsRead(notifications.filter(n => !n.read).map(n => n.id))}
+              style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              Segna tutti come letti
+            </button>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            {notifications.filter(n => !n.read).map(n => (
+              <div key={n.id} style={{
+                padding: '0.75rem 1rem',
+                background: 'rgba(255,255,255,0.05)',
+                borderRadius: '0.625rem',
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem',
+              }}>
+                <div>
+                  <p style={{ fontSize: '0.875rem', color: '#ffffff', margin: '0 0 0.2rem', fontWeight: '500' }}>{n.message}</p>
+                  <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', margin: 0 }}>
+                    {new Date(n.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}
+                    {' · '}{new Date(n.created_at).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+                <button
+                  onClick={() => { setSelectedJournalUser(n.user_email); markNotificationsRead([n.id]) }}
+                  style={{ fontSize: '0.75rem', padding: '0.25rem 0.75rem', borderRadius: '0.5rem', background: 'rgba(196,120,58,0.2)', border: '1px solid rgba(196,120,58,0.4)', color: '#c4783a', cursor: 'pointer', flexShrink: 0 }}
+                >
+                  Leggi →
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Attiva coaching */}
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
+          Attiva coaching 1:1
+        </h2>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+          <input
+            type="email"
+            className="input-field"
+            placeholder="Email del cliente…"
+            value={activateEmail}
+            onChange={(e) => setActivateEmail(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && activateCoaching()}
+            style={{ flex: 1 }}
+          />
+          <button
+            className="btn-primary"
+            onClick={activateCoaching}
+            disabled={activating || !activateEmail.trim()}
+            style={{ flexShrink: 0, whiteSpace: 'nowrap' }}
+          >
+            {activating ? 'Attivando…' : 'Attiva coaching'}
+          </button>
+        </div>
+        {activateMsg && (
+          <p style={{ fontSize: '0.875rem', color: activateMsg.startsWith('✓') ? '#4ade80' : '#f87171', marginTop: '0.75rem' }}>
+            {activateMsg}
+          </p>
+        )}
+      </div>
+
+      {/* Quaderni coaching */}
+      {journalEntries.length > 0 && (
+        <div className="card" style={{ marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1rem' }}>
+            📓 Quaderni 1:1
+          </h2>
+
+          {/* Filtro per utente */}
+          {(() => {
+            const uniqueEmails = [...new Set(
+              journalEntries.map(e => users.find(u => u.id === e.user_id)?.email ?? e.user_id.slice(0, 8))
+            )]
+            return (
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+                <button
+                  onClick={() => setSelectedJournalUser(null)}
+                  style={{
+                    fontSize: '0.8125rem', padding: '0.25rem 0.75rem', borderRadius: '9999px', cursor: 'pointer',
+                    background: !selectedJournalUser ? 'rgba(196,120,58,0.2)' : 'rgba(255,255,255,0.06)',
+                    border: `1px solid ${!selectedJournalUser ? 'rgba(196,120,58,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                    color: !selectedJournalUser ? '#c4783a' : 'rgba(255,255,255,0.6)',
+                  }}
+                >
+                  Tutti
+                </button>
+                {uniqueEmails.map(email => (
+                  <button
+                    key={email}
+                    onClick={() => setSelectedJournalUser(email)}
+                    style={{
+                      fontSize: '0.8125rem', padding: '0.25rem 0.75rem', borderRadius: '9999px', cursor: 'pointer',
+                      background: selectedJournalUser === email ? 'rgba(196,120,58,0.2)' : 'rgba(255,255,255,0.06)',
+                      border: `1px solid ${selectedJournalUser === email ? 'rgba(196,120,58,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                      color: selectedJournalUser === email ? '#c4783a' : 'rgba(255,255,255,0.6)',
+                    }}
+                  >
+                    {email}
+                  </button>
+                ))}
+              </div>
+            )
+          })()}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {journalEntries
+              .filter(e => {
+                if (!selectedJournalUser) return true
+                const email = users.find(u => u.id === e.user_id)?.email ?? e.user_id.slice(0, 8)
+                return email === selectedJournalUser
+              })
+              .map(e => {
+                const email = users.find(u => u.id === e.user_id)?.email ?? e.user_id.slice(0, 8)
+                return (
+                  <div key={e.id} style={{
+                    padding: '1rem',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '0.75rem',
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                      <div>
+                        <span style={{ fontSize: '0.6875rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600' }}>
+                          {e.area}
+                        </span>
+                        <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginLeft: '0.5rem' }}>· {email}</span>
+                      </div>
+                      <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)' }}>
+                        {new Date(e.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {' · '}{new Date(e.created_at).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.65', margin: 0 }}>
+                      {e.content}
+                    </p>
+                  </div>
+                )
+              })}
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
