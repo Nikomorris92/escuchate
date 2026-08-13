@@ -38,10 +38,7 @@ export default function CoachingPage() {
 
       setIsCoachingClient(profile?.is_coaching_client ?? false)
 
-      const { data } = await supabase
-        .from('coaching_ratings')
-        .select('id, area, rating, note, created_at')
-        .order('created_at', { ascending: false })
+      const { data } = await supabase.rpc('get_my_coaching_ratings')
 
       setRatings(data ?? [])
       setLoading(false)
@@ -55,14 +52,14 @@ export default function CoachingPage() {
 
     setSaving(areaId)
     const supabase = createClient()
-    const { data, error } = await supabase
-      .from('coaching_ratings')
-      .insert({ area: areaId, rating, note: notes[areaId]?.trim() || null })
-      .select('id, area, rating, note, created_at')
-      .single()
+    const { data, error } = await supabase.rpc('save_coaching_rating', {
+      p_area: areaId,
+      p_rating: rating,
+      p_note: notes[areaId]?.trim() || null,
+    })
 
     if (!error && data) {
-      setRatings(prev => [data, ...prev])
+      setRatings(prev => [data as Rating, ...prev])
       setSelected(prev => ({ ...prev, [areaId]: 0 }))
       setNotes(prev => ({ ...prev, [areaId]: '' }))
       setSaved(areaId)
