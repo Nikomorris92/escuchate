@@ -7,6 +7,10 @@ import { LangProvider } from '@/lib/LangContext'
 export const metadata: Metadata = {
   title: 'Escúchate',
   description: 'Un espacio de reflexión diaria para escucharte y actuar.',
+  icons: {
+    icon: '/logo-v4.png',
+    apple: '/logo-v4.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
