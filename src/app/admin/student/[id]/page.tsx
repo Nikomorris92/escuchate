@@ -63,7 +63,7 @@ export default function StudentDetailPage() {
       setAuthorized(true)
 
       const [profileRes, reflRes, journalRes, ratingsRes] = await Promise.all([
-        supabase.from('user_profiles').select('id, full_name, area_order, total_score, quiz_completed').eq('id', studentId).single(),
+        supabase.rpc('get_student_profile', { student_id: studentId }).single(),
         supabase.rpc('get_student_reflections', { student_id: studentId }),
         supabase.rpc('get_student_journal', { student_id: studentId }),
         supabase.rpc('get_student_ratings', { student_id: studentId }),
