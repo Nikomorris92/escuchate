@@ -69,7 +69,7 @@ export default function StudentDetailPage() {
         supabase.rpc('get_student_ratings', { student_id: studentId }),
       ])
 
-      if (profileRes.data) setProfile(profileRes.data)
+      if (profileRes.data) setProfile(profileRes.data as StudentProfile)
       if (reflRes.data) {
         setReflections(reflRes.data)
         setCompletedAreas(new Set(reflRes.data.map((r: Reflection) => r.area)))
