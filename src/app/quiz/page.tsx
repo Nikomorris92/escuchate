@@ -280,7 +280,7 @@ export default function QuizPage() {
             {t(lang, 'quiz_result_cta_title')}
           </h3>
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', marginBottom: '1.5rem', lineHeight: '1.65' }}
-            dangerouslySetInnerHTML={{ __html: t(lang, 'quiz_result_cta_text').replace('€20.55/year', '<strong style="color:#ffffff">€20.55/year</strong>').replace('€20,55/año', '<strong style="color:#ffffff">€20,55/año</strong>') }}
+            dangerouslySetInnerHTML={{ __html: t(lang, 'quiz_result_cta_text').replace('€50/year', '<strong style="color:#ffffff">€50/year</strong>').replace('€50/año', '<strong style="color:#ffffff">€50/año</strong>') }}
           />
 
           <button className="btn-primary" onClick={handlePay} disabled={paying} style={{ width: '100%', marginBottom: '0.75rem' }}>
