@@ -28,7 +28,7 @@ export default function AdminButton() {
     <div style={{
       position: 'fixed',
       top: '0.875rem',
-      right: isAdmin ? '0.75rem' : '6rem',
+      right: '7.5rem',
       zIndex: 80,
       display: 'flex',
       alignItems: 'center',

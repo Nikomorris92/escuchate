@@ -59,13 +59,19 @@ export default function JourneyAreaPage() {
     async function init() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user) { router.push('/login'); return }
 
       const [progressRes, profileRes, journalRes] = await Promise.all([
         supabase.from('level_progress').select('id').eq('user_id', user.id).eq('area', areaId).limit(1),
-        supabase.from('user_profiles').select('is_coaching_client').eq('id', user.id).single(),
+        supabase.from('user_profiles').select('is_coaching_client, paid').eq('id', user.id).single(),
         fetch(`/api/coaching/journal?area=${areaId}`),
       ])
+
+      const isAdmin = user.email === 'nicola.morea92@gmail.com'
+      if (!profileRes.data?.paid && !isAdmin) {
+        router.push('/quiz')
+        return
+      }
 
       if (progressRes.data && progressRes.data.length > 0) setAlreadyDone(true)
       if (profileRes.data?.is_coaching_client) {

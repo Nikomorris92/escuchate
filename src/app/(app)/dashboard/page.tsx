@@ -21,6 +21,11 @@ export default async function DashboardPage() {
     redirect('/onboarding')
   }
 
+  const isAdmin = user.email === 'nicola.morea92@gmail.com'
+  if (!profile.paid && !isAdmin) {
+    redirect('/quiz')
+  }
+
   const { data: completedLevels } = await supabase
     .from('level_progress')
     .select('area')
