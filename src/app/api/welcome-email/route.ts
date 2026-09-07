@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
           <p style="font-size: 0.8125rem; color: rgba(255,255,255,0.3); margin: 32px 0 0; line-height: 1.6;">
             Esta app no es un servicio médico ni terapéutico.<br/>
             Si estás siguiendo una terapia o tratamiento, sigue haciéndolo.<br/><br/>
-            ¿Preguntas? Escríbenos a <a href="mailto:escuchateatimismo@gmail.com" style="color: rgba(255,255,255,0.5);">escuchateatimismo@gmail.com</a>
+            ¿Preguntas? Escríbenos a <a href="mailto:escuchateati26@gmail.com" style="color: rgba(255,255,255,0.5);">escuchateati26@gmail.com</a>
           </p>
         </div>
       `,

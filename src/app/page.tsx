@@ -75,8 +75,8 @@ export default function HomePage() {
           <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.375rem' }}>
             {t(lang, 'home_contact')}
           </p>
-          <a href="mailto:escuchateatimismo@gmail.com" style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>
-            escuchateatimismo@gmail.com
+          <a href="mailto:escuchateati26@gmail.com" style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>
+            escuchateati26@gmail.com
           </a>
         </div>
       </div>

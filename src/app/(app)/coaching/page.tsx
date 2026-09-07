@@ -88,7 +88,7 @@ export default function CoachingPage() {
         <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.7', marginBottom: '1.5rem' }}>
           Esta sección es exclusiva para alumnos del programa de coaching 1:1 con Nicola.
         </p>
-        <a href="mailto:escuchateatimismo@gmail.com" style={{
+        <a href="mailto:escuchateati26@gmail.com" style={{
           display: 'inline-block', padding: '0.75rem 1.5rem',
           background: 'rgba(196,120,58,0.15)', border: '1px solid rgba(196,120,58,0.3)',
           borderRadius: '0.75rem', color: '#c4783a', fontWeight: '600',
