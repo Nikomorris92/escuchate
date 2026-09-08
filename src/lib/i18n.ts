@@ -10,6 +10,24 @@ export const translations = {
     home_disclaimer: 'Esta app no es un servicio médico ni terapéutico.\nSi estás siguiendo una terapia o tratamiento, sigue haciéndolo.',
     home_contact: 'Contacto',
 
+    // Dashboard
+    dash_level_current: 'Nivel actual',
+    dash_level_of: 'de',
+    dash_go_level: 'Ir al nivel',
+    dash_journey: 'Tu recorrido',
+    dash_completed: 'Has completado tu recorrido',
+    dash_completed_sub: 'Vuelve cuando quieras. La plataforma está en constante actualización con nuevos puntos de reflexión.',
+    dash_advanced: 'Continuar al recorrido avanzado',
+    dash_advanced_soon: 'Sigue reflexionando para desbloquear el recorrido avanzado.',
+    dash_start: 'Mi punto de partida',
+    dash_start_sub: 'Feedback inicial · Mis reflexiones',
+    dash_wall: 'Muro de reflexiones',
+    dash_wall_sub: 'Lee lo que otros están descubriendo',
+    dash_coaching: 'Mi progreso — Coaching',
+    dash_coaching_sub: 'Puntúa tus áreas y ve tu evolución',
+    dash_admin: 'Panel Admin',
+    dash_signout: 'Cerrar sesión',
+
     // Login
     login_title: 'Bienvenido de nuevo',
     login_subtitle: 'Tu reflexión te espera.',
@@ -116,6 +134,24 @@ export const translations = {
     home_login: 'I already have an account',
     home_disclaimer: 'This app is not a medical or therapeutic service.\nIf you are following a therapy or treatment, please continue doing so.',
     home_contact: 'Contact',
+
+    // Dashboard
+    dash_level_current: 'Current level',
+    dash_level_of: 'of',
+    dash_go_level: 'Go to level',
+    dash_journey: 'Your journey',
+    dash_completed: 'You have completed your journey',
+    dash_completed_sub: 'Come back whenever you want. The platform is constantly updated with new reflection points.',
+    dash_advanced: 'Continue to the advanced journey',
+    dash_advanced_soon: 'Keep reflecting to unlock the advanced journey.',
+    dash_start: 'My starting point',
+    dash_start_sub: 'Initial feedback · My reflections',
+    dash_wall: 'Reflection wall',
+    dash_wall_sub: 'Read what others are discovering',
+    dash_coaching: 'My progress — Coaching',
+    dash_coaching_sub: 'Rate your areas and see your evolution',
+    dash_admin: 'Admin Panel',
+    dash_signout: 'Sign out',
 
     // Login
     login_title: 'Welcome back',

@@ -1,45 +1,81 @@
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/client'
 import { AREA_MAP } from '@/lib/areas'
-import LogoTopRight from '@/components/LogoTopRight'
+import { useLang } from '@/lib/LangContext'
+import { t } from '@/lib/i18n'
 import type { Area } from '@/types'
 
-export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
-  if (!user) redirect('/login')
+interface Profile {
+  area_order: Area[]
+  quiz_completed: boolean
+  paid: boolean
+  total_score: number
+  advanced_unlocked: boolean
+  is_coaching_client: boolean
+}
 
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+export default function DashboardPage() {
+  const router = useRouter()
+  const { lang } = useLang()
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [completedAreas, setCompletedAreas] = useState<Set<string>>(new Set())
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  if (!profile || !profile.quiz_completed) {
-    redirect('/onboarding')
-  }
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { router.push('/login'); return }
 
-  const isAdmin = user.email === 'nicola.morea92@gmail.com'
-  if (!profile.paid && !isAdmin) {
-    redirect('/quiz')
-  }
+      setUserEmail(user.email ?? null)
 
-  const { data: completedLevels } = await supabase
-    .from('level_progress')
-    .select('area')
-    .eq('user_id', user.id)
+      const { data: prof } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
 
-  const completedAreas = new Set((completedLevels ?? []).map((l: { area: string }) => l.area))
+      if (!prof || !prof.quiz_completed) { router.push('/onboarding'); return }
+
+      const isAdmin = user.email === ADMIN_EMAIL
+      if (!prof.paid && !isAdmin) { router.push('/quiz'); return }
+
+      const { data: levels } = await supabase
+        .from('level_progress')
+        .select('area')
+        .eq('user_id', user.id)
+
+      setCompletedAreas(new Set((levels ?? []).map((l: { area: string }) => l.area)))
+      setProfile(prof as Profile)
+      setLoading(false)
+    }
+    load()
+  }, [router])
+
+  if (loading) return (
+    <div className="page-container">
+      <p style={{ color: 'rgba(255,255,255,0.4)' }}>Cargando…</p>
+    </div>
+  )
+
+  if (!profile) return null
+
   const areaOrder: Area[] = (profile.area_order ?? []).filter((a: string) => AREA_MAP[a])
   const currentIndex = areaOrder.findIndex((a) => !completedAreas.has(a))
   const currentArea = currentIndex !== -1 ? areaOrder[currentIndex] : null
   const allCompleted = currentIndex === -1
+  const isAdmin = userEmail === ADMIN_EMAIL
 
   return (
     <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}>
-<div style={{ width: '100%', maxWidth: '480px' }}>
+      <div style={{ width: '100%', maxWidth: '480px' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
@@ -54,29 +90,29 @@ export default async function DashboardPage() {
           <div className="card" style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <p style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>✦</p>
             <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', marginBottom: '0.5rem' }}>
-              Has completado tu recorrido
+              {t(lang, 'dash_completed')}
             </h2>
             <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.5rem' }}>
-              Vuelve cuando quieras. La plataforma está en constante actualización con nuevos puntos de reflexión.
+              {t(lang, 'dash_completed_sub')}
             </p>
             {profile.advanced_unlocked ? (
               <Link href="/journey/advanced" className="btn-primary">
-                Continuar al recorrido avanzado
+                {t(lang, 'dash_advanced')}
               </Link>
             ) : (
               <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)' }}>
-                Sigue reflexionando para desbloquear el recorrido avanzado.
+                {t(lang, 'dash_advanced_soon')}
               </p>
             )}
           </div>
         ) : currentArea ? (
           <div style={{ marginBottom: '2rem' }}>
             <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Nivel actual
+              {t(lang, 'dash_level_current')}
             </p>
             <div className="card">
               <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.375rem' }}>
-                {currentIndex + 1} de {areaOrder.length}
+                {currentIndex + 1} {t(lang, 'dash_level_of')} {areaOrder.length}
               </p>
               <h2 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
                 {AREA_MAP[currentArea]?.title}
@@ -85,7 +121,7 @@ export default async function DashboardPage() {
                 "{AREA_MAP[currentArea]?.subtitle}"
               </p>
               <Link href={`/journey/${currentArea}`} className="btn-primary">
-                Ir al nivel
+                {t(lang, 'dash_go_level')}
               </Link>
             </div>
           </div>
@@ -93,7 +129,7 @@ export default async function DashboardPage() {
 
         {/* Lista percorso */}
         <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-          Tu recorrido
+          {t(lang, 'dash_journey')}
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '2rem' }}>
           {areaOrder.map((areaId, i) => {
@@ -108,7 +144,6 @@ export default async function DashboardPage() {
                   border: `1.5px solid ${isCurrent ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.08)'}`,
                   borderRadius: '0.75rem',
                   opacity: done ? 0.5 : 1,
-                  cursor: 'pointer',
                 }}>
                   <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', width: '1.25rem', textAlign: 'right', flexShrink: 0 }}>
                     {done ? '✓' : i + 1}
@@ -122,86 +157,42 @@ export default async function DashboardPage() {
           })}
         </div>
 
-        <Link href="/inicio" style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '1rem 1.25rem',
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: '0.875rem',
-          textDecoration: 'none',
-          marginBottom: '1rem',
-        }}>
+        <Link href="/inicio" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
           <div>
-            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
-              Mi punto de partida
-            </p>
-            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
-              Feedback inicial · Mis reflexiones
-            </p>
+            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{t(lang, 'dash_start')}</p>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>{t(lang, 'dash_start_sub')}</p>
           </div>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
         </Link>
 
-        <Link href="/muro" style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '1rem 1.25rem',
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: '0.875rem',
-          textDecoration: 'none',
-          marginBottom: '1rem',
-        }}>
+        <Link href="/muro" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
           <div>
-            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
-              Muro de reflexiones
-            </p>
-            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
-              Lee lo que otros están descubriendo
-            </p>
+            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{t(lang, 'dash_wall')}</p>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>{t(lang, 'dash_wall_sub')}</p>
           </div>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
         </Link>
 
         {profile.is_coaching_client && (
-          <Link href="/coaching" style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '1rem 1.25rem',
-            background: 'rgba(196,120,58,0.08)',
-            border: '1px solid rgba(196,120,58,0.2)',
-            borderRadius: '0.875rem',
-            textDecoration: 'none',
-            marginBottom: '1rem',
-          }}>
+          <Link href="/coaching" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(196,120,58,0.08)', border: '1px solid rgba(196,120,58,0.2)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
             <div>
-              <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
-                Mi progreso — Coaching
-              </p>
-              <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
-                Puntúa tus áreas y ve tu evolución
-              </p>
+              <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{t(lang, 'dash_coaching')}</p>
+              <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>{t(lang, 'dash_coaching_sub')}</p>
             </div>
             <span style={{ color: 'rgba(196,120,58,0.7)', fontSize: '1rem' }}>→</span>
           </Link>
         )}
 
-        {user.email === 'nicola.morea92@gmail.com' && (
-          <Link href="/admin" style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '0.875rem 1.25rem',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '0.875rem',
-            textDecoration: 'none',
-            marginBottom: '1rem',
-          }}>
-            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', margin: 0 }}>Panel Admin</p>
+        {isAdmin && (
+          <Link href="/admin" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1.25rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', margin: 0 }}>{t(lang, 'dash_admin')}</p>
             <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)' }}>→</span>
           </Link>
         )}
 
         <form action="/api/auth/signout" method="post" style={{ textAlign: 'center' }}>
           <button type="submit" className="btn-ghost">
-            Cerrar sesión
+            {t(lang, 'dash_signout')}
           </button>
         </form>
       </div>
