@@ -24,6 +24,12 @@ export default function AdminButton() {
   const isAuthPage = pathname?.startsWith('/login') || pathname?.startsWith('/signup')
   if (isAuthPage || !email) return null
 
+  async function handleSignOut() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    window.location.href = '/login'
+  }
+
   return (
     <div style={{
       position: 'fixed',
@@ -31,8 +37,9 @@ export default function AdminButton() {
       right: '7.5rem',
       zIndex: 80,
       display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      gap: '0.25rem',
     }}>
       {/* Email badge */}
       <div style={{
@@ -50,6 +57,21 @@ export default function AdminButton() {
           {email}
         </span>
       </div>
+
+      {/* Logout */}
+      <button
+        onClick={handleSignOut}
+        style={{
+          fontSize: '0.625rem',
+          color: 'rgba(255,255,255,0.35)',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '0 0.625rem',
+        }}
+      >
+        Cerrar sesión
+      </button>
 
       {/* Bottone A solo per admin */}
       {isAdmin && !pathname?.startsWith('/admin') && (
