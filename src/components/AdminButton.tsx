@@ -35,12 +35,18 @@ export default function AdminButton() {
     <>
       {/* Selettore lingua — in alto a sinistra */}
       <div style={{ position: 'fixed', top: '0.875rem', left: '0.875rem', zIndex: 90, display: 'flex', gap: '0.375rem' }}>
-        <button onClick={() => setLang('es')} title="Español" style={{ fontSize: '1.375rem', background: 'none', border: 'none', cursor: 'pointer', opacity: lang === 'es' ? 1 : 0.35, transition: 'opacity 0.2s', padding: '0.125rem' }}>
-          🇪🇸
-        </button>
-        <button onClick={() => setLang('en')} title="English" style={{ fontSize: '1.375rem', background: 'none', border: 'none', cursor: 'pointer', opacity: lang === 'en' ? 1 : 0.35, transition: 'opacity 0.2s', padding: '0.125rem' }}>
-          🇬🇧
-        </button>
+        {(['es', 'en'] as const).map((l) => (
+          <button
+            key={l}
+            onClick={() => setLang(l)}
+            title={l === 'es' ? 'Español' : 'English'}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = lang === l ? '1' : '0.35')}
+            style={{ fontSize: '1.375rem', background: 'none', border: 'none', cursor: 'pointer', opacity: lang === l ? 1 : 0.35, transition: 'opacity 0.15s', padding: '0.125rem' }}
+          >
+            {l === 'es' ? '🇪🇸' : '🇬🇧'}
+          </button>
+        ))}
       </div>
 
       {/* Badge email + logout + admin — in alto a destra */}

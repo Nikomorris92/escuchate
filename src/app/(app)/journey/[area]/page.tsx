@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AREA_MAP } from '@/lib/areas'
@@ -31,7 +31,7 @@ export default function JourneyAreaPage() {
   const router = useRouter()
   const areaId = params.area as string
   const { lang } = useLang()
-  const area = lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId]
+  const area = useMemo(() => lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId], [lang, areaId])
   const [phase, setPhase] = useState<Phase>('teachings')
   const [reflection, setReflection] = useState('')
   const [practiceNote, setPracticeNote] = useState('')
