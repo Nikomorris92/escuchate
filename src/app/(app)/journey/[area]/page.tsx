@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AREA_MAP } from '@/lib/areas'
+import { AREA_MAP_EN } from '@/lib/areas_en'
 import { AREA_COMPLETION_FEEDBACK } from '@/lib/feedback'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/lib/LangContext'
@@ -29,7 +30,7 @@ export default function JourneyAreaPage() {
   const params = useParams()
   const router = useRouter()
   const areaId = params.area as string
-  const area = AREA_MAP[areaId]
+  const area = lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId]
 
   const { lang } = useLang()
   const [phase, setPhase] = useState<Phase>('teachings')

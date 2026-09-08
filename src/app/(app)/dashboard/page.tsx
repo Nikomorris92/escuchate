@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { AREA_MAP } from '@/lib/areas'
+import { AREA_MAP, AREA_TITLES_EN } from '@/lib/areas'
+import { AREA_MAP_EN } from '@/lib/areas_en'
 import { useLang } from '@/lib/LangContext'
 import { t } from '@/lib/i18n'
 import type { Area } from '@/types'
@@ -72,6 +73,8 @@ export default function DashboardPage() {
   const currentArea = currentIndex !== -1 ? areaOrder[currentIndex] : null
   const allCompleted = currentIndex === -1
   const isAdmin = userEmail === ADMIN_EMAIL
+  const areaTitle = (id: string) => lang === 'en' ? (AREA_TITLES_EN[id] ?? AREA_MAP[id]?.title) : AREA_MAP[id]?.title
+  const areaSubtitle = (id: string) => lang === 'en' ? (AREA_MAP_EN[id]?.subtitle ?? AREA_MAP[id]?.subtitle) : AREA_MAP[id]?.subtitle
 
   return (
     <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}>
@@ -115,10 +118,10 @@ export default function DashboardPage() {
                 {currentIndex + 1} {t(lang, 'dash_level_of')} {areaOrder.length}
               </p>
               <h2 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
-                {AREA_MAP[currentArea]?.title}
+                {areaTitle(currentArea)}
               </h2>
               <p style={{ fontSize: '0.9375rem', color: '#c4783a', fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                "{AREA_MAP[currentArea]?.subtitle}"
+                "{areaSubtitle(currentArea)}"
               </p>
               <Link href={`/journey/${currentArea}`} className="btn-primary">
                 {t(lang, 'dash_go_level')}
@@ -149,7 +152,7 @@ export default function DashboardPage() {
                     {done ? '✓' : i + 1}
                   </span>
                   <span style={{ fontSize: '0.9375rem', color: '#ffffff', fontWeight: isCurrent ? '500' : '400' }}>
-                    {AREA_MAP[areaId]?.title}
+                    {areaTitle(areaId)}
                   </span>
                 </div>
               </Link>
