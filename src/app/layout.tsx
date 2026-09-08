@@ -22,8 +22,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <LangProvider>
           {children}
+          <AdminButton />
         </LangProvider>
-        <AdminButton />
       </body>
     </html>
   )
