@@ -30,9 +30,8 @@ export default function JourneyAreaPage() {
   const params = useParams()
   const router = useRouter()
   const areaId = params.area as string
-  const area = lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId]
-
   const { lang } = useLang()
+  const area = lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId]
   const [phase, setPhase] = useState<Phase>('teachings')
   const [reflection, setReflection] = useState('')
   const [practiceNote, setPracticeNote] = useState('')
