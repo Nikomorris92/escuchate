@@ -24,7 +24,7 @@ export const translations = {
     dash_wall: 'Muro de reflexiones',
     dash_wall_sub: 'Lee lo que otros están descubriendo',
     dash_coaching: 'Mi progreso — Coaching',
-    dash_coaching_sub: 'Puntúa tus áreas y ve tu evolución',
+    dash_coaching_sub: 'Cómo me siento · Mi cuaderno',
     dash_admin: 'Panel Admin',
     dash_signout: 'Cerrar sesión',
 
@@ -149,7 +149,7 @@ export const translations = {
     dash_wall: 'Reflection wall',
     dash_wall_sub: 'Read what others are discovering',
     dash_coaching: 'My progress — Coaching',
-    dash_coaching_sub: 'Rate your areas and see your evolution',
+    dash_coaching_sub: 'How I feel · My journal',
     dash_admin: 'Admin Panel',
     dash_signout: 'Sign out',
 

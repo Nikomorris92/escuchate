@@ -22,8 +22,7 @@ export default function AdminButton() {
     })
   }, [])
 
-  const isAuthPage = pathname?.startsWith('/login') || pathname?.startsWith('/signup')
-  if (isAuthPage || !email) return null
+  if (!email) return null
 
   async function handleSignOut() {
     const supabase = createClient()
