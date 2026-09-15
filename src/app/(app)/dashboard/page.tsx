@@ -13,17 +13,15 @@ import type { Area } from '@/types'
 const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
 function CancelSubscriptionButton({ lang }: { lang: string }) {
+  const [showModal, setShowModal] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [done, setDone] = useState(false)
 
-  async function handleCancel() {
-    const msg = lang === 'en'
-      ? 'Are you sure you want to cancel your subscription? You will keep access until the end of the current period.'
-      : '¿Seguro que quieres cancelar tu suscripción? Mantendrás el acceso hasta el final del período actual.'
-    if (!confirm(msg)) return
+  async function handleConfirm() {
     setCancelling(true)
     const res = await fetch('/api/cancel-subscription', { method: 'POST' })
     setCancelling(false)
+    setShowModal(false)
     if (res.ok) setDone(true)
   }
 
@@ -34,15 +32,60 @@ function CancelSubscriptionButton({ lang }: { lang: string }) {
   )
 
   return (
-    <button
-      onClick={handleCancel}
-      disabled={cancelling}
-      style={{ fontSize: '0.75rem', color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-    >
-      {cancelling
-        ? (lang === 'en' ? 'Cancelling…' : 'Cancelando…')
-        : (lang === 'en' ? 'Cancel subscription' : 'Cancelar suscripción')}
-    </button>
+    <>
+      <button
+        onClick={() => setShowModal(true)}
+        style={{ fontSize: '0.75rem', color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+      >
+        {lang === 'en' ? 'Cancel subscription' : 'Cancelar suscripción'}
+      </button>
+
+      {showModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 200,
+          background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '1.5rem',
+        }}>
+          <div className="card" style={{ maxWidth: '360px', width: '100%', textAlign: 'center' }}>
+            <p style={{ fontSize: '1.375rem', marginBottom: '0.75rem' }}>⚠️</p>
+            <h3 style={{ fontSize: '1rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.625rem' }}>
+              {lang === 'en' ? 'Cancel subscription?' : '¿Cancelar suscripción?'}
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.65', marginBottom: '1.5rem' }}>
+              {lang === 'en'
+                ? 'You will keep access until the end of the current period. After that, you will lose access to the platform.'
+                : 'Mantendrás el acceso hasta el final del período actual. Después perderás el acceso a la plataforma.'}
+            </p>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button
+                onClick={() => setShowModal(false)}
+                style={{
+                  flex: 1, padding: '0.75rem', borderRadius: '0.75rem',
+                  background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                  color: '#ffffff', cursor: 'pointer', fontSize: '0.9375rem', fontWeight: '500',
+                }}
+              >
+                {lang === 'en' ? 'Keep it' : 'Mantener'}
+              </button>
+              <button
+                onClick={handleConfirm}
+                disabled={cancelling}
+                style={{
+                  flex: 1, padding: '0.75rem', borderRadius: '0.75rem',
+                  background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.35)',
+                  color: '#f87171', cursor: 'pointer', fontSize: '0.9375rem', fontWeight: '600',
+                }}
+              >
+                {cancelling
+                  ? (lang === 'en' ? 'Cancelling…' : 'Cancelando…')
+                  : (lang === 'en' ? 'Cancel' : 'Cancelar')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
