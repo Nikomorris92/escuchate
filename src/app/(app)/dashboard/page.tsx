@@ -12,6 +12,40 @@ import type { Area } from '@/types'
 
 const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
+function CancelSubscriptionButton({ lang }: { lang: string }) {
+  const [cancelling, setCancelling] = useState(false)
+  const [done, setDone] = useState(false)
+
+  async function handleCancel() {
+    const msg = lang === 'en'
+      ? 'Are you sure you want to cancel your subscription? You will keep access until the end of the current period.'
+      : '¿Seguro que quieres cancelar tu suscripción? Mantendrás el acceso hasta el final del período actual.'
+    if (!confirm(msg)) return
+    setCancelling(true)
+    const res = await fetch('/api/cancel-subscription', { method: 'POST' })
+    setCancelling(false)
+    if (res.ok) setDone(true)
+  }
+
+  if (done) return (
+    <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>
+      {lang === 'en' ? 'Cancellation scheduled' : 'Cancelación programada'}
+    </span>
+  )
+
+  return (
+    <button
+      onClick={handleCancel}
+      disabled={cancelling}
+      style={{ fontSize: '0.75rem', color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+    >
+      {cancelling
+        ? (lang === 'en' ? 'Cancelling…' : 'Cancelando…')
+        : (lang === 'en' ? 'Cancel subscription' : 'Cancelar suscripción')}
+    </button>
+  )
+}
+
 interface Profile {
   area_order: Area[]
   quiz_completed: boolean
@@ -193,11 +227,16 @@ export default function DashboardPage() {
           </Link>
         )}
 
-        <form action="/api/auth/signout" method="post" style={{ textAlign: 'center' }}>
-          <button type="submit" className="btn-ghost">
-            {t(lang, 'dash_signout')}
-          </button>
-        </form>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+          <form action="/api/auth/signout" method="post">
+            <button type="submit" className="btn-ghost" style={{ padding: 0 }}>
+              {t(lang, 'dash_signout')}
+            </button>
+          </form>
+          {!isAdmin && profile.paid && (
+            <CancelSubscriptionButton lang={lang} />
+          )}
+        </div>
       </div>
     </div>
   )

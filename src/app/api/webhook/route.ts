@@ -31,12 +31,28 @@ export async function POST(request: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
     const userId = session.client_reference_id
+    const subscriptionId = session.subscription as string | null
 
     if (userId) {
       const { error } = await supabaseAnon.rpc('set_user_paid', { p_user_id: userId })
       if (error) console.error('set_user_paid error:', error)
       else console.log('User marked as paid:', userId)
+
+      if (subscriptionId) {
+        await supabaseAnon
+          .from('user_profiles')
+          .update({ stripe_subscription_id: subscriptionId })
+          .eq('id', userId)
+      }
     }
+  }
+
+  if (event.type === 'customer.subscription.deleted') {
+    const sub = event.data.object as Stripe.Subscription
+    await supabaseAnon
+      .from('user_profiles')
+      .update({ paid: false, stripe_subscription_id: null })
+      .eq('stripe_subscription_id', sub.id)
   }
 
   return NextResponse.json({ received: true })
