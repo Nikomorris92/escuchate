@@ -561,12 +561,16 @@ export default function JourneyAreaPage() {
             : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
         </button>
 
-        {/* Riflessioni passate per quest'area */}
-        {pastReflections.length > 0 && (
-          <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
-              {lang === 'en' ? 'My reflections on this area' : 'Mis reflexiones sobre esta área'}
+        {/* Riflessioni passate per quest'area — sempre visibili */}
+        <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
+            {lang === 'en' ? 'My reflections on this area' : 'Mis reflexiones sobre esta área'}
+          </p>
+          {pastReflections.length === 0 ? (
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>
+              {lang === 'en' ? 'Complete this area to see your reflections here.' : 'Completa esta área para ver tus reflexiones aquí.'}
             </p>
+          ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {pastReflections.map((r) => (
                 <div key={r.id} style={{
@@ -590,8 +594,8 @@ export default function JourneyAreaPage() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Quaderno coaching — visibile solo ai clienti 1:1 */}
         {isCoachingClient && (
