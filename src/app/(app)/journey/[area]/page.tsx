@@ -372,7 +372,7 @@ export default function JourneyAreaPage() {
           <textarea
             className="reflection-textarea"
             style={{ minHeight: '100px' }}
-            placeholder="(Opcional) Escribe cómo fue…"
+            placeholder={lang === 'en' ? '(Optional) Write how it went…' : '(Opcional) Escribe cómo fue…'}
             value={practiceNote}
             onChange={(e) => setPracticeNote(e.target.value)}
           />
@@ -382,7 +382,9 @@ export default function JourneyAreaPage() {
             style={{ marginTop: '1.5rem' }}
             onClick={() => setPhase(area.secondExercise ? 'exercise2' : 'reflection')}
           >
-            {area.secondExercise ? 'Siguiente ejercicio →' : 'Ir a la reflexión →'}
+            {area.secondExercise
+              ? (lang === 'en' ? 'Next exercise →' : 'Siguiente ejercicio →')
+              : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
           </button>
         </div>
       </div>
@@ -420,7 +422,7 @@ export default function JourneyAreaPage() {
           <textarea
             className="reflection-textarea"
             style={{ minHeight: '140px' }}
-            placeholder="Escribe aquí tu carta…"
+            placeholder={lang === 'en' ? 'Write your letter here…' : 'Escribe aquí tu carta…'}
             value={practiceNote}
             onChange={(e) => setPracticeNote(e.target.value)}
           />
@@ -430,7 +432,7 @@ export default function JourneyAreaPage() {
             style={{ marginTop: '1.5rem' }}
             onClick={() => setPhase('reflection')}
           >
-            Ir a la reflexión →
+            {lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →'}
           </button>
         </div>
       </div>
