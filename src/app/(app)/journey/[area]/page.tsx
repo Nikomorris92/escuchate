@@ -117,7 +117,7 @@ export default function JourneyAreaPage() {
 
   async function handleSubmit() {
     if (!sufficient) {
-      setError('Todavía no es suficiente para detenerte a pensar de verdad. Intenta ir un poco más a fondo.')
+      setError(lang === 'en' ? 'Not enough yet to really stop and think. Try going a little deeper.' : 'Todavía no es suficiente para detenerte a pensar de verdad. Intenta ir un poco más a fondo.')
       return
     }
     setError('')
@@ -149,7 +149,7 @@ export default function JourneyAreaPage() {
       setPhase('done')
     } catch (err) {
       console.error('handleSubmit error:', err)
-      setError('Hubo un error al guardar. Inténtalo de nuevo.')
+      setError(lang === 'en' ? 'There was an error saving. Please try again.' : 'Hubo un error al guardar. Inténtalo de nuevo.')
     } finally {
       setSaving(false)
     }
@@ -187,7 +187,7 @@ export default function JourneyAreaPage() {
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>✦</p>
             <h2 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
-              Nivel completado
+              {lang === 'en' ? 'Level complete' : 'Nivel completado'}
             </h2>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', marginBottom: '1.25rem' }}>
               {area.title}
@@ -231,13 +231,13 @@ export default function JourneyAreaPage() {
             ) : (
               <>
                 <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)', lineHeight: '1.6', marginBottom: '1rem' }}>
-                  Tu reflexión puede ayudar a otras personas en su recorrido. ¿Quieres compartirla en el muro?
+                  {lang === 'en' ? 'Your reflection can help other people on their journey. Would you like to share it on the wall?' : 'Tu reflexión puede ayudar a otras personas en su recorrido. ¿Quieres compartirla en el muro?'}
                 </p>
                 <input
                   className="input-field"
                   style={{ marginBottom: '0.75rem', fontSize: '0.875rem' }}
                   type="text"
-                  placeholder="Tu nombre (opcional — si no, aparece anónimo)"
+                  placeholder={lang === 'en' ? 'Your name (optional — anonymous if blank)' : 'Tu nombre (opcional — si no, aparece anónimo)'}
                   value={sharedName}
                   onChange={(e) => setSharedName(e.target.value)}
                   maxLength={40}
@@ -248,14 +248,14 @@ export default function JourneyAreaPage() {
                   onClick={handleShare}
                   disabled={sharing}
                 >
-                  {sharing ? 'Compartiendo…' : 'Compartir mi reflexión'}
+                  {sharing ? (lang === 'en' ? 'Sharing…' : 'Compartiendo…') : (lang === 'en' ? 'Share my reflection' : 'Compartir mi reflexión')}
                 </button>
               </>
             )}
           </div>
 
           <button className="btn-primary" onClick={() => router.push('/dashboard')}>
-            Volver al recorrido
+            {lang === 'en' ? 'Back to journey' : 'Volver al recorrido'}
           </button>
         </div>
       </div>
@@ -273,14 +273,14 @@ export default function JourneyAreaPage() {
           </button>
 
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            Reflexión · {area.title}
+            {lang === 'en' ? 'Reflection' : 'Reflexión'} · {area.title}
           </p>
           <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', lineHeight: '1.6', marginBottom: '1.5rem' }}>
             {area.reflection}
           </h2>
 
           <p style={{ fontSize: '0.8125rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.6', marginBottom: '0.875rem' }}>
-            Tómate este trabajo en serio. Las reflexiones son para ti — no para cumplir. A nada sirve engañarte: escribir lo que crees que hay que escribir, o pedirle a una IA que lo haga por ti. El único que gana o pierde aquí eres tú.
+            {lang === 'en' ? 'Take this seriously. Reflections are for you — not to tick a box. There is no point in deceiving yourself: writing what you think you should write, or asking an AI to do it for you. The only one who wins or loses here is you.' : 'Tómate este trabajo en serio. Las reflexiones son para ti — no para cumplir. A nada sirve engañarte: escribir lo que crees que hay que escribir, o pedirle a una IA que lo haga por ti. El único que gana o pierde aquí eres tú.'}
           </p>
           <textarea
             className="reflection-textarea"
@@ -289,7 +289,7 @@ export default function JourneyAreaPage() {
             onChange={(e) => setReflection(e.target.value)}
           />
           <p className={`word-count${sufficient ? ' sufficient' : ''}`}>
-            {wordCount} / {MIN_WORDS} palabras mínimas
+            {wordCount} / {MIN_WORDS} {lang === 'en' ? 'minimum words' : 'palabras mínimas'}
           </p>
 
           {error && (
@@ -304,7 +304,7 @@ export default function JourneyAreaPage() {
             onClick={handleSubmit}
             disabled={saving}
           >
-            {saving ? 'Guardando…' : 'Completar nivel'}
+            {saving ? (lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'en' ? 'Complete level' : 'Completar nivel')}
           </button>
 
           <p className="disclaimer">
@@ -467,7 +467,7 @@ export default function JourneyAreaPage() {
           }}>
             <span style={{ fontSize: '0.875rem', color: '#c4783a' }}>✓</span>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-              Ya completaste este nivel. Puedes volver a hacerlo — cada vez que lo relees, lo haces desde un lugar diferente.
+              {lang === 'en' ? 'You already completed this level. You can redo it — each time you re-read it, you do so from a different place.' : 'Ya completaste este nivel. Puedes volver a hacerlo — cada vez que lo relees, lo haces desde un lugar diferente.'}
             </p>
           </div>
         )}
@@ -487,7 +487,7 @@ export default function JourneyAreaPage() {
         )}
 
         <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginBottom: '0.75rem', fontStyle: 'italic' }}>
-          Marca con una ✕ el cuadrado al lado de la frase una vez leída.
+          {lang === 'en' ? 'Mark with ✕ once you have read each sentence.' : 'Marca con una ✕ el cuadrado al lado de la frase una vez leída.'}
         </p>
         <div style={{ marginBottom: '2rem' }}>
           {area.teachings.map((teaching, i) => (
@@ -511,7 +511,7 @@ export default function JourneyAreaPage() {
           marginBottom: '2rem',
         }}>
           <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            En las relaciones
+            {lang === 'en' ? 'In relationships' : 'En las relaciones'}
           </p>
           <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.65', margin: 0 }}>
             {area.inRelacion}
@@ -519,7 +519,9 @@ export default function JourneyAreaPage() {
         </div>
 
         <button className="btn-primary" onClick={() => setPhase(area.practicalExercise ? 'exercise' : 'reflection')}>
-          {area.practicalExercise ? 'Ir a los ejercicios →' : 'Ir a la reflexión →'}
+          {area.practicalExercise
+            ? (lang === 'en' ? 'Go to exercises →' : 'Ir a los ejercicios →')
+            : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
         </button>
 
         {/* Quaderno coaching — visibile solo ai clienti 1:1 */}
