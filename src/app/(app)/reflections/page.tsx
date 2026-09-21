@@ -12,7 +12,7 @@ interface Reflection {
   id: string
   area: string
   reflection_text: string | null
-  created_at: string
+  completed_at: string
 }
 
 export default function ReflectionsPage() {
@@ -29,9 +29,9 @@ export default function ReflectionsPage() {
 
       const { data } = await supabase
         .from('level_progress')
-        .select('id, area, reflection_text, created_at')
+        .select('id, area, reflection_text, completed_at')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .order('completed_at', { ascending: false })
 
       setReflections(data ?? [])
       setLoading(false)
@@ -82,7 +82,7 @@ export default function ReflectionsPage() {
                         {areaTitle}
                       </span>
                       <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)' }}>
-                        {new Date(r.created_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {new Date(r.completed_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </span>
                     </div>
                     {r.reflection_text ? (

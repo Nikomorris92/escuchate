@@ -46,7 +46,7 @@ export default function JourneyAreaPage() {
   const [sharing, setSharing] = useState(false)
 
   // Riflessioni passate
-  const [pastReflections, setPastReflections] = useState<{ id: string; reflection_text: string; created_at: string }[]>([])
+  const [pastReflections, setPastReflections] = useState<{ id: string; reflection_text: string | null; completed_at: string }[]>([])
 
   // Coaching journal
   const [isCoachingClient, setIsCoachingClient] = useState(false)
@@ -65,7 +65,7 @@ export default function JourneyAreaPage() {
       if (!user) { router.push('/login'); return }
 
       const [progressRes, profileRes, journalRes] = await Promise.all([
-        supabase.from('level_progress').select('id, reflection_text, created_at').eq('user_id', user.id).eq('area', areaId).order('created_at', { ascending: false }),
+        supabase.from('level_progress').select('id, reflection_text, completed_at').eq('user_id', user.id).eq('area', areaId).order('completed_at', { ascending: false }),
         supabase.from('user_profiles').select('is_coaching_client, paid').eq('id', user.id).single(),
         fetch(`/api/coaching/journal?area=${areaId}`),
       ])
@@ -357,7 +357,7 @@ export default function JourneyAreaPage() {
                     borderRadius: '0.75rem',
                   }}>
                     <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.625rem' }}>
-                      {new Date(r.created_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      {new Date(r.completed_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
                     {r.reflection_text ? (
                       <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
@@ -580,7 +580,7 @@ export default function JourneyAreaPage() {
                   borderRadius: '0.75rem',
                 }}>
                   <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.625rem' }}>
-                    {new Date(r.created_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {new Date(r.completed_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                   {r.reflection_text ? (
                     <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
