@@ -300,7 +300,7 @@ export default function JourneyAreaPage() {
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }}
             onClick={() => setPhase(area.practicalExercise ? 'exercise' : 'teachings')}>
-            ← Volver
+            ← {lang === 'en' ? 'Back' : 'Volver'}
           </button>
 
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
@@ -384,14 +384,14 @@ export default function JourneyAreaPage() {
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2.5rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }} onClick={() => setPhase('teachings')}>
-            ← Volver
+            ← {lang === 'en' ? 'Back' : 'Volver'}
           </button>
 
           <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            Ejercicio práctico · {area.title}
+            {lang === 'en' ? 'Practical exercise' : 'Ejercicio práctico'} · {area.title}
           </p>
           <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ffffff', lineHeight: '1.4', marginBottom: '1.5rem' }}>
-            Ponlo en práctica
+            {lang === 'en' ? 'Put it into practice' : 'Ponlo en práctica'}
           </h2>
 
           <div style={{ marginBottom: '1.5rem' }}>
@@ -434,14 +434,14 @@ export default function JourneyAreaPage() {
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2.5rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }} onClick={() => setPhase('exercise')}>
-            ← Volver
+            ← {lang === 'en' ? 'Back' : 'Volver'}
           </button>
 
           <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            Segundo ejercicio · {area.title}
+            {lang === 'en' ? 'Second exercise' : 'Segundo ejercicio'} · {area.title}
           </p>
           <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ffffff', lineHeight: '1.4', marginBottom: '1.5rem' }}>
-            La carta que no enviarás
+            {lang === 'en' ? 'The letter you will not send' : 'La carta que no enviarás'}
           </h2>
 
           <div style={{ marginBottom: '1.5rem' }}>
