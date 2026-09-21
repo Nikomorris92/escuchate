@@ -561,6 +561,38 @@ export default function JourneyAreaPage() {
             : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
         </button>
 
+        {/* Riflessioni passate per quest'area */}
+        {pastReflections.length > 0 && (
+          <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
+              {lang === 'en' ? 'My reflections on this area' : 'Mis reflexiones sobre esta área'}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {pastReflections.map((r) => (
+                <div key={r.id} style={{
+                  padding: '1rem 1.25rem',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '0.75rem',
+                }}>
+                  <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.625rem' }}>
+                    {new Date(r.created_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                  {r.reflection_text ? (
+                    <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
+                      "{r.reflection_text}"
+                    </p>
+                  ) : (
+                    <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.25)', margin: 0, fontStyle: 'italic' }}>
+                      {lang === 'en' ? 'Completed — no reflection saved.' : 'Completado — sin reflexión guardada.'}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Quaderno coaching — visibile solo ai clienti 1:1 */}
         {isCoachingClient && (
           <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
