@@ -78,7 +78,7 @@ export default function JourneyAreaPage() {
 
       if (progressRes.data && progressRes.data.length > 0) {
         setAlreadyDone(true)
-        setPastReflections(progressRes.data.filter((r: { reflection_text: string | null }) => r.reflection_text))
+        setPastReflections(progressRes.data)
       }
       if (profileRes.data?.is_coaching_client) {
         setIsCoachingClient(true)
@@ -359,9 +359,15 @@ export default function JourneyAreaPage() {
                     <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.625rem' }}>
                       {new Date(r.created_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
-                    <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
-                      "{r.reflection_text}"
-                    </p>
+                    {r.reflection_text ? (
+                      <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
+                        "{r.reflection_text}"
+                      </p>
+                    ) : (
+                      <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.3)', margin: 0, fontStyle: 'italic' }}>
+                        {lang === 'en' ? 'Completed — no reflection saved.' : 'Completado — sin reflexión guardada.'}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
