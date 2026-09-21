@@ -216,28 +216,43 @@ export default function JourneyAreaPage() {
             </div>
           )}
 
-          {/* Blocco condivisione */}
-          <div style={{
-            padding: '1.25rem',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '0.875rem',
-            marginBottom: '1.25rem',
-          }}>
-            {shared ? (
-              <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', textAlign: 'center', margin: 0 }}>
-                ✓ Reflexión compartida en el muro. Gracias.
+          {/* 2 opzioni: condividi o salva privato */}
+          {shared ? (
+            <div style={{
+              padding: '1.25rem',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '0.875rem',
+              marginBottom: '1.25rem',
+              textAlign: 'center',
+            }}>
+              <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', margin: '0 0 1.25rem' }}>
+                ✓ {lang === 'en' ? 'Reflection shared on the wall. Thank you.' : 'Reflexión compartida en el muro. Gracias.'}
               </p>
-            ) : (
-              <>
-                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)', lineHeight: '1.6', marginBottom: '1rem' }}>
-                  {lang === 'en' ? 'Your reflection can help other people on their journey. Would you like to share it on the wall?' : 'Tu reflexión puede ayudar a otras personas en su recorrido. ¿Quieres compartirla en el muro?'}
+              <button className="btn-primary" onClick={() => router.push('/dashboard')}>
+                {lang === 'en' ? 'Back to journey' : 'Volver al recorrido'}
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {/* Opzione 1: Condividi */}
+              <div style={{
+                padding: '1.25rem',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '0.875rem',
+              }}>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                  {lang === 'en' ? 'Share' : 'Compartir'}
+                </p>
+                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.6', marginBottom: '1rem' }}>
+                  {lang === 'en' ? 'Your reflection can inspire other people on their journey.' : 'Tu reflexión puede inspirar a otras personas en su recorrido.'}
                 </p>
                 <input
                   className="input-field"
                   style={{ marginBottom: '0.75rem', fontSize: '0.875rem' }}
                   type="text"
-                  placeholder={lang === 'en' ? 'Your name (optional — anonymous if blank)' : 'Tu nombre (opcional — si no, aparece anónimo)'}
+                  placeholder={lang === 'en' ? 'Your name (optional — anonymous if blank)' : 'Tu nombre (opcional — anónimo si está vacío)'}
                   value={sharedName}
                   onChange={(e) => setSharedName(e.target.value)}
                   maxLength={40}
@@ -248,15 +263,31 @@ export default function JourneyAreaPage() {
                   onClick={handleShare}
                   disabled={sharing}
                 >
-                  {sharing ? (lang === 'en' ? 'Sharing…' : 'Compartiendo…') : (lang === 'en' ? 'Share my reflection' : 'Compartir mi reflexión')}
+                  {sharing
+                    ? (lang === 'en' ? 'Sharing…' : 'Compartiendo…')
+                    : (lang === 'en' ? 'Share on the wall' : 'Compartir en el muro')}
                 </button>
-              </>
-            )}
-          </div>
+              </div>
 
-          <button className="btn-primary" onClick={() => router.push('/dashboard')}>
-            {lang === 'en' ? 'Back to journey' : 'Volver al recorrido'}
-          </button>
+              {/* Opzione 2: Salva privato */}
+              <div style={{
+                padding: '1.25rem',
+                background: 'rgba(196,120,58,0.06)',
+                border: '1px solid rgba(196,120,58,0.2)',
+                borderRadius: '0.875rem',
+              }}>
+                <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+                  {lang === 'en' ? 'Keep it for yourself' : 'Guardar en tu área'}
+                </p>
+                <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.6', marginBottom: '1rem' }}>
+                  {lang === 'en' ? 'Your reflection stays private. You will be able to re-read it when you redo this level.' : 'Tu reflexión queda privada. Podrás releerla cuando vuelvas a hacer este nivel.'}
+                </p>
+                <button className="btn-primary" onClick={() => router.push('/dashboard')}>
+                  {lang === 'en' ? 'Save to my area' : 'Guardar en mi área'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )
