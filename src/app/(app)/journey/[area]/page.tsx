@@ -45,6 +45,9 @@ export default function JourneyAreaPage() {
   const [sharedName, setSharedName] = useState('')
   const [sharing, setSharing] = useState(false)
 
+  // Riflessioni passate
+  const [pastReflections, setPastReflections] = useState<{ id: string; reflection_text: string; created_at: string }[]>([])
+
   // Coaching journal
   const [isCoachingClient, setIsCoachingClient] = useState(false)
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
@@ -62,7 +65,7 @@ export default function JourneyAreaPage() {
       if (!user) { router.push('/login'); return }
 
       const [progressRes, profileRes, journalRes] = await Promise.all([
-        supabase.from('level_progress').select('id').eq('user_id', user.id).eq('area', areaId).limit(1),
+        supabase.from('level_progress').select('id, reflection_text, created_at').eq('user_id', user.id).eq('area', areaId).order('created_at', { ascending: false }),
         supabase.from('user_profiles').select('is_coaching_client, paid').eq('id', user.id).single(),
         fetch(`/api/coaching/journal?area=${areaId}`),
       ])
@@ -73,7 +76,10 @@ export default function JourneyAreaPage() {
         return
       }
 
-      if (progressRes.data && progressRes.data.length > 0) setAlreadyDone(true)
+      if (progressRes.data && progressRes.data.length > 0) {
+        setAlreadyDone(true)
+        setPastReflections(progressRes.data.filter((r: { reflection_text: string | null }) => r.reflection_text))
+      }
       if (profileRes.data?.is_coaching_client) {
         setIsCoachingClient(true)
         const json = await journalRes.json()
@@ -302,8 +308,34 @@ export default function JourneyAreaPage() {
           </button>
 
           <p className="disclaimer">
-            Tus reflexiones son privadas y solo tú puedes verlas.
+            {lang === 'en' ? 'Your reflections are private — only you can see them.' : 'Tus reflexiones son privadas y solo tú puedes verlas.'}
           </p>
+
+          {/* Riflessioni passate */}
+          {pastReflections.length > 0 && (
+            <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
+                {lang === 'en' ? 'Your previous reflections' : 'Tus reflexiones anteriores'}
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {pastReflections.map((r) => (
+                  <div key={r.id} style={{
+                    padding: '1rem 1.25rem',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '0.75rem',
+                  }}>
+                    <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.625rem' }}>
+                      {new Date(r.created_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </p>
+                    <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
+                      "{r.reflection_text}"
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )
