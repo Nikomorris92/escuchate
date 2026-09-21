@@ -284,7 +284,7 @@ export default function JourneyAreaPage() {
           </p>
           <textarea
             className="reflection-textarea"
-            placeholder="Escribe aquí tu reflexión…"
+            placeholder={lang === 'en' ? 'Write your reflection here…' : 'Escribe aquí tu reflexión…'}
             value={reflection}
             onChange={(e) => setReflection(e.target.value)}
           />
