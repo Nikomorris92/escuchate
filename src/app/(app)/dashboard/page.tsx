@@ -245,6 +245,14 @@ export default function DashboardPage() {
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
         </Link>
 
+        <Link href="/reflections" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
+          <div>
+            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{lang === 'en' ? 'My reflections' : 'Mis reflexiones'}</p>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>{lang === 'en' ? 'Everything you have written' : 'Todo lo que has escrito'}</p>
+          </div>
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
+        </Link>
+
         <Link href="/muro" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
           <div>
             <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{t(lang, 'dash_wall')}</p>
