@@ -540,7 +540,7 @@ export default function JourneyAreaPage() {
           ))}
         </div>
 
-        {areaId === 'disciplina' && (
+        {(areaId === 'discipline' || areaId === 'disciplina') && (
           <div style={{ marginBottom: '2rem' }}>
             <Image
               src="/slide-vision-vs-placer.png"
