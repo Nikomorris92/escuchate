@@ -50,6 +50,7 @@ export default function JourneyAreaPage() {
   const [feedbackText, setFeedbackText] = useState('')
   const [feedbackSent, setFeedbackSent] = useState(false)
   const [sendingFeedback, setSendingFeedback] = useState(false)
+  const [savedPrivately, setSavedPrivately] = useState(false)
 
   // Riflessioni passate
   const [pastReflections, setPastReflections] = useState<{ id: string; reflection_text: string | null; completed_at: string }[]>([])
@@ -236,55 +237,60 @@ export default function JourneyAreaPage() {
             </div>
           )}
 
-          {/* Feedback migliorativo */}
-          <div style={{
-            marginBottom: '1.5rem',
-            padding: '1.25rem',
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '0.875rem',
-          }}>
-            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem' }}>
-              {lang === 'en' ? 'What would you improve?' : '¿Qué mejorarías?'}
-            </p>
-            {feedbackSent ? (
-              <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
-                {lang === 'en' ? 'Thank you for your feedback ✓' : 'Gracias por tu opinión ✓'}
-              </p>
-            ) : (
-              <>
-                <textarea
-                  className="input-field"
-                  style={{ width: '100%', minHeight: '80px', resize: 'vertical', marginBottom: '0.75rem', fontSize: '0.875rem' }}
-                  placeholder={lang === 'en' ? 'Any suggestion to improve this area…' : 'Alguna sugerencia para mejorar esta área…'}
-                  value={feedbackText}
-                  onChange={(e) => setFeedbackText(e.target.value)}
-                />
-                <button
-                  className="btn-primary"
-                  style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.875rem', padding: '0.625rem 1.25rem' }}
-                  onClick={handleFeedback}
-                  disabled={sendingFeedback || !feedbackText.trim()}
-                >
-                  {sendingFeedback ? '…' : (lang === 'en' ? 'Send feedback' : 'Enviar opinión')}
-                </button>
-              </>
-            )}
-          </div>
-
           {/* 2 opzioni: condividi o salva privato */}
-          {shared ? (
-            <div style={{
-              padding: '1.25rem',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '0.875rem',
-              marginBottom: '1.25rem',
-              textAlign: 'center',
-            }}>
-              <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', margin: '0 0 1.25rem' }}>
-                ✓ {lang === 'en' ? 'Reflection shared on the wall. Thank you.' : 'Reflexión compartida en el muro. Gracias.'}
-              </p>
+          {(shared || savedPrivately) ? (
+            <div>
+              {shared && (
+                <div style={{
+                  padding: '1rem 1.25rem',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '0.875rem',
+                  marginBottom: '1rem',
+                  textAlign: 'center',
+                }}>
+                  <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+                    ✓ {lang === 'en' ? 'Reflection shared on the wall. Thank you.' : 'Reflexión compartida en el muro. Gracias.'}
+                  </p>
+                </div>
+              )}
+
+              {/* Feedback migliorativo */}
+              <div style={{
+                padding: '1.25rem',
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '0.875rem',
+                marginBottom: '1rem',
+              }}>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem' }}>
+                  {lang === 'en' ? 'What would you improve?' : '¿Qué mejorarías?'}
+                </p>
+                {feedbackSent ? (
+                  <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
+                    {lang === 'en' ? 'Thank you for your feedback ✓' : 'Gracias por tu opinión ✓'}
+                  </p>
+                ) : (
+                  <>
+                    <textarea
+                      className="input-field"
+                      style={{ width: '100%', minHeight: '80px', resize: 'vertical', marginBottom: '0.75rem', fontSize: '0.875rem' }}
+                      placeholder={lang === 'en' ? 'Any suggestion to improve this area…' : 'Alguna sugerencia para mejorar esta área…'}
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                    />
+                    <button
+                      className="btn-primary"
+                      style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.875rem', padding: '0.625rem 1.25rem' }}
+                      onClick={handleFeedback}
+                      disabled={sendingFeedback || !feedbackText.trim()}
+                    >
+                      {sendingFeedback ? '…' : (lang === 'en' ? 'Send feedback' : 'Enviar opinión')}
+                    </button>
+                  </>
+                )}
+              </div>
+
               <button className="btn-primary" onClick={() => router.push('/dashboard')}>
                 {lang === 'en' ? 'Back to journey' : 'Volver al recorrido'}
               </button>
@@ -338,7 +344,7 @@ export default function JourneyAreaPage() {
                 <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.6', marginBottom: '1rem' }}>
                   {lang === 'en' ? 'Your reflection stays private. You will be able to re-read it when you redo this level.' : 'Tu reflexión queda privada. Podrás releerla cuando vuelvas a hacer este nivel.'}
                 </p>
-                <button className="btn-primary" onClick={() => router.push('/dashboard')}>
+                <button className="btn-primary" onClick={() => setSavedPrivately(true)}>
                   {lang === 'en' ? 'Save to my area' : 'Guardar en mi área'}
                 </button>
               </div>
