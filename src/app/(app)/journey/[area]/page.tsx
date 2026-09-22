@@ -22,7 +22,7 @@ function computeScore(wordCount: number): number {
   return Math.round(10 + ((capped - MIN_WORDS) / (MAX_SCORE_WORDS - MIN_WORDS)) * 40)
 }
 
-type Phase = 'teachings' | 'exercise' | 'exercise2' | 'reflection' | 'done'
+type Phase = 'teachings' | 'vision_slide' | 'exercise' | 'exercise2' | 'reflection' | 'done'
 
 type JournalEntry = { id: string; content: string; entry_date: string; created_at: string }
 
@@ -378,6 +378,29 @@ export default function JourneyAreaPage() {
     )
   }
 
+  /* ── FASE: VISION SLIDE (solo Disciplina) ── */
+  if (phase === 'vision_slide') {
+    return (
+      <div className="page-container" style={{ justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+        <div style={{ width: '100%', maxWidth: '900px' }}>
+          <Image
+            src={lang === 'en' ? '/slide-vision-vs-pleasure-en.png' : '/slide-vision-vs-placer.png'}
+            alt={lang === 'en' ? 'What do you invest your time in?' : '¿En qué inviertes tu tiempo?'}
+            width={1280}
+            height={720}
+            style={{ width: '100%', height: 'auto', borderRadius: '1rem', marginBottom: '1.5rem' }}
+            priority
+          />
+          <button className="btn-primary" style={{ width: '100%' }} onClick={() => setPhase(area.practicalExercise ? 'exercise' : 'reflection')}>
+            {area.practicalExercise
+              ? (lang === 'en' ? 'Go to exercises →' : 'Ir a los ejercicios →')
+              : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   /* ── FASE: EJERCICIO ── */
   if (phase === 'exercise' && area.practicalExercise) {
     return (
@@ -540,18 +563,6 @@ export default function JourneyAreaPage() {
           ))}
         </div>
 
-        {(areaId === 'discipline' || areaId === 'disciplina') && (
-          <div style={{ marginBottom: '2rem' }}>
-            <Image
-              src={lang === 'en' ? '/slide-vision-vs-pleasure-en.png' : '/slide-vision-vs-placer.png'}
-              alt={lang === 'en' ? 'What do you invest your time in?' : '¿En qué inviertes tu tiempo?'}
-              width={1280}
-              height={720}
-              style={{ width: '100%', height: 'auto', borderRadius: '0.75rem' }}
-            />
-          </div>
-        )}
-
         <div style={{
           padding: '1.25rem',
           background: 'rgba(196,120,58,0.1)',
@@ -567,7 +578,13 @@ export default function JourneyAreaPage() {
           </p>
         </div>
 
-        <button className="btn-primary" onClick={() => setPhase(area.practicalExercise ? 'exercise' : 'reflection')}>
+        <button className="btn-primary" onClick={() => {
+          if (areaId === 'discipline' || areaId === 'disciplina') {
+            setPhase('vision_slide')
+          } else {
+            setPhase(area.practicalExercise ? 'exercise' : 'reflection')
+          }
+        }}>
           {area.practicalExercise
             ? (lang === 'en' ? 'Go to exercises →' : 'Ir a los ejercicios →')
             : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
