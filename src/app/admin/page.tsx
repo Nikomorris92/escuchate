@@ -130,6 +130,8 @@ export default function AdminPage() {
   const [activateMsg, setActivateMsg] = useState('')
   const [selectedJournalUser, setSelectedJournalUser] = useState<string | null>(null)
   const [coachingClients, setCoachingClients] = useState<CoachingClient[]>([])
+  const [userActivity, setUserActivity] = useState<{ user_id: string; area: string; completed_at: string }[]>([])
+  const [expandedActivity, setExpandedActivity] = useState<string | null>(null)
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null)
   const [studentReflections, setStudentReflections] = useState<Record<string, StudentReflection[]>>({})
   const [studentJournals, setStudentJournals] = useState<Record<string, StudentJournal[]>>({})
@@ -194,6 +196,13 @@ export default function AdminPage() {
         .order('created_at', { ascending: false })
         .limit(50)
       setNotifications(notifData ?? [])
+
+      // Attività utenti per monitoraggio
+      const { data: activityData } = await supabase
+        .from('level_progress')
+        .select('user_id, area, completed_at')
+        .order('completed_at', { ascending: false })
+      setUserActivity(activityData ?? [])
 
       // Journal entries
       const journalRes = await fetch('/api/admin/coaching-journal')
@@ -874,6 +883,85 @@ export default function AdminPage() {
           )
         })()}
       </div>
+
+      {/* Monitoraggio attività */}
+      {(() => {
+        const ALL_AREAS = Object.keys(AREAS)
+        const userIds = [...new Set(userActivity.map(a => a.user_id))]
+        // aggiungi anche utenti senza attività
+        users.forEach(u => { if (!userIds.includes(u.id)) userIds.push(u.id) })
+
+        const rows = userIds.map(uid => {
+          const acts = userActivity.filter(a => a.user_id === uid)
+          const lastAct = acts[0]?.completed_at ?? null
+          const daysSince = lastAct ? Math.floor((Date.now() - new Date(lastAct).getTime()) / 86400000) : null
+          const email = users.find(u => u.id === uid)?.email ?? uid.slice(0,8) + '…'
+          const completedAreas = [...new Set(acts.map(a => a.area))]
+          return { uid, email, lastAct, daysSince, completedAreas }
+        }).sort((a, b) => {
+          if (a.lastAct && b.lastAct) return new Date(b.lastAct).getTime() - new Date(a.lastAct).getTime()
+          if (a.lastAct) return -1; if (b.lastAct) return 1; return 0
+        })
+
+        const active7 = rows.filter(r => r.daysSince !== null && r.daysSince <= 7).length
+        const inactive21 = rows.filter(r => r.daysSince !== null && r.daysSince > 21).length
+
+        return (
+          <div className="card" style={{ marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: '600', color: '#ffffff', marginBottom: '1.25rem' }}>
+              📊 Monitoraggio attività
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              {[
+                { label: 'Totale utenti', value: rows.length, color: '#ffffff' },
+                { label: 'Attivi 7gg', value: active7, color: '#4ade80' },
+                { label: 'Inattivi 21gg+', value: inactive21, color: '#f87171' },
+              ].map(k => (
+                <div key={k.label} style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.04)', borderRadius: '0.625rem', textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: '700', color: k.color, lineHeight: 1 }}>{k.value}</div>
+                  <div style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.35)', marginTop: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{k.label}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+              {rows.map(r => {
+                const color = r.daysSince === null ? 'rgba(255,255,255,0.25)' : r.daysSince <= 7 ? '#4ade80' : r.daysSince <= 21 ? '#c4783a' : '#f87171'
+                const label = r.daysSince === null ? 'mai' : r.daysSince === 0 ? 'oggi' : `${r.daysSince}g fa`
+                return (
+                  <div key={r.uid}>
+                    <button
+                      onClick={() => setExpandedActivity(expandedActivity === r.uid ? null : r.uid)}
+                      style={{ width: '100%', textAlign: 'left', background: expandedActivity === r.uid ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '0.625rem', padding: '0.625rem 0.875rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}
+                    >
+                      <span style={{ fontSize: '0.875rem', color: '#ffffff' }}>{r.email}</span>
+                      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>{r.completedAreas.length}/{ALL_AREAS.length} aree</span>
+                        <span style={{ fontSize: '0.6875rem', fontWeight: '600', padding: '0.15rem 0.5rem', borderRadius: '9999px', background: `${color}18`, color }}>{label}</span>
+                      </div>
+                    </button>
+                    {expandedActivity === r.uid && (
+                      <div style={{ padding: '0.75rem 0.875rem', background: 'rgba(255,255,255,0.02)', borderLeft: '1px solid rgba(255,255,255,0.07)', borderRight: '1px solid rgba(255,255,255,0.07)', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRadius: '0 0 0.625rem 0.625rem', marginTop: '-0.25rem' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+                          {ALL_AREAS.map(areaId => {
+                            const done = r.completedAreas.includes(areaId)
+                            const lastDone = userActivity.filter(a => a.user_id === r.uid && a.area === areaId)[0]
+                            return (
+                              <span key={areaId} style={{ fontSize: '0.6875rem', padding: '0.2rem 0.5rem', borderRadius: '9999px', background: done ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)', color: done ? '#4ade80' : 'rgba(255,255,255,0.25)', border: `1px solid ${done ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.06)'}` }}>
+                                {AREAS[areaId as keyof typeof AREAS]?.title ?? areaId}
+                                {done && lastDone && <span style={{ opacity: 0.6, marginLeft: '0.25rem' }}>{new Date(lastDone.completed_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}</span>}
+                              </span>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Utenti Supabase */}
       <div className="card">
