@@ -543,10 +543,10 @@ export default function JourneyAreaPage() {
         {(areaId === 'discipline' || areaId === 'disciplina') && (
           <div style={{ marginBottom: '2rem' }}>
             <Image
-              src="/slide-vision-vs-placer.png"
+              src={lang === 'en' ? '/slide-vision-vs-pleasure-en.png' : '/slide-vision-vs-placer.png'}
               alt={lang === 'en' ? 'What do you invest your time in?' : '¿En qué inviertes tu tiempo?'}
-              width={900}
-              height={506}
+              width={1280}
+              height={720}
               style={{ width: '100%', height: 'auto', borderRadius: '0.75rem' }}
             />
           </div>
