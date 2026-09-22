@@ -8,6 +8,7 @@ import { AREA_MAP_EN } from '@/lib/areas_en'
 import { AREA_COMPLETION_FEEDBACK } from '@/lib/feedback'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/lib/LangContext'
+import VisionSlide from '@/components/VisionSlide'
 
 const MIN_WORDS = 30
 const MAX_SCORE_WORDS = 150
@@ -381,22 +382,11 @@ export default function JourneyAreaPage() {
   /* ── FASE: VISION SLIDE (solo Disciplina) ── */
   if (phase === 'vision_slide') {
     return (
-      <div className="page-container" style={{ justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
-        <div style={{ width: '100%', maxWidth: '900px' }}>
-          <Image
-            src={lang === 'en' ? '/slide-vision-vs-pleasure-en.png' : '/slide-vision-vs-placer.png'}
-            alt={lang === 'en' ? 'What do you invest your time in?' : '¿En qué inviertes tu tiempo?'}
-            width={1280}
-            height={720}
-            style={{ width: '100%', height: 'auto', borderRadius: '1rem', marginBottom: '1.5rem' }}
-            priority
-          />
-          <button className="btn-primary" style={{ width: '100%' }} onClick={() => setPhase(area.practicalExercise ? 'exercise' : 'reflection')}>
-            {area.practicalExercise
-              ? (lang === 'en' ? 'Go to exercises →' : 'Ir a los ejercicios →')
-              : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
-          </button>
-        </div>
+      <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2rem' }}>
+        <VisionSlide
+          lang={lang}
+          onContinue={() => setPhase(area.practicalExercise ? 'exercise' : 'reflection')}
+        />
       </div>
     )
   }
