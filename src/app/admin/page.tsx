@@ -133,6 +133,7 @@ export default function AdminPage() {
   const [userActivity, setUserActivity] = useState<{ user_id: string; area: string; completed_at: string }[]>([])
   const [expandedActivity, setExpandedActivity] = useState<string | null>(null)
   const [expandedStudent, setExpandedStudent] = useState<string | null>(null)
+  const [userFeedback, setUserFeedback] = useState<{ id: string; user_id: string; area: string; feedback: string; created_at: string }[]>([])
   const [studentReflections, setStudentReflections] = useState<Record<string, StudentReflection[]>>({})
   const [studentJournals, setStudentJournals] = useState<Record<string, StudentJournal[]>>({})
   const [loadingStudent, setLoadingStudent] = useState<string | null>(null)
@@ -196,6 +197,13 @@ export default function AdminPage() {
         .order('created_at', { ascending: false })
         .limit(50)
       setNotifications(notifData ?? [])
+
+      // Feedback utenti
+      const { data: feedbackData } = await supabase
+        .from('user_feedback')
+        .select('id, user_id, area, feedback, created_at')
+        .order('created_at', { ascending: false })
+      setUserFeedback(feedbackData ?? [])
 
       // Attività utenti per monitoraggio
       const { data: activityData } = await supabase
@@ -1004,6 +1012,44 @@ export default function AdminPage() {
           </div>
         )}
       </div>
+
+      {/* Feedback miglioramenti */}
+      <div style={{ marginTop: '2.5rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#fff', marginBottom: '0.25rem' }}>
+          💬 Miglioramenti suggeriti dagli utenti
+        </h3>
+        <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.35)', marginBottom: '1.25rem' }}>
+          {userFeedback.length} feedback ricevuti
+        </p>
+
+        {userFeedback.length === 0 ? (
+          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>Nessun feedback ancora.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {userFeedback.map((f) => (
+              <div key={f.id} style={{
+                padding: '1rem 1.25rem',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '0.75rem',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '0.6875rem', color: '#c4783a', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    {AREA_MAP[f.area]?.title ?? f.area}
+                  </span>
+                  <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)' }}>
+                    {new Date(f.created_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.6', margin: 0 }}>
+                  {f.feedback}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   )
 }
