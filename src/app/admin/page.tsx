@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { AREAS } from '@/lib/areas'
+import { AREAS, AREA_MAP } from '@/lib/areas'
 
 const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
@@ -886,7 +886,7 @@ export default function AdminPage() {
 
       {/* Monitoraggio attività */}
       {(() => {
-        const ALL_AREAS = Object.keys(AREAS)
+        const ALL_AREAS = Object.keys(AREA_MAP)
         const userIds = [...new Set(userActivity.map(a => a.user_id))]
         // aggiungi anche utenti senza attività
         users.forEach(u => { if (!userIds.includes(u.id)) userIds.push(u.id) })
@@ -947,7 +947,7 @@ export default function AdminPage() {
                             const lastDone = userActivity.filter(a => a.user_id === r.uid && a.area === areaId)[0]
                             return (
                               <span key={areaId} style={{ fontSize: '0.6875rem', padding: '0.2rem 0.5rem', borderRadius: '9999px', background: done ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)', color: done ? '#4ade80' : 'rgba(255,255,255,0.25)', border: `1px solid ${done ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.06)'}` }}>
-                                {AREAS[areaId as keyof typeof AREAS]?.title ?? areaId}
+                                {AREA_MAP[areaId]?.title ?? areaId}
                                 {done && lastDone && <span style={{ opacity: 0.6, marginLeft: '0.25rem' }}>{new Date(lastDone.completed_at).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}</span>}
                               </span>
                             )
