@@ -46,6 +46,11 @@ export default function JourneyAreaPage() {
   const [sharedName, setSharedName] = useState('')
   const [sharing, setSharing] = useState(false)
 
+  // Feedback migliorativo
+  const [feedbackText, setFeedbackText] = useState('')
+  const [feedbackSent, setFeedbackSent] = useState(false)
+  const [sendingFeedback, setSendingFeedback] = useState(false)
+
   // Riflessioni passate
   const [pastReflections, setPastReflections] = useState<{ id: string; reflection_text: string | null; completed_at: string }[]>([])
 
@@ -179,6 +184,20 @@ export default function JourneyAreaPage() {
     setSharing(false)
   }
 
+  async function handleFeedback() {
+    if (!feedbackText.trim()) return
+    setSendingFeedback(true)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    await supabase.from('user_feedback').insert({
+      user_id: user?.id,
+      area: areaId,
+      feedback: feedbackText.trim(),
+    })
+    setFeedbackSent(true)
+    setSendingFeedback(false)
+  }
+
   /* ── FASE: COMPLETATO ── */
   if (phase === 'done') {
     const completionFeedback = AREA_COMPLETION_FEEDBACK[area.id as keyof typeof AREA_COMPLETION_FEEDBACK]
@@ -216,6 +235,42 @@ export default function JourneyAreaPage() {
               </p>
             </div>
           )}
+
+          {/* Feedback migliorativo */}
+          <div style={{
+            marginBottom: '1.5rem',
+            padding: '1.25rem',
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '0.875rem',
+          }}>
+            <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem' }}>
+              {lang === 'en' ? 'What would you improve?' : '¿Qué mejorarías?'}
+            </p>
+            {feedbackSent ? (
+              <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
+                {lang === 'en' ? 'Thank you for your feedback ✓' : 'Gracias por tu opinión ✓'}
+              </p>
+            ) : (
+              <>
+                <textarea
+                  className="input-field"
+                  style={{ width: '100%', minHeight: '80px', resize: 'vertical', marginBottom: '0.75rem', fontSize: '0.875rem' }}
+                  placeholder={lang === 'en' ? 'Any suggestion to improve this area…' : 'Alguna sugerencia para mejorar esta área…'}
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                />
+                <button
+                  className="btn-primary"
+                  style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)', fontSize: '0.875rem', padding: '0.625rem 1.25rem' }}
+                  onClick={handleFeedback}
+                  disabled={sendingFeedback || !feedbackText.trim()}
+                >
+                  {sendingFeedback ? '…' : (lang === 'en' ? 'Send feedback' : 'Enviar opinión')}
+                </button>
+              </>
+            )}
+          </div>
 
           {/* 2 opzioni: condividi o salva privato */}
           {shared ? (
