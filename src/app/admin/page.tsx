@@ -206,7 +206,7 @@ export default function AdminPage() {
       setUserFeedback(feedbackData ?? [])
 
       // Attività utenti per monitoraggio — usa API route con service role (bypassa RLS)
-      const activityRes = await fetch('/api/admin/activity')
+      const activityRes = await fetch('/api/admin/activity', { credentials: 'include' })
       if (activityRes.ok) {
         const activityJson = await activityRes.json()
         setUserActivity(activityJson.activity ?? [])
