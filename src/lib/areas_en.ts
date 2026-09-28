@@ -63,24 +63,25 @@ export const AREAS_EN: AreaDefinition[] = [
     id: 'no_complaining',
     slug: 'no-complaining',
     order: 3,
-    title: 'Stop Complaining',
-    subtitle: 'Complaining tells the story. Action solves it',
+    title: 'Momentary Pleasure',
+    subtitle: 'What promises relief now charges the price later',
     teachings: [
-      'Complaining gives relief for a minute and drains energy for a day.',
-      'Complaining doesn\'t solve any problem — in fact, it makes it worse. Every minute you spend complaining is a minute you\'re not using to change something.',
-      'Instead of focusing on the complaint, look for a direct solution to the problem. Ask yourself: what depends on me here?',
-      'Problems are the foundation of any kind of business. A product exists to solve a problem — the bigger the problem it solves, the more value it has. The people who advance most in life are not those who have fewer problems: they are those who get better at solving them.',
-      'In life we will always be surrounded by problems. We should only strive to make them a different kind of problem. It is not the same to cry on a pavement because there is no money for food, as to decide which fund to invest in to generate more wealth.',
-      'Most complaints come from focusing on what we are not or what we don\'t have. Change the focus and you change what you see.',
+      'Dopamine is the hormone of "going after" — not of pleasure itself. It fires when you anticipate a reward: the scroll, the like, the message, the drink. The problem is that the more you stimulate it without effort, the more you need to feel the same thing.',
+      'At the gym, muscle pain is not failure — it is exactly the signal that something is changing. Momentary pleasure works the other way: it takes away the pain now, but charges the price later, with interest.',
+      'Every time you choose the sofa instead of training, social media instead of a book, complaining instead of action — it\'s not just a small choice. You are training your brain to choose the easy path. And the brain learns fast.',
+      'Alcohol, drugs, porn, infinite scroll: they all activate the same reward circuit. They are not moral problems — they are neurological shortcuts that over time reduce your capacity to feel satisfaction from things that truly matter.',
+      'The person who goes to the gym doesn\'t enjoy the pain — they learn to tolerate discomfort because they know what\'s on the other side. That same skill, applied to your life, changes everything.',
+      'It\'s not about eliminating pleasure. It\'s about learning to choose pleasures that leave you something afterwards. A real dinner with friends, a book that changes you, a project that scares you — they all activate dopamine. But they let it grow, not burn it out.',
+      'Every morning my alarm goes off at 5:40. No motivation, no desire — just the promise I made to myself the day before. I get up anyway. Not because it\'s easy, but because I know what\'s on the other side: not an immediate reward, but something far more valuable — a steady, lasting sense of wellbeing that builds day after day. Momentary pleasure promises you everything now and leaves you nothing. Repeated effort promises you nothing now — and builds everything later.',
     ],
     reflection:
-      'Think about the last thing you complained about. Was there a small action you could have taken instead?',
+      'Think about the last moment you chose immediate relief. What were you really avoiding? What would you have done if that escape hadn\'t existed?',
     inRelacion:
-      'Those who complain instead of acting tend to pull the other person into the role of rescuer or target — neither lasts long.',
+      'Those who constantly seek easy stimulation end up feeling empty with real people — who are complex, imperfect, and don\'t give likes in two seconds.',
     practicalExercise: {
       description:
-        'Instead of complaining about what you don\'t have or what you\'re not, focus on people who are much worse off than you — and there are many. To be well, you lack nothing. Be grateful for what you have and put everything into changing what doesn\'t satisfy you, without complaining.\n\nIn your work environment: the next time you notice a complaint about something that isn\'t working, don\'t express it as a problem. Prepare a concrete solution proposal — even a brief one — and present it to whoever is responsible. A problem well presented with a solution is already half the work done.',
-      prompt: 'What complaint did you turn into action? How did it go?',
+        'Instagram, TikTok, YouTube Shorts — it\'s not your fault. They\'re built by teams of engineers specifically so you can\'t stop. So you need a system, not willpower.\n\n1. Change your password without looking at it.\nGo to Instagram settings, type a random combination fast without memorising it. Log out. Now getting back in requires real effort — and that friction breaks the automatic habit.\n\n2. Phone out of the room where you work or study.\nNot on silent. Not face down. Out. In another room. Every time you want it, you\'ll have to get up — and that moment of friction gives you time to decide if you actually need it.\n\n3. Immediate substitution.\nWhen you feel the impulse, don\'t resist it — redirect it. Have something concrete nearby: a notebook, a half-finished project, a book. The brain doesn\'t tolerate emptiness — give it something better.\n\n4. The punishment that trains.\nEvery time you give in to a momentary pleasure you\'d decided to avoid — 100 push-ups. Not as moral punishment. As a system: your body learns that giving in has a real physical cost. And very soon, your brain starts calculating whether two minutes of scrolling is worth the effort. Spoiler: it almost never is.',
+      prompt: 'How many times did you pick up your phone today automatically, without consciously deciding to? What did you do instead?',
     },
   },
   {

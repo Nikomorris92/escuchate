@@ -63,24 +63,25 @@ export const AREAS: AreaDefinition[] = [
     id: 'no_complaining',
     slug: 'no-te-quejes',
     order: 3,
-    title: 'No te quejes',
-    subtitle: 'La queja cuenta. La acción resuelve',
+    title: 'El placer momentáneo',
+    subtitle: 'Lo que promete alivio ahora cobra el precio después',
     teachings: [
-      'La queja da alivio por un minuto y quita energía por un día.',
-      'Lamentarte no resuelve ningún problema — de hecho, lo empeora. Cada minuto que pasas quejándote es un minuto que no estás usando para cambiar algo.',
-      'En lugar de poner el foco en la queja, busca una solución directa al problema. Pregúntate: ¿qué depende de mí aquí?',
-      'Los problemas son la base de cualquier tipo de negocio. Un producto existe para resolver un problema — cuanto más grande el problema que resuelve, más valor tiene. Las personas que más avanzan en la vida no son las que tienen menos problemas: son las que se vuelven mejores resolviéndolos.',
-      'En la vida siempre estaremos rodeados de problemas. Solo debemos esforzarnos en que sean otro tipo de problemas. No es lo mismo llorar en una acera porque no hay dinero para comer, que decidir en qué fondo invertir una cantidad de dinero para que genere más riqueza.',
-      'La mayoría de las quejas vienen de poner el foco en lo que no somos o en lo que no tenemos. Cambia el foco y cambia lo que ves.',
+      'La dopamina es la hormona del "ir a buscar" — no del placer en sí. Se dispara cuando anticipas una recompensa: el scroll, el like, el mensaje, la copa. El problema es que cuanto más la estimulas sin esfuerzo, más necesitas para sentir lo mismo.',
+      'En el gimnasio, el dolor muscular no es el fracaso — es exactamente la señal de que algo está cambiando. El placer momentáneo funciona al revés: te quita el dolor ahora, pero te cobra el precio más tarde, con intereses.',
+      'Cada vez que eliges el sofá en lugar del entrenamiento, las redes en lugar del libro, la queja en lugar de la acción — no es solo una elección pequeña. Estás entrenando a tu cerebro para elegir lo fácil. Y el cerebro aprende rápido.',
+      'El alcohol, las drogas, el porno, el scroll infinito: todos activan el mismo circuito de recompensa. No son problemas morales — son atajos neurológicos que con el tiempo reducen tu capacidad de sentir satisfacción con las cosas que realmente valen.',
+      'La persona que va al gimnasio no disfruta del dolor — aprende a tolerar el malestar porque sabe lo que hay al otro lado. Esa misma habilidad, aplicada a tu vida, lo cambia todo.',
+      'No se trata de eliminar el placer. Se trata de aprender a elegir placeres que te dejen algo después. Una cena con amigos de verdad, un libro que te cambia, un proyecto que te da miedo — todos activan dopamina. Pero la dejan crecer, no la queman.',
+      'Cada mañana suena el despertador a las 5:40. No hay motivación, no hay ganas — solo la promesa que me hice a mí mismo el día anterior. Me levanto de todos modos. No porque sea fácil, sino porque sé lo que hay al otro lado: no una recompensa inmediata, sino algo mucho más valioso — una sensación constante de bienestar que se acumula día tras día. El placer momentáneo te promete todo ahora y no te deja nada. El esfuerzo repetido no te promete nada ahora — pero lo construye todo después.',
     ],
     reflection:
-      'Piensa en lo último de lo que te has quejado. ¿Había una pequeña acción que podías tomar en cambio?',
+      'Piensa en el último momento en que elegiste el alivio inmediato. ¿Qué estabas evitando realmente? ¿Qué habrías hecho si ese escape no hubiera existido?',
     inRelacion:
-      'Quien se queja en lugar de actuar suele arrastrar al otro al papel de salvador o de blanco — ninguno de los dos aguanta mucho tiempo.',
+      'Quien busca constantemente estímulos fáciles acaba sintiéndose vacío con personas reales — que son complejas, imperfectas y no dan like en dos segundos.',
     practicalExercise: {
       description:
-        'En lugar de quejarte por lo que no tienes o no eres, focalízate en la gente que está mucho peor que tú — y es muchísima. Para estar bien, no te falta nada. Sé agradecido por lo que tienes y pon todo de ti en cambiar lo que no te satisface, sin quejarte.\n\nEn tu entorno laboral: la próxima vez que notes una queja sobre algo que no funciona, no la expreses como problema. Prepara una propuesta concreta de solución — aunque sea breve — y preséntala a quien corresponda. Un problema bien presentado con una solución ya es la mitad del trabajo hecho.',
-      prompt: '¿Qué queja transformaste en acción? ¿Cómo fue?',
+        'Instagram, TikTok, YouTube Shorts — no son culpa tuya. Están diseñados por equipos de ingenieros para que no puedas parar. Entonces necesitas un sistema, no voluntad.\n\n1. Cambia la contraseña sin mirarla.\nVe a la configuración de Instagram, cambia la contraseña con una combinación aleatoria que teclees rápido sin memorizarla. Cierra sesión. Ahora para entrar necesitas un esfuerzo real — y ese esfuerzo rompe el automatismo.\n\n2. El teléfono fuera de la habitación donde trabajas o estudias.\nNo en silencio. No boca abajo. Fuera. En otra habitación. Cada vez que lo quieras, tendrás que levantarte — y ese momento de fricción te da tiempo para decidir si realmente lo necesitas.\n\n3. Sustitución inmediata.\nCuando sientas el impulso, no lo resistas — redirigelo. Ten a mano algo concreto: un cuaderno, un proyecto a medio hacer, un libro. El cerebro no tolera el vacío — dale algo mejor.\n\n4. El castigo que entrena.\nCada vez que cedes a un placer momentáneo que habías decidido evitar — 100 flexiones. No como castigo moral. Como sistema: tu cuerpo aprende que ceder tiene un coste físico real. Y muy pronto, el cerebro empieza a calcular si el scroll de dos minutos vale el esfuerzo. Spoiler: casi nunca vale.',
+      prompt: '¿Cuántas veces cogiste el teléfono hoy de forma automática, sin haberlo decidido conscientemente? ¿Qué hiciste en su lugar?',
     },
   },
 
@@ -308,7 +309,7 @@ export const AREA_MAP = Object.fromEntries(AREAS.map((a) => [a.id, a])) as Recor
 export const AREA_TITLES_EN: Record<string, string> = {
   acceptance: 'Acceptance',
   discipline: 'Discipline',
-  no_complaining: 'Stop Complaining',
+  no_complaining: 'Momentary Pleasure',
   leap: 'Fear',
   gratitude: 'Gratitude',
   observe: 'Emotions',

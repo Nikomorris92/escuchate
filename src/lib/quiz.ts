@@ -16,7 +16,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: 3,
     area: 'no_complaining',
-    question: '¿Cuántas veces al día te sorprendes quejándote —en voz alta o en tu cabeza— de algo?',
+    question: '¿Con qué frecuencia eliges el alivio inmediato —el teléfono, las redes, el sofá— en lugar de hacer lo que sabes que deberías hacer?',
     options: ['Casi nunca', 'A veces', 'A menudo', 'Casi siempre'],
   },
   {

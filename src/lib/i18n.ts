@@ -116,7 +116,7 @@ export const translations = {
     // Quiz - feedback aree
     quiz_feedback_acceptance: 'Hay algo en ti que todavía estás combatiendo. Una parte que juzgas, que quisieras que fuera diferente. Ese esfuerzo cansa — y suele ser el primero que hay que soltar.',
     quiz_feedback_discipline: 'Empiezas, pero algo te detiene a mitad. No es falta de voluntad: es que todavía no has encontrado el sistema que te sostenga cuando las ganas se acaban.',
-    quiz_feedback_no_complaining: 'Te quedas mucho tiempo en el problema antes de moverte hacia la solución. La queja te da alivio, pero te quita el impulso que necesitas para cambiar las cosas.',
+    quiz_feedback_no_complaining: 'El alivio inmediato te aleja de lo que realmente quieres. Cada vez que cedes al placer fácil, entrenas a tu cerebro para evitar el esfuerzo — y con el tiempo, eso tiene un precio.',
     quiz_feedback_obstacle: 'Ante una dificultad, tu primer movimiento suele ser evitarla. Lo que no afrontas hoy regresa mañana — casi siempre más grande.',
     quiz_feedback_leap: 'Piensas, analizas, vuelves a pensar — y el tiempo pasa sin que tomes la decisión. La claridad que esperas casi nunca llega antes de actuar.',
     quiz_feedback_gratitude: 'Te resulta difícil detenerte a ver lo que ya funciona. Vives más en lo que falta que en lo que tienes — y eso agota sin que te des cuenta.',
@@ -241,7 +241,7 @@ export const translations = {
     // Quiz - feedback areas
     quiz_feedback_acceptance: 'There is something in you that you are still fighting. A part you judge, that you wish were different. That effort is exhausting — and it is usually the first thing that needs to be let go.',
     quiz_feedback_discipline: 'You start, but something stops you halfway. It is not a lack of willpower: you just haven\'t found the system that sustains you when motivation runs out.',
-    quiz_feedback_no_complaining: 'You spend a lot of time on the problem before moving toward the solution. Complaining brings relief, but it takes away the momentum you need to change things.',
+    quiz_feedback_no_complaining: 'Immediate relief pulls you away from what you truly want. Every time you give in to easy pleasure, you train your brain to avoid effort — and over time, that has a cost.',
     quiz_feedback_obstacle: 'When faced with a difficulty, your first move is usually to avoid it. What you don\'t face today comes back tomorrow — almost always bigger.',
     quiz_feedback_leap: 'You think, analyze, think again — and time passes without you making the decision. The clarity you are waiting for almost never comes before acting.',
     quiz_feedback_gratitude: 'You find it hard to stop and see what is already working. You live more in what is missing than in what you have — and that drains you without you realizing it.',
