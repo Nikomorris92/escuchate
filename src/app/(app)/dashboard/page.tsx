@@ -105,6 +105,8 @@ export default function DashboardPage() {
   const [completedAreas, setCompletedAreas] = useState<Set<string>>(new Set())
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [notifications, setNotifications] = useState<{ id: string; area: string; message_es: string; message_en: string }[]>([])
+  const [showNotifications, setShowNotifications] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -132,6 +134,15 @@ export default function DashboardPage() {
 
       setCompletedAreas(new Set((levels ?? []).map((l: { area: string }) => l.area)))
       setProfile(prof as Profile)
+
+      const { data: notifData } = await supabase
+        .from('user_notifications')
+        .select('id, area, message_es, message_en')
+        .eq('user_id', user.id)
+        .eq('read', false)
+        .order('created_at', { ascending: false })
+      setNotifications(notifData ?? [])
+
       setLoading(false)
     }
     load()
@@ -160,10 +171,63 @@ export default function DashboardPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
           <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff' }}>Escúchate</h1>
-          <span style={{ display: 'inline-flex', alignItems: 'center', padding: '0.375rem 0.875rem', background: 'rgba(196,120,58,0.2)', border: '1px solid #c4783a', color: '#c4783a', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: '600' }}>
-            {profile.total_score ?? 0} pts
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Campanella notifiche */}
+            {notifications.length > 0 && (
+              <button
+                onClick={() => {
+                  setShowNotifications(v => !v)
+                  if (!showNotifications) {
+                    const supabase = (async () => {
+                      const { createClient } = await import('@/lib/supabase/client')
+                      return createClient()
+                    })()
+                    supabase.then(sb => sb.from('user_notifications').update({ read: true }).in('id', notifications.map(n => n.id)))
+                  }
+                }}
+                style={{
+                  position: 'relative', background: 'rgba(196,120,58,0.15)',
+                  border: '1px solid rgba(196,120,58,0.4)', borderRadius: '9999px',
+                  width: '2.25rem', height: '2.25rem', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#c4783a', fontSize: '1rem',
+                }}
+              >
+                🔔
+                <span style={{
+                  position: 'absolute', top: '-4px', right: '-4px',
+                  background: '#e05c4b', color: '#fff', borderRadius: '9999px',
+                  width: '1.1rem', height: '1.1rem', fontSize: '0.625rem',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700,
+                }}>
+                  {notifications.length}
+                </span>
+              </button>
+            )}
+            <span style={{ display: 'inline-flex', alignItems: 'center', padding: '0.375rem 0.875rem', background: 'rgba(196,120,58,0.2)', border: '1px solid #c4783a', color: '#c4783a', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: '600' }}>
+              {profile.total_score ?? 0} pts
+            </span>
+          </div>
         </div>
+
+        {/* Pannello notifiche */}
+        {showNotifications && notifications.length > 0 && (
+          <div style={{
+            marginBottom: '1.5rem', padding: '1rem 1.25rem',
+            background: 'rgba(196,120,58,0.08)', border: '1px solid rgba(196,120,58,0.25)',
+            borderRadius: '0.875rem',
+          }}>
+            <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem', fontWeight: 600 }}>
+              {lang === 'en' ? 'New updates' : 'Nuevas actualizaciones'}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {notifications.map(n => (
+                <p key={n.id} style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.6', margin: 0 }}>
+                  🆕 {lang === 'en' ? n.message_en : n.message_es}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Livello attuale */}
         {allCompleted ? (
