@@ -205,12 +205,9 @@ export default function AdminPage() {
         .order('created_at', { ascending: false })
       setUserFeedback(feedbackData ?? [])
 
-      // Attività utenti per monitoraggio — usa API route con service role (bypassa RLS)
-      const activityRes = await fetch('/api/admin/activity', { credentials: 'include' })
-      if (activityRes.ok) {
-        const activityJson = await activityRes.json()
-        setUserActivity(activityJson.activity ?? [])
-      }
+      // Attività utenti — SECURITY DEFINER function bypassa RLS
+      const { data: activityData } = await supabase.rpc('get_all_level_progress')
+      setUserActivity(activityData ?? [])
 
       // Journal entries
       const journalRes = await fetch('/api/admin/coaching-journal')
