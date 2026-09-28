@@ -186,13 +186,13 @@ export default function DashboardPage() {
               }}
               style={{
                 position: 'relative',
-                background: notifications.length > 0 ? '#f5c518' : 'rgba(255,255,255,0.07)',
-                border: notifications.length > 0 ? '2px solid #f5c518' : '1px solid rgba(255,255,255,0.15)',
+                background: notifications.length > 0 ? '#f5c518' : 'rgba(255,255,255,0.12)',
+                border: notifications.length > 0 ? '2px solid #f5c518' : '1.5px solid rgba(255,255,255,0.3)',
                 borderRadius: '9999px',
                 width: '2.5rem', height: '2.5rem', display: 'flex',
                 alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', fontSize: '1.1rem',
-                boxShadow: notifications.length > 0 ? '0 0 12px rgba(245,197,24,0.5)' : 'none',
+                boxShadow: notifications.length > 0 ? '0 0 12px rgba(245,197,24,0.5)' : '0 0 0 0 transparent',
                 transition: 'all 0.2s',
               }}
             >
