@@ -173,36 +173,42 @@ export default function DashboardPage() {
           <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff' }}>Escúchate</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {/* Campanella notifiche */}
-            {notifications.length > 0 && (
-              <button
-                onClick={() => {
-                  setShowNotifications(v => !v)
-                  if (!showNotifications) {
-                    const supabase = (async () => {
-                      const { createClient } = await import('@/lib/supabase/client')
-                      return createClient()
-                    })()
-                    supabase.then(sb => sb.from('user_notifications').update({ read: true }).in('id', notifications.map(n => n.id)))
-                  }
-                }}
-                style={{
-                  position: 'relative', background: 'rgba(196,120,58,0.15)',
-                  border: '1px solid rgba(196,120,58,0.4)', borderRadius: '9999px',
-                  width: '2.25rem', height: '2.25rem', display: 'flex',
-                  alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#c4783a', fontSize: '1rem',
-                }}
-              >
-                🔔
+            <button
+              onClick={() => {
+                setShowNotifications(v => !v)
+                if (!showNotifications && notifications.length > 0) {
+                  const supabase = (async () => {
+                    const { createClient } = await import('@/lib/supabase/client')
+                    return createClient()
+                  })()
+                  supabase.then(sb => sb.from('user_notifications').update({ read: true }).in('id', notifications.map(n => n.id)))
+                }
+              }}
+              style={{
+                position: 'relative',
+                background: notifications.length > 0 ? '#f5c518' : 'rgba(255,255,255,0.07)',
+                border: notifications.length > 0 ? '2px solid #f5c518' : '1px solid rgba(255,255,255,0.15)',
+                borderRadius: '9999px',
+                width: '2.5rem', height: '2.5rem', display: 'flex',
+                alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer', fontSize: '1.1rem',
+                boxShadow: notifications.length > 0 ? '0 0 12px rgba(245,197,24,0.5)' : 'none',
+                transition: 'all 0.2s',
+              }}
+            >
+              🔔
+              {notifications.length > 0 && (
                 <span style={{
-                  position: 'absolute', top: '-4px', right: '-4px',
+                  position: 'absolute', top: '-5px', right: '-5px',
                   background: '#e05c4b', color: '#fff', borderRadius: '9999px',
-                  width: '1.1rem', height: '1.1rem', fontSize: '0.625rem',
+                  width: '1.25rem', height: '1.25rem', fontSize: '0.7rem',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700,
+                  border: '2px solid #0a1628',
                 }}>
                   {notifications.length}
                 </span>
-              </button>
-            )}
+              )}
+            </button>
             <span style={{ display: 'inline-flex', alignItems: 'center', padding: '0.375rem 0.875rem', background: 'rgba(196,120,58,0.2)', border: '1px solid #c4783a', color: '#c4783a', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: '600' }}>
               {profile.total_score ?? 0} pts
             </span>
