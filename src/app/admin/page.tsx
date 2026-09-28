@@ -205,12 +205,12 @@ export default function AdminPage() {
         .order('created_at', { ascending: false })
       setUserFeedback(feedbackData ?? [])
 
-      // Attività utenti per monitoraggio
-      const { data: activityData } = await supabase
-        .from('level_progress')
-        .select('user_id, area, completed_at')
-        .order('completed_at', { ascending: false })
-      setUserActivity(activityData ?? [])
+      // Attività utenti per monitoraggio — usa API route con service role (bypassa RLS)
+      const activityRes = await fetch('/api/admin/activity')
+      if (activityRes.ok) {
+        const activityJson = await activityRes.json()
+        setUserActivity(activityJson.activity ?? [])
+      }
 
       // Journal entries
       const journalRes = await fetch('/api/admin/coaching-journal')
