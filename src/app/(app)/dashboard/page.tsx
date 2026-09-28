@@ -225,12 +225,24 @@ export default function DashboardPage() {
             <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem', fontWeight: 600 }}>
               {lang === 'en' ? 'New updates' : 'Nuevas actualizaciones'}
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {notifications.map(n => (
-                <p key={n.id} style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.6', margin: 0 }}>
-                  🆕 {lang === 'en' ? n.message_en : n.message_es}
-                </p>
-              ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+              {notifications.map(n => {
+                const areaTitle = lang === 'en'
+                  ? (AREA_TITLES_EN[n.area] ?? AREA_MAP[n.area]?.title ?? n.area)
+                  : (AREA_MAP[n.area]?.title ?? n.area)
+                const areaSlug = AREA_MAP[n.area]?.id ?? n.area
+                return (
+                  <div key={n.id} style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.6' }}>
+                    🆕 {lang === 'en' ? n.message_en : n.message_es}{' '}
+                    <Link href={`/journey/${areaSlug}`} style={{
+                      color: '#f5c518', fontWeight: 700, textDecoration: 'underline',
+                      textUnderlineOffset: '2px',
+                    }}>
+                      → {areaTitle}
+                    </Link>
+                  </div>
+                )
+              })}
             </div>
           </div>
         )}
