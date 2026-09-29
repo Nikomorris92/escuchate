@@ -48,6 +48,7 @@ export const AREAS: AreaDefinition[] = [
       'Un médico entra al quirófano aunque no tenga ganas. No porque sea de hierro — sino porque sabe que su deber no depende de su estado de ánimo. Tú también puedes actuar antes de sentirte listo.',
       'Cuanto más tiempo y esfuerzo dedicas a lo que amas, más rápido llegas a donde quieres estar. No hay atajo más directo que eso.',
       'No existe el éxito sin el fracaso. Cada intento fallido te acerca a la consecución del objetivo — es más importante el camino y los intentos fallidos que el logro en sí mismo.',
+      'Encuentra una hora al día que sea solo tuya. Sin teléfono, sin ruido, sin nadie que te necesite. Una hora en la que lees, entrenas, te mueves, te hablas bien. No es un lujo — es el mínimo que te debes a ti mismo. Todo lo que construyes hacia afuera empieza por lo que construyes en ese silencio.',
     ],
     reflection:
       '¿Cuál es la acción más pequeña que podrías hacer hoy para cumplir una promesa a ti mismo?',
@@ -57,6 +58,11 @@ export const AREAS: AreaDefinition[] = [
       description:
         'Todo empieza la noche anterior. Si te acuestas a medianoche o más tarde, no es lo mismo que hacerlo a las 10:30. El cuerpo no descansa igual: el tipo de sueño es diferente y la energía con la que te levantas también. Garantízate 7 u 8 horas de sueño real — eso no es perder tiempo, es la base de todo lo demás.\n\nDurante los próximos 7 días, haz esto cada mañana: levántate 30 minutos antes de lo habitual y mueve el cuerpo — lo que sea: caminar, estirar, subir escaleras. Sin teléfono hasta que hayas terminado. Y si puedes, apúntate a una clase en el gimnasio, la que sea. Ahí entra menos la voluntad cuando ya has pagado un abono o reservado una plaza. Verás que todo lo que viene después lo enfrentas con otro tipo de energía.\n\nUna cosa más: elige el entorno donde trabajas. Tu cerebro no rinde igual en el sofá que en un sitio donde hay energía y movimiento. Busca tu lugar — una cafetería, una biblioteca, un banco en la calle — y prueba a trabajar desde ahí aunque sea una vez.\n\nAl final del día, si has cumplido, date algo concreto: algo pequeño que disfrutes y que hayas reservado solo para cuando cumplas tu palabra. No como premio por haber sido bueno — sino como confirmación de que eres alguien que hace lo que dice.',
       prompt: '¿Qué cambió cuando lo hiciste igual, sin esperar las ganas?',
+    },
+    secondExercise: {
+      description:
+        'Decide ahora mismo cuál es tu hora. ¿A las 6 de la mañana antes de que empiece el día? ¿A mediodía? ¿Por la noche? Elige el momento, ponlo en el calendario, y protégelo como si fuera la reunión más importante de tu semana — porque lo es.\n\nDurante esa hora: muévete, lee algo que te haga crecer, dite en voz alta una cosa que admiras de ti mismo. No para el mundo. Para ti.\n\nSin teléfono. Sin notificaciones. Sin nadie que te necesite. Solo tú.',
+      prompt: '¿Cuál es tu hora? ¿Qué harás en ella mañana?',
     },
   },
   {

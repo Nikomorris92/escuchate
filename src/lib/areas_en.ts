@@ -48,6 +48,7 @@ export const AREAS_EN: AreaDefinition[] = [
       'A doctor enters the operating room even when they don\'t feel like it. Not because they are made of iron — but because they know their duty does not depend on their mood. You too can act before you feel ready.',
       'The more time and effort you dedicate to what you love, the faster you get to where you want to be. There is no more direct shortcut than that.',
       'There is no success without failure. Every failed attempt brings you closer to achieving your goal — the journey and the failed attempts are more important than the achievement itself.',
+      'Find one hour a day that is just yours. No phone, no noise, no one who needs you. An hour where you read, train, move, speak kindly to yourself. This is not a luxury — it is the minimum you owe yourself. Everything you build on the outside starts with what you build in that silence.',
     ],
     reflection:
       'What is the smallest action you could take today to keep a promise to yourself?',
@@ -57,6 +58,11 @@ export const AREAS_EN: AreaDefinition[] = [
       description:
         'Everything starts the night before. Going to bed at midnight or later is not the same as going at 10:30. Your body doesn\'t rest the same way: the type of sleep is different and the energy you wake up with is too. Give yourself 7 or 8 hours of real sleep — that is not wasting time, it is the foundation of everything else.\n\nFor the next 7 days, do this every morning: get up 30 minutes earlier than usual and move your body — anything: walk, stretch, take the stairs. No phone until you\'re done. And if you can, sign up for a gym class, any one. There\'s less room for willpower when you\'ve already paid or booked a spot. You\'ll find that everything that comes after you face with a different kind of energy.\n\nOne more thing: choose where you work. Your brain doesn\'t perform the same on the sofa as in a place with energy and movement. Find your place — a café, a library, a bench outside — and try working from there even just once.\n\nAt the end of the day, if you kept your word, give yourself something concrete: something small you enjoy that you\'ve reserved only for when you keep your promise. Not as a reward for being good — but as confirmation that you are someone who does what they say.',
       prompt: 'What changed when you did it anyway, without waiting to feel like it?',
+    },
+    secondExercise: {
+      description:
+        'Decide right now what your hour is. 6 in the morning before the day begins? At noon? In the evening? Choose the time, put it in your calendar, and protect it as if it were the most important meeting of your week — because it is.\n\nDuring that hour: move your body, read something that makes you grow, say out loud one thing you admire about yourself. Not for the world. For you.\n\nNo phone. No notifications. No one who needs you. Just you.',
+      prompt: 'What is your hour? What will you do during it tomorrow?',
     },
   },
   {
