@@ -15,6 +15,7 @@ export const AREAS_EN: AreaDefinition[] = [
       'When your heart is full of kindness and love, it is much easier to accept even events that seem adverse at first glance. Not because they hurt less — but because from that place, you can see further.',
       'It is not pain that makes us suffer most, but the continuous resistance to a reality we cannot change. Letting go of that resistance does not mean you don\'t care — it means you care enough about yourself not to destroy yourself.',
       'When I was young I fell in love with a girl who lived in Australia. She promised she would come back to Italy and we could have our story together. It never happened. One day she called to say she was staying there. Two years later, before I moved to Spain, she came back for some medical paperwork — and we still didn\'t meet. Accepting that years earlier, and looking forward, would have saved me years of suffering. I understood it late. But I understood it.',
+      'There is a difference between resignation and acceptance. Resignation says: "there\'s nothing I can do, so I give up." Acceptance says: "this is what it is — now, what do I do with it?" One paralyzes you. The other gives you power.',
     ],
     reflection:
       'Is there something that has happened — a situation, someone else\'s decision, something that didn\'t go as you hoped — that you are still fighting against? What would change if, just for today, you stopped?',

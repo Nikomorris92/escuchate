@@ -15,6 +15,7 @@ export const AREAS: AreaDefinition[] = [
       'Cuando se tiene el corazón lleno de bondad y amor, es mucho más fácil aceptar incluso los acontecimientos que a primera vista parecen adversos. No porque duelan menos — sino porque desde ahí se ve más lejos.',
       'No es el dolor lo que más nos hace sufrir, sino la resistencia continua a una realidad que no podemos cambiar. Soltar esa resistencia no significa que no te importe — significa que te importas lo suficiente como para no destruirte.',
       'De joven me enamoré de una chica que vivía en Australia. Me prometió que volvería a vivir en Italia y que podríamos tener nuestra historia. No ocurrió. Un día me llamó para decirme que se quedaría allí. Dos años después, antes de irme a España, volvió por unos trámites médicos — y tampoco nos vimos. Aceptar aquello años antes, y mirar hacia adelante, me habría ahorrado años de sufrimiento. Lo entendí tarde. Pero lo entendí.',
+      'Hay una diferencia entre resignarse y aceptar. La resignación dice: "no puedo hacer nada, así que me rindo." La aceptación dice: "esto es lo que hay — ahora, ¿qué hago con ello?" Una te paraliza. La otra te da poder.',
     ],
     reflection:
       '¿Hay algo que ha ocurrido — una situación, una decisión de otra persona, algo que no salió como esperabas — que todavía estás combatiendo? ¿Qué cambiaría si, solo por hoy, dejaras de hacerlo?',
