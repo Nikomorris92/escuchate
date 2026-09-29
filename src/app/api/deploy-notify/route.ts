@@ -27,7 +27,10 @@ export async function POST(req: Request) {
     changed: storedMap[area.id] === undefined || area.teachings.length > (storedMap[area.id] ?? 0),
   }))
 
-  const changedAreas = AREAS.filter(area => {
+  const body = await req.json().catch(() => ({}))
+  const forceAll = body?.force === true
+
+  const changedAreas = forceAll ? [...AREAS] : AREAS.filter(area => {
     const stored = storedMap[area.id]
     return stored === undefined || area.teachings.length > stored
   })
