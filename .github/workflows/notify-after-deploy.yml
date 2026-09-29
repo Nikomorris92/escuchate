@@ -1,0 +1,18 @@
+name: Notify after deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Vercel deploy
+        run: sleep 120
+
+      - name: Call deploy-notify
+        run: |
+          curl -X POST https://escuchate.vercel.app/api/deploy-notify \
+            -H "x-deploy-token: ${{ secrets.DEPLOY_NOTIFY_SECRET }}" \
+            -H "Content-Type: application/json"
