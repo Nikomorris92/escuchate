@@ -357,8 +357,11 @@ export default function AdminPage() {
           const completedAreas = [...new Set(acts.map(a => a.area))]
           return { uid, email, lastAct, daysSince, completedAreas }
         }).sort((a, b) => {
-          if (a.lastAct && b.lastAct) return new Date(b.lastAct).getTime() - new Date(a.lastAct).getTime()
-          if (a.lastAct) return -1; if (b.lastAct) return 1; return 0
+          const uA = users.find(u => u.id === a.uid)
+          const uB = users.find(u => u.id === b.uid)
+          const tA = uA?.created_at ? new Date(uA.created_at).getTime() : 0
+          const tB = uB?.created_at ? new Date(uB.created_at).getTime() : 0
+          return tB - tA
         })
 
         const active7 = rows.filter(r => r.daysSince !== null && r.daysSince <= 7).length
@@ -986,8 +989,11 @@ export default function AdminPage() {
           const completedAreas = [...new Set(acts.map(a => a.area))]
           return { uid, email, lastAct, daysSince, completedAreas }
         }).sort((a, b) => {
-          if (a.lastAct && b.lastAct) return new Date(b.lastAct).getTime() - new Date(a.lastAct).getTime()
-          if (a.lastAct) return -1; if (b.lastAct) return 1; return 0
+          const uA = users.find(u => u.id === a.uid)
+          const uB = users.find(u => u.id === b.uid)
+          const tA = uA?.created_at ? new Date(uA.created_at).getTime() : 0
+          const tB = uB?.created_at ? new Date(uB.created_at).getTime() : 0
+          return tB - tA
         })
 
         const active7 = rows.filter(r => r.daysSince !== null && r.daysSince <= 7).length
