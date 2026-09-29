@@ -20,13 +20,19 @@ export async function POST(req: Request) {
   const storedMap: Record<string, number> = {}
   for (const v of storedVersions ?? []) storedMap[v.area] = v.teaching_count
 
+  const debugInfo = AREAS.map(area => ({
+    id: area.id,
+    stored: storedMap[area.id] ?? 'NOT_IN_DB',
+    current: area.teachings.length,
+    changed: storedMap[area.id] === undefined || area.teachings.length > (storedMap[area.id] ?? 0),
+  }))
+
   const changedAreas = AREAS.filter(area => {
     const stored = storedMap[area.id]
     return stored === undefined || area.teachings.length > stored
   })
 
   if (changedAreas.length === 0) {
-    // Inizializza i count se tabella vuota
     for (const area of AREAS) {
       await supabase.from('area_versions').upsert({
         area: area.id,
@@ -34,7 +40,7 @@ export async function POST(req: Request) {
         updated_at: new Date().toISOString(),
       })
     }
-    return NextResponse.json({ sent: 0, message: 'Counts inizializzati, nessuna novità.' })
+    return NextResponse.json({ sent: 0, message: 'Nessuna area da notificare — counts aggiornati.', debug: debugInfo })
   }
 
   const { data: profiles } = await supabase.from('user_profiles').select('id')

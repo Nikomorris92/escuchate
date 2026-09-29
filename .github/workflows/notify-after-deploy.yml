@@ -13,6 +13,7 @@ jobs:
 
       - name: Call deploy-notify
         run: |
-          curl -X POST https://www.escuchateati.com/api/deploy-notify \
+          curl -v -X POST https://www.escuchateati.com/api/deploy-notify \
             -H "x-deploy-token: ${{ secrets.DEPLOY_NOTIFY_SECRET }}" \
-            -H "Content-Type: application/json"
+            -H "Content-Type: application/json" \
+            -w "\n\nHTTP_STATUS: %{http_code}\n"
