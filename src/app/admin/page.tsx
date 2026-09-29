@@ -392,7 +392,12 @@ export default function AdminPage() {
                       style={{ width: '100%', textAlign: 'left', background: expandedActivity === r.uid ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '0.625rem', padding: '0.625rem 0.875rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}
                     >
                       <span style={{ fontSize: '0.875rem', color: '#ffffff' }}>{r.email}</span>
-                      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: '0.625rem', alignItems: 'center' }}>
+                        {(() => { const u = users.find(u => u.id === r.uid); return u ? (
+                          <span style={{ fontSize: '0.6875rem', padding: '0.15rem 0.5rem', borderRadius: '9999px', background: u.quiz_completed ? 'rgba(74,222,128,0.1)' : 'rgba(248,113,113,0.1)', color: u.quiz_completed ? '#4ade80' : '#f87171', border: `1px solid ${u.quiz_completed ? 'rgba(74,222,128,0.2)' : 'rgba(248,113,113,0.2)'}` }}>
+                            {u.quiz_completed ? 'quiz ✓' : 'sin quiz'}
+                          </span>
+                        ) : null })()}
                         <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>{r.completedAreas.length}/{ALL_AREAS.length} aree</span>
                         <span style={{ fontSize: '0.6875rem', fontWeight: '600', padding: '0.15rem 0.5rem', borderRadius: '9999px', background: `${color}18`, color }}>{label}</span>
                       </div>
@@ -1016,7 +1021,12 @@ export default function AdminPage() {
                       style={{ width: '100%', textAlign: 'left', background: expandedActivity === r.uid ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '0.625rem', padding: '0.625rem 0.875rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}
                     >
                       <span style={{ fontSize: '0.875rem', color: '#ffffff' }}>{r.email}</span>
-                      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: '0.625rem', alignItems: 'center' }}>
+                        {(() => { const u = users.find(u => u.id === r.uid); return u ? (
+                          <span style={{ fontSize: '0.6875rem', padding: '0.15rem 0.5rem', borderRadius: '9999px', background: u.quiz_completed ? 'rgba(74,222,128,0.1)' : 'rgba(248,113,113,0.1)', color: u.quiz_completed ? '#4ade80' : '#f87171', border: `1px solid ${u.quiz_completed ? 'rgba(74,222,128,0.2)' : 'rgba(248,113,113,0.2)'}` }}>
+                            {u.quiz_completed ? 'quiz ✓' : 'sin quiz'}
+                          </span>
+                        ) : null })()}
                         <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>{r.completedAreas.length}/{ALL_AREAS.length} aree</span>
                         <span style={{ fontSize: '0.6875rem', fontWeight: '600', padding: '0.15rem 0.5rem', borderRadius: '9999px', background: `${color}18`, color }}>{label}</span>
                       </div>
