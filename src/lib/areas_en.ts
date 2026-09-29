@@ -49,6 +49,7 @@ export const AREAS_EN: AreaDefinition[] = [
       'The more time and effort you dedicate to what you love, the faster you get to where you want to be. There is no more direct shortcut than that.',
       'There is no success without failure. Every failed attempt brings you closer to achieving your goal — the journey and the failed attempts are more important than the achievement itself.',
       'Find one hour a day that is just yours. No phone, no noise, no one who needs you. An hour where you read, train, move, speak kindly to yourself. This is not a luxury — it is the minimum you owe yourself. Everything you build on the outside starts with what you build in that silence.',
+      'Discipline is not a personality trait — it is a skill. It is trained like a muscle: through repetition, through small daily challenges, through the conscious decision to choose the hard thing over the comfortable one. Nobody is born disciplined. It is built.',
     ],
     reflection:
       'What is the smallest action you could take today to keep a promise to yourself?',

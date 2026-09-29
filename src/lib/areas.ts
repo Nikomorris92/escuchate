@@ -49,6 +49,7 @@ export const AREAS: AreaDefinition[] = [
       'Cuanto más tiempo y esfuerzo dedicas a lo que amas, más rápido llegas a donde quieres estar. No hay atajo más directo que eso.',
       'No existe el éxito sin el fracaso. Cada intento fallido te acerca a la consecución del objetivo — es más importante el camino y los intentos fallidos que el logro en sí mismo.',
       'Encuentra una hora al día que sea solo tuya. Sin teléfono, sin ruido, sin nadie que te necesite. Una hora en la que lees, entrenas, te mueves, te hablas bien. No es un lujo — es el mínimo que te debes a ti mismo. Todo lo que construyes hacia afuera empieza por lo que construyes en ese silencio.',
+      'La disciplina no es una característica de personalidad — es una habilidad. Se entrena igual que un músculo: con repetición, con pequeños retos diarios, con la decisión consciente de elegir lo difícil sobre lo cómodo. Nadie nace disciplinado. Se construye.',
     ],
     reflection:
       '¿Cuál es la acción más pequeña que podrías hacer hoy para cumplir una promesa a ti mismo?',
