@@ -13,6 +13,6 @@ jobs:
 
       - name: Call deploy-notify
         run: |
-          curl -X POST https://escuchate.vercel.app/api/deploy-notify \
+          curl -X POST https://www.escuchateati.com/api/deploy-notify \
             -H "x-deploy-token: ${{ secrets.DEPLOY_NOTIFY_SECRET }}" \
             -H "Content-Type: application/json"
