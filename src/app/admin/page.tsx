@@ -137,6 +137,8 @@ export default function AdminPage() {
   const [studentReflections, setStudentReflections] = useState<Record<string, StudentReflection[]>>({})
   const [studentJournals, setStudentJournals] = useState<Record<string, StudentJournal[]>>({})
   const [loadingStudent, setLoadingStudent] = useState<string | null>(null)
+  const [sendingNotifs, setSendingNotifs] = useState(false)
+  const [notifMsg, setNotifMsg] = useState('')
 
   useEffect(() => {
     async function init() {
@@ -338,10 +340,35 @@ export default function AdminPage() {
     <div style={{ minHeight: '100dvh', padding: '2rem 1.5rem', maxWidth: '900px', margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ffffff' }}>Panel Admin</h1>
-        <button onClick={() => router.push('/')} style={{ color: 'rgba(255,255,255,0.5)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}>
-          ← Volver
-        </button>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <button
+            onClick={async () => {
+              setSendingNotifs(true)
+              setNotifMsg('')
+              const res = await fetch('/api/admin/notify-updates', { method: 'POST', credentials: 'include' })
+              const json = await res.json()
+              setNotifMsg(json.message ?? 'Fatto.')
+              setSendingNotifs(false)
+            }}
+            disabled={sendingNotifs}
+            style={{
+              fontSize: '0.8125rem', padding: '0.4rem 0.875rem',
+              background: 'rgba(245,197,24,0.15)', border: '1px solid rgba(245,197,24,0.4)',
+              color: '#f5c518', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: '600',
+            }}
+          >
+            {sendingNotifs ? 'Inviando…' : '🔔 Invia notifiche'}
+          </button>
+          <button onClick={() => router.push('/')} style={{ color: 'rgba(255,255,255,0.5)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}>
+            ← Volver
+          </button>
+        </div>
       </div>
+      {notifMsg && (
+        <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: '0.625rem', fontSize: '0.875rem', color: '#4ade80' }}>
+          {notifMsg}
+        </div>
+      )}
 
       {/* Monitoraggio attività — IN CIMA */}
       {(() => {
