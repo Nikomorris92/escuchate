@@ -51,6 +51,7 @@ export const AREAS: AreaDefinition[] = [
       'Encuentra una hora al día que sea solo tuya. Sin teléfono, sin ruido, sin nadie que te necesite. Una hora en la que lees, entrenas, te mueves, te hablas bien. No es un lujo — es el mínimo que te debes a ti mismo. Todo lo que construyes hacia afuera empieza por lo que construyes en ese silencio.',
       'La disciplina no es una característica de personalidad — es una habilidad. Se entrena igual que un músculo: con repetición, con pequeños retos diarios, con la decisión consciente de elegir lo difícil sobre lo cómodo. Nadie nace disciplinado. Se construye.',
       'El día que dejas de necesitar que alguien te empuje, que alguien te recuerde, que alguien te dé permiso — ese día empieza la verdadera disciplina.',
+      'Disciplina no es hacer las cosas cuando tienes ganas. Es hacerlas sobre todo cuando no las tienes.',
     ],
     reflection:
       '¿Cuál es la acción más pequeña que podrías hacer hoy para cumplir una promesa a ti mismo?',

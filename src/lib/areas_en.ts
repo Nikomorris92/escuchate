@@ -51,6 +51,7 @@ export const AREAS_EN: AreaDefinition[] = [
       'Find one hour a day that is just yours. No phone, no noise, no one who needs you. An hour where you read, train, move, speak kindly to yourself. This is not a luxury — it is the minimum you owe yourself. Everything you build on the outside starts with what you build in that silence.',
       'Discipline is not a personality trait — it is a skill. It is trained like a muscle: through repetition, through small daily challenges, through the conscious decision to choose the hard thing over the comfortable one. Nobody is born disciplined. It is built.',
       'The day you stop needing someone to push you, to remind you, to give you permission — that is the day real discipline begins.',
+      'Discipline is not doing things when you feel like it. It is doing them especially when you do not.',
     ],
     reflection:
       'What is the smallest action you could take today to keep a promise to yourself?',
