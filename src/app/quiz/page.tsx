@@ -226,6 +226,26 @@ export default function QuizPage() {
     return (
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
+
+          {/* Banner puntos */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '1rem',
+            background: 'rgba(196,120,58,0.12)', border: '1px solid rgba(196,120,58,0.35)',
+            borderRadius: '0.875rem', padding: '1rem 1.25rem', marginBottom: '1.75rem',
+          }}>
+            <div style={{ fontSize: '2rem', lineHeight: 1 }}>🏅</div>
+            <div>
+              <p style={{ margin: 0, fontSize: '1.125rem', fontWeight: '700', color: '#c4783a' }}>
+                +20 {lang === 'es' ? 'puntos' : 'points'}
+              </p>
+              <p style={{ margin: 0, fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)', marginTop: '0.2rem' }}>
+                {lang === 'es'
+                  ? 'Has completado el cuestionario. ¡Este es el primer paso hacia el cambio!'
+                  : 'You completed the questionnaire. This is the first step toward change!'}
+              </p>
+            </div>
+          </div>
+
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             {t(lang, 'quiz_result_label')}
           </p>
