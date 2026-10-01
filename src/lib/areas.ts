@@ -62,7 +62,7 @@ export const AREAS: AreaDefinition[] = [
       '¿Cuál es la acción más pequeña que podrías hacer hoy para cumplir una promesa a ti mismo?',
     extraReflections: [
       '¿Qué excusa usas más a menudo para posponer lo que sabes que tienes que hacer? ¿Qué hay detrás de esa excusa?',
-      '¿Hay una versión de ti mismo — más disciplinada, más constante — que todavía no has dejado salir? ¿Qué le impide aparecer?',
+      'Imagínate obteniendo la mejor versión de ti mismo — a nivel físico, mental y espiritual. ¿Cómo lo conseguirías? ¿Qué tipo de cambios tendría tu vida?',
     ],
     inRelacion:
       'Quien sabe cumplir una promesa a sí mismo, por lo general, sabe cumplirla también a quien ama — la disciplina con uno mismo es la base de la confianza con el otro.',

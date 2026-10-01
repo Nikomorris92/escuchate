@@ -62,7 +62,7 @@ export const AREAS_EN: AreaDefinition[] = [
       'What is the smallest action you could take today to keep a promise to yourself?',
     extraReflections: [
       'What excuse do you use most often to postpone what matters? If that excuse weren\'t available, what would you do?',
-      'Is there a more disciplined version of yourself you can imagine — what does their daily life look like? What is one thing they do that you don\'t?',
+      'Imagine becoming the best version of yourself — physically, mentally, and spiritually. How would you get there? What kind of changes would your life have?',
     ],
     inRelacion:
       'Those who know how to keep a promise to themselves generally know how to keep it to those they love — discipline with oneself is the foundation of trust with others.',
