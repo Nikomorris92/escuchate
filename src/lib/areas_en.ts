@@ -228,7 +228,7 @@ export const AREAS_EN: AreaDefinition[] = [
       'Is there a difficulty in your life right now that you are avoiding instead of facing? What would happen if you tried to turn it to your advantage?',
     extraReflections: [
       'What is the biggest obstacle you have overcome in your life so far? What did it teach you about yourself?',
-      'Is there something you consider a failure that, looking at it from the outside, could actually be the foundation of something better?',
+      'Which of your greatest weaknesses could become one of your strongest points?',
     ],
     inRelacion:
       'Conflicts in relationships are obstacles. Those who avoid them accumulate distance; those who face them — with calm and honesty — build something more solid.',
