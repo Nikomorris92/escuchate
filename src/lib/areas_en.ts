@@ -19,6 +19,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'Is there something that has happened — a situation, someone else\'s decision, something that didn\'t go as you hoped — that you are still fighting against? What would change if, just for today, you stopped?',
+    extraReflections: [
+      'Is there something about yourself you haven\'t fully accepted yet? What story do you keep telling yourself about it?',
+      'If you could talk to the version of yourself who lived through that difficult moment, what would you say to them now?',
+    ],
     inRelacion:
       'Those who do not accept themselves tend to seek in others the confirmation they cannot give themselves — and that is a weight no relationship can carry for long.',
     practicalExercise: {
@@ -56,6 +60,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'What is the smallest action you could take today to keep a promise to yourself?',
+    extraReflections: [
+      'What excuse do you use most often to postpone what matters? If that excuse weren\'t available, what would you do?',
+      'Is there a more disciplined version of yourself you can imagine — what does their daily life look like? What is one thing they do that you don\'t?',
+    ],
     inRelacion:
       'Those who know how to keep a promise to themselves generally know how to keep it to those they love — discipline with oneself is the foundation of trust with others.',
     practicalExercise: {
@@ -90,6 +98,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'Think about the last moment you chose immediate relief. What were you really avoiding? What would you have done if that escape hadn\'t existed?',
+    extraReflections: [
+      'Is there a habit you know is draining your energy but you keep going back to? What do you think it\'s giving you that you haven\'t found elsewhere?',
+      'What would you do with your time if your phone ceased to exist? Is there something you\'ve been putting off that would finally surface?',
+    ],
     inRelacion:
       'Those who constantly seek easy stimulation end up feeling empty with real people — who are complex, imperfect, and don\'t give likes in two seconds.',
     practicalExercise: {
@@ -122,6 +134,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'Is there something you have been wanting to do or say for a long time but fear has stopped you from taking the step? What would actually be the worst that could happen?',
+    extraReflections: [
+      'Is there a decision you keep putting off because you\'re afraid of what others will think? What would you do if no one was watching?',
+      'Can you remember a time when you did something that scared you? What changed in you after you did it?',
+    ],
     inRelacion:
       'Waiting to "feel ready" to truly love, or to let go of someone who isn\'t right for you, is often just fear dressed up as caution.',
     practicalExercise: {
@@ -151,6 +167,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'What in your life, as it is today, deserves more gratitude than you are giving it?',
+    extraReflections: [
+      'Is there someone in your life you\'ve never properly thanked — someone whose impact you only really understood later?',
+      'What difficult situation from your past gave you something you value today? What would you have lost if it had never happened?',
+    ],
     inRelacion:
       'We love better from a place of fullness than from a place of lack — those who seek the other to fill a void will, sooner or later, consume them.',
     practicalExercise: {
@@ -177,6 +197,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'Is there a recent decision you would have made differently with a cooler head?',
+    extraReflections: [
+      'Is there an emotion you tend to avoid — one you quickly change the channel on when it appears? What do you think would happen if you stayed with it for a moment?',
+      'When was the last time you acted from calm instead of reaction? What was different about that moment?',
+    ],
     inRelacion:
       'Most arguments don\'t start from the problem itself, but from a reaction said at the wrong moment, with the wrong tone. Calm is not weakness — it is the only real advantage in a conflict.',
     practicalExercise: {
@@ -202,6 +226,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'Is there a difficulty in your life right now that you are avoiding instead of facing? What would happen if you tried to turn it to your advantage?',
+    extraReflections: [
+      'What is the biggest obstacle you have overcome in your life so far? What did it teach you about yourself?',
+      'Is there something you consider a failure that, looking at it from the outside, could actually be the foundation of something better?',
+    ],
     inRelacion:
       'Conflicts in relationships are obstacles. Those who avoid them accumulate distance; those who face them — with calm and honesty — build something more solid.',
     practicalExercise: {
@@ -228,6 +256,10 @@ export const AREAS_EN: AreaDefinition[] = [
       'After publishing my latest songs on Instagram, I decided to uninstall all social media from my phone. The number of details I was missing during a simple walk along the seafront or through the mountains was enormous. Because of that I started reading on public transport. Small actions that, day by day, bring me closer to who I want to be.',
     ],
     reflection: 'Where is your mind right now? In the past, in the future, or here?',
+    extraReflections: [
+      'Is there a memory from the past or a worry about the future that your mind keeps replaying? What would that thought need in order to let go?',
+      'What activity or moment in your day puts you most easily in the present? How could you have more of that?',
+    ],
     inRelacion:
       'You can sit next to someone and be completely somewhere else — that is where a relationship starts to empty out, in silence, without anyone saying it.',
     practicalExercise: {
@@ -260,6 +292,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'What is the voice you hear most often, the one that tells you that you are not enough? What happens if you watch it pass instead of believing it?',
+    extraReflections: [
+      'Where do you think that voice comes from? Do you recognize it in someone from your past?',
+      'If you spoke to your best friend the way you speak to yourself, would they still be your friend? What would you change?',
+    ],
     inRelacion:
       'Those who always believe the voice that says "I am not enough" tend to seek in the other a proof of the contrary that no relationship can provide forever.',
     practicalExercise: {
@@ -286,6 +322,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'Is there a deep resentment you still feel toward another person after years? And why?',
+    extraReflections: [
+      'Is there something you criticize in others that, if you\'re honest, you recognize in yourself too?',
+      'What part of yourself is hardest to accept? What would it take to forgive yourself for that?',
+    ],
     inRelacion:
       'Changing yourself is often what, without even trying to achieve it, also changes how the people around you behave.',
     practicalExercise: {
@@ -315,6 +355,10 @@ export const AREAS_EN: AreaDefinition[] = [
     ],
     reflection:
       'Do you seek in the other someone who completes you, or someone to share what you already are? Is there a limit of yours that you have crossed — or allowed to be crossed — to maintain a relationship?',
+    extraReflections: [
+      'Is there something you\'ve never said to someone important in your life, but have needed to say for a long time?',
+      'What have you learned from your past relationships — romantic, family, or friendship — that you now apply differently?',
+    ],
     inRelacion:
       'Everything you have worked on before — acceptance, discipline, presence, gratitude — converges here. This area is the result of all the others.',
     practicalExercise: {

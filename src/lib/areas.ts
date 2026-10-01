@@ -19,6 +19,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Hay algo que ha ocurrido — una situación, una decisión de otra persona, algo que no salió como esperabas — que todavía estás combatiendo? ¿Qué cambiaría si, solo por hoy, dejaras de hacerlo?',
+    extraReflections: [
+      '¿Hay algo de ti mismo que todavía no has aceptado del todo? ¿Cómo sería tratarte con la misma comprensión que le darías a un amigo?',
+      'Si pudieras hablar con la versión de ti que vivió ese momento difícil, ¿qué le dirías?',
+    ],
     inRelacion:
       'Quien no se acepta a sí mismo suele buscar en el otro la confirmación que no logra darse — y es un peso que ninguna relación aguanta mucho tiempo.',
     practicalExercise: {
@@ -56,6 +60,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Cuál es la acción más pequeña que podrías hacer hoy para cumplir una promesa a ti mismo?',
+    extraReflections: [
+      '¿Qué excusa usas más a menudo para posponer lo que sabes que tienes que hacer? ¿Qué hay detrás de esa excusa?',
+      '¿Hay una versión de ti mismo — más disciplinada, más constante — que todavía no has dejado salir? ¿Qué le impide aparecer?',
+    ],
     inRelacion:
       'Quien sabe cumplir una promesa a sí mismo, por lo general, sabe cumplirla también a quien ama — la disciplina con uno mismo es la base de la confianza con el otro.',
     practicalExercise: {
@@ -90,6 +98,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       'Piensa en el último momento en que elegiste el alivio inmediato. ¿Qué estabas evitando realmente? ¿Qué habrías hecho si ese escape no hubiera existido?',
+    extraReflections: [
+      '¿Hay algún hábito que sabes que te quita energía pero sigues repitiendo? ¿Qué te da a cambio — aunque sea por un momento?',
+      '¿Qué harías con tu tiempo si el teléfono dejara de existir durante una semana?',
+    ],
     inRelacion:
       'Quien busca constantemente estímulos fáciles acaba sintiéndose vacío con personas reales — que son complejas, imperfectas y no dan like en dos segundos.',
     practicalExercise: {
@@ -123,6 +135,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Hay algo que llevas tiempo queriendo hacer o decir y el miedo te ha impedido dar el paso? ¿Qué sería lo peor que podría pasar realmente?',
+    extraReflections: [
+      '¿Hay alguna decisión que postergues por miedo al juicio de los demás? ¿Qué elegirías si nadie te estuviera mirando?',
+      '¿Recuerdas alguna vez que te atreviste a hacer algo que te daba miedo? ¿Qué pasó después?',
+    ],
     inRelacion:
       'Esperar a "sentirse listo" para amar de verdad, o para dejar ir a quien no es el indicado, es a menudo solo miedo disfrazado de cautela.',
     practicalExercise: {
@@ -152,6 +168,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Qué, en tu vida tal como es hoy, merecería más gratitud de la que le estás dando?',
+    extraReflections: [
+      '¿Hay alguien en tu vida a quien nunca le hayas dado las gracias como se merece? ¿Qué te ha impedido hacerlo?',
+      '¿Qué situación difícil del pasado te ha dado algo que hoy valoras — aunque en su momento solo lo vivieras como pérdida?',
+    ],
     inRelacion:
       'Se ama mejor desde un lugar de plenitud que desde un lugar de carencia — quien busca al otro para llenar un vacío, tarde o temprano, lo consume.',
     practicalExercise: {
@@ -178,6 +198,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Hay alguna decisión reciente que habrías tomado de forma diferente con la cabeza más fría?',
+    extraReflections: [
+      '¿Hay alguna emoción que evitas sentir — que cambias de canal en cuanto aparece? ¿Qué crees que pasaría si te quedaras con ella un momento?',
+      '¿Cuándo fue la última vez que actuaste desde la calma en lugar de desde la reacción? ¿Qué fue diferente?',
+    ],
     inRelacion:
       'La mayoría de las peleas no nace del problema en sí, sino de una reacción dicha en el momento equivocado, con el tono equivocado. La calma no es debilidad — es la única ventaja real en un conflicto.',
     practicalExercise: {
@@ -203,6 +227,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Hay alguna dificultad en tu vida ahora mismo que estés evitando en lugar de enfrentando? ¿Qué pasaría si intentaras convertirla a tu favor?',
+    extraReflections: [
+      '¿Cuál ha sido el obstáculo más grande que has superado en tu vida hasta ahora? ¿Qué te enseñó de ti mismo?',
+      '¿Hay algo que consideras un fracaso pero que, mirándolo desde fuera, podría ser la base de algo mejor?',
+    ],
     inRelacion:
       'Los conflictos en las relaciones son obstáculos. Quien los evita acumula distancia; quien los enfrenta — con calma y honestidad — construye algo más sólido.',
     practicalExercise: {
@@ -229,6 +257,10 @@ export const AREAS: AreaDefinition[] = [
       'Después de publicar mis últimas canciones en Instagram, decidí desinstalar todas las redes sociales del teléfono. La cantidad de detalles que me perdía durante un simple paseo por el paseo marítimo o por la montaña era inmensa. Gracias a eso empecé a leer en el transporte público. Pequeñas acciones que, día a día, me acercan a lo que quiero ser.',
     ],
     reflection: '¿Dónde está tu mente en este momento? ¿En el pasado, en el futuro, o aquí?',
+    extraReflections: [
+      '¿Hay un recuerdo del pasado o una preocupación del futuro que tu mente repite con más frecuencia? ¿Qué necesitaría ese pensamiento para soltarse?',
+      '¿Qué actividad o momento del día te pone más fácilmente en el presente? ¿Cómo podrías tener más de eso?',
+    ],
     inRelacion:
       'Puedes estar sentado junto a alguien y estar completamente en otro lugar — ahí es donde una relación empieza a vaciarse, en silencio, sin que nadie lo diga.',
     practicalExercise: {
@@ -261,6 +293,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Cuál es la voz que escuchas con más frecuencia, la que te dice que no eres suficiente? ¿Qué pasa si la miras pasar en lugar de creerle?',
+    extraReflections: [
+      '¿De quién crees que viene esa voz? ¿La reconoces en alguien de tu historia?',
+      'Si le hablaras a tu mejor amigo como te hablas a ti mismo, ¿seguiría siendo tu amigo? ¿Qué cambiarías?',
+    ],
     inRelacion:
       'Quien siempre cree a la voz que dice "no soy suficiente" suele buscar en el otro una prueba del contrario que ninguna relación puede dar para siempre.',
     practicalExercise: {
@@ -287,6 +323,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Hay algún rencor muy grande que todavía sientes hacia otra persona después de años? ¿Y por qué?',
+    extraReflections: [
+      '¿Hay algo que criticas en los demás que, si eres honesto, reconoces también en ti mismo?',
+      '¿Qué parte de ti mismo te cuesta más aceptar? ¿Qué haría falta para perdonarte por eso?',
+    ],
     inRelacion:
       'Cambiar a uno mismo es a menudo lo que, sin esforzarse por lograrlo, cambia también cómo se comportan las personas a tu alrededor.',
     practicalExercise: {
@@ -316,6 +356,10 @@ export const AREAS: AreaDefinition[] = [
     ],
     reflection:
       '¿Buscas en el otro a alguien que te complete, o a alguien con quien compartir lo que ya eres? ¿Hay algún límite tuyo que hayas cruzado — o dejado cruzar — para mantener una relación?',
+    extraReflections: [
+      '¿Hay algo que nunca le has dicho a alguien importante en tu vida pero que llevas tiempo necesitando decir?',
+      '¿Qué aprendiste de tus relaciones pasadas — románticas, familiares o de amistad — que hoy aplicas de forma diferente?',
+    ],
     inRelacion:
       'Todo lo que has trabajado antes — aceptación, disciplina, presencia, gratitud — converge aquí. Esta área es el resultado de todas las demás.',
     practicalExercise: {
