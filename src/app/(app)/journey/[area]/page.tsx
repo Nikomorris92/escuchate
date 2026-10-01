@@ -72,9 +72,10 @@ export default function JourneyAreaPage() {
   }, [area])
 
   const currentAnswer = reflectionAnswers[reflectionStep] ?? ''
-  const wordCount = countWords(reflectionStep === allQuestions.length - 1 ? reflectionAnswers.join(' ') : currentAnswer)
   const currentWordCount = countWords(currentAnswer)
-  const sufficient = wordCount >= MIN_WORDS
+  const currentSufficient = currentWordCount >= MIN_WORDS
+  const wordCount = reflectionAnswers.reduce((acc, a) => acc + countWords(a), 0)
+  const sufficient = currentSufficient
 
   useEffect(() => {
     async function init() {
@@ -419,11 +420,9 @@ export default function JourneyAreaPage() {
             }}
           />
 
-          {isLastStep && (
-            <p className={`word-count${sufficient ? ' sufficient' : ''}`}>
-              {wordCount} / {MIN_WORDS} {lang === 'en' ? 'minimum words total' : 'palabras mínimas en total'}
-            </p>
-          )}
+          <p className={`word-count${currentSufficient ? ' sufficient' : ''}`}>
+            {currentWordCount} / {MIN_WORDS} {lang === 'en' ? 'minimum words' : 'palabras mínimas'}
+          </p>
 
           {error && (
             <p style={{ fontSize: '0.875rem', color: '#c4783a', marginTop: '0.75rem', lineHeight: '1.5' }}>
@@ -436,7 +435,7 @@ export default function JourneyAreaPage() {
               className="btn-primary"
               style={{ marginTop: '1.5rem' }}
               onClick={handleSubmit}
-              disabled={saving}
+              disabled={saving || !currentSufficient}
             >
               {saving ? (lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'en' ? 'Complete level' : 'Completar nivel')}
             </button>
@@ -444,10 +443,8 @@ export default function JourneyAreaPage() {
             <button
               className="btn-primary"
               style={{ marginTop: '1.5rem' }}
-              onClick={() => {
-                if (!currentAnswer.trim()) return
-                setReflectionStep(s => s + 1)
-              }}
+              onClick={() => setReflectionStep(s => s + 1)}
+              disabled={!currentSufficient}
             >
               {lang === 'en' ? 'Next →' : 'Siguiente →'}
             </button>
