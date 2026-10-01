@@ -18,6 +18,7 @@ export interface AreaDefinition {
   subtitle: string
   teachings: string[]
   reflection: string
+  extraReflections?: string[]
   inRelacion: string
   unlockNotice?: string
   practicalExercise?: {
