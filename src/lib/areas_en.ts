@@ -198,8 +198,8 @@ export const AREAS_EN: AreaDefinition[] = [
     reflection:
       'Is there a recent decision you would have made differently with a cooler head?',
     extraReflections: [
-      'Is there an emotion you tend to avoid — one you quickly change the channel on when it appears? What do you think would happen if you stayed with it for a moment?',
-      'When was the last time you acted from calm instead of reaction? What was different about that moment?',
+      'Anger and resentment are two of the worst emotions. In what situations, by listening to them, have you made your situation worse?',
+      'When someone is driven by desperation, they accept the worst compromises. Tell your worst personal experience with this emotion.',
     ],
     inRelacion:
       'Most arguments don\'t start from the problem itself, but from a reaction said at the wrong moment, with the wrong tone. Calm is not weakness — it is the only real advantage in a conflict.',

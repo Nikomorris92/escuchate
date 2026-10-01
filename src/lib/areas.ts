@@ -199,8 +199,8 @@ export const AREAS: AreaDefinition[] = [
     reflection:
       '¿Hay alguna decisión reciente que habrías tomado de forma diferente con la cabeza más fría?',
     extraReflections: [
-      '¿Hay alguna emoción que evitas sentir — que cambias de canal en cuanto aparece? ¿Qué crees que pasaría si te quedaras con ella un momento?',
-      '¿Cuándo fue la última vez que actuaste desde la calma en lugar de desde la reacción? ¿Qué fue diferente?',
+      'La rabia y el rencor son dos de las peores emociones. ¿En qué momentos, al hacerles caso, has empeorado tu situación?',
+      'Cuando uno está movido por la desesperación, acepta los peores compromisos. Cuenta tu peor experiencia con esta emoción.',
     ],
     inRelacion:
       'La mayoría de las peleas no nace del problema en sí, sino de una reacción dicha en el momento equivocado, con el tono equivocado. La calma no es debilidad — es la única ventaja real en un conflicto.',
