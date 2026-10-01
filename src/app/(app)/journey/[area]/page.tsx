@@ -62,7 +62,18 @@ export default function JourneyAreaPage() {
   const [savingJournal, setSavingJournal] = useState(false)
   const [journalSaved, setJournalSaved] = useState(false)
 
-  const wordCount = countWords(reflection)
+  const [reflectionStep, setReflectionStep] = useState(0)
+  const [reflectionAnswers, setReflectionAnswers] = useState<string[]>(['', '', ''])
+
+  const allQuestions = useMemo(() => {
+    const qs = [area?.reflection ?? '']
+    if (area?.extraReflections) qs.push(...area.extraReflections)
+    return qs
+  }, [area])
+
+  const currentAnswer = reflectionAnswers[reflectionStep] ?? ''
+  const wordCount = countWords(reflectionStep === allQuestions.length - 1 ? reflectionAnswers.join(' ') : currentAnswer)
+  const currentWordCount = countWords(currentAnswer)
   const sufficient = wordCount >= MIN_WORDS
 
   useEffect(() => {
@@ -137,10 +148,11 @@ export default function JourneyAreaPage() {
 
       const score = computeScore(wordCount)
 
+      const combinedReflection = allQuestions.map((q, i) => `${q}\n${reflectionAnswers[i] ?? ''}`).join('\n\n')
       const { data: inserted, error: insertError } = await supabase.from('level_progress').insert({
         user_id: user.id,
         area: areaId,
-        reflection_text: reflection,
+        reflection_text: combinedReflection,
         word_count: wordCount,
         score,
       }).select('id').single()
@@ -357,40 +369,61 @@ export default function JourneyAreaPage() {
 
   /* ── FASE: REFLEXIÓN ── */
   if (phase === 'reflection') {
+    const isLastStep = reflectionStep === allQuestions.length - 1
+    const totalSteps = allQuestions.length
+
     return (
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2.5rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }}
-            onClick={() => setPhase(area.practicalExercise ? 'exercise' : 'teachings')}>
+            onClick={() => {
+              if (reflectionStep > 0) setReflectionStep(s => s - 1)
+              else setPhase(area.practicalExercise ? 'exercise' : 'teachings')
+            }}>
             ← {lang === 'en' ? 'Back' : 'Volver'}
           </button>
 
-          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            {lang === 'en' ? 'Reflection' : 'Reflexión'} · {area.title}
-          </p>
-          <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', lineHeight: '1.6', margin: 0 }}>
-              {area.reflection}
-            </h2>
-            {area.extraReflections?.map((q, i) => (
-              <h2 key={i} style={{ fontSize: '1.125rem', fontWeight: '600', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
-                {q}
-              </h2>
+          {/* Step indicator */}
+          <div style={{ display: 'flex', gap: '0.375rem', marginBottom: '1.25rem' }}>
+            {allQuestions.map((_, i) => (
+              <div key={i} style={{
+                height: '3px', flex: 1, borderRadius: '9999px',
+                background: i <= reflectionStep ? '#c4783a' : 'rgba(255,255,255,0.15)',
+                transition: 'background 0.3s',
+              }} />
             ))}
           </div>
 
-          <p style={{ fontSize: '0.8125rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.6', marginBottom: '0.875rem' }}>
-            {lang === 'en' ? 'Take this seriously. Reflections are for you — not to tick a box. There is no point in deceiving yourself: writing what you think you should write, or asking an AI to do it for you. The only one who wins or loses here is you.' : 'Tómate este trabajo en serio. Las reflexiones son para ti — no para cumplir. A nada sirve engañarte: escribir lo que crees que hay que escribir, o pedirle a una IA que lo haga por ti. El único que gana o pierde aquí eres tú.'}
+          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+            {lang === 'en' ? 'Reflection' : 'Reflexión'} · {reflectionStep + 1}/{totalSteps}
           </p>
+
+          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+            {allQuestions[reflectionStep]}
+          </h2>
+
+          {reflectionStep === 0 && (
+            <p style={{ fontSize: '0.8125rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.6', marginBottom: '0.875rem' }}>
+              {lang === 'en' ? 'Take this seriously. Reflections are for you — not to tick a box. There is no point in deceiving yourself: writing what you think you should write, or asking an AI to do it for you. The only one who wins or loses here is you.' : 'Tómate este trabajo en serio. Las reflexiones son para ti — no para cumplir. A nada sirve engañarte: escribir lo que crees que hay que escribir, o pedirle a una IA que lo haga por ti. El único que gana o pierde aquí eres tú.'}
+            </p>
+          )}
+
           <textarea
+            key={reflectionStep}
             className="reflection-textarea"
             placeholder={lang === 'en' ? 'Write your reflection here…' : 'Escribe aquí tu reflexión…'}
-            value={reflection}
-            onChange={(e) => setReflection(e.target.value)}
+            value={currentAnswer}
+            onChange={(e) => {
+              const val = e.target.value
+              setReflectionAnswers(prev => { const next = [...prev]; next[reflectionStep] = val; return next })
+            }}
           />
-          <p className={`word-count${sufficient ? ' sufficient' : ''}`}>
-            {wordCount} / {MIN_WORDS} {lang === 'en' ? 'minimum words' : 'palabras mínimas'}
-          </p>
+
+          {isLastStep && (
+            <p className={`word-count${sufficient ? ' sufficient' : ''}`}>
+              {wordCount} / {MIN_WORDS} {lang === 'en' ? 'minimum words total' : 'palabras mínimas en total'}
+            </p>
+          )}
 
           {error && (
             <p style={{ fontSize: '0.875rem', color: '#c4783a', marginTop: '0.75rem', lineHeight: '1.5' }}>
@@ -398,14 +431,27 @@ export default function JourneyAreaPage() {
             </p>
           )}
 
-          <button
-            className="btn-primary"
-            style={{ marginTop: '1.5rem' }}
-            onClick={handleSubmit}
-            disabled={saving}
-          >
-            {saving ? (lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'en' ? 'Complete level' : 'Completar nivel')}
-          </button>
+          {isLastStep ? (
+            <button
+              className="btn-primary"
+              style={{ marginTop: '1.5rem' }}
+              onClick={handleSubmit}
+              disabled={saving}
+            >
+              {saving ? (lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'en' ? 'Complete level' : 'Completar nivel')}
+            </button>
+          ) : (
+            <button
+              className="btn-primary"
+              style={{ marginTop: '1.5rem' }}
+              onClick={() => {
+                if (!currentAnswer.trim()) return
+                setReflectionStep(s => s + 1)
+              }}
+            >
+              {lang === 'en' ? 'Next →' : 'Siguiente →'}
+            </button>
+          )}
 
           <p className="disclaimer">
             {lang === 'en' ? 'Your reflections are private — only you can see them.' : 'Tus reflexiones son privadas y solo tú puedes verlas.'}
