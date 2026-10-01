@@ -368,9 +368,16 @@ export default function JourneyAreaPage() {
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
             {lang === 'en' ? 'Reflection' : 'Reflexión'} · {area.title}
           </p>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-            {area.reflection}
-          </h2>
+          <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', lineHeight: '1.6', margin: 0 }}>
+              {area.reflection}
+            </h2>
+            {area.extraReflections?.map((q, i) => (
+              <h2 key={i} style={{ fontSize: '1.125rem', fontWeight: '600', color: 'rgba(255,255,255,0.7)', lineHeight: '1.6', margin: 0 }}>
+                {q}
+              </h2>
+            ))}
+          </div>
 
           <p style={{ fontSize: '0.8125rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.6', marginBottom: '0.875rem' }}>
             {lang === 'en' ? 'Take this seriously. Reflections are for you — not to tick a box. There is no point in deceiving yourself: writing what you think you should write, or asking an AI to do it for you. The only one who wins or loses here is you.' : 'Tómate este trabajo en serio. Las reflexiones son para ti — no para cumplir. A nada sirve engañarte: escribir lo que crees que hay que escribir, o pedirle a una IA que lo haga por ti. El único que gana o pierde aquí eres tú.'}
