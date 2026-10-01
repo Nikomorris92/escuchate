@@ -357,8 +357,8 @@ export const AREAS: AreaDefinition[] = [
     reflection:
       '¿Buscas en el otro a alguien que te complete, o a alguien con quien compartir lo que ya eres? ¿Hay algún límite tuyo que hayas cruzado — o dejado cruzar — para mantener una relación?',
     extraReflections: [
-      '¿Hay algo que nunca le has dicho a alguien importante en tu vida pero que llevas tiempo necesitando decir?',
-      '¿Qué aprendiste de tus relaciones pasadas — románticas, familiares o de amistad — que hoy aplicas de forma diferente?',
+      '¿Crees que estás haciendo todo lo posible por mantener una relación con otra persona — ya sea de amistad o de pareja? ¿Qué te ha faltado hasta ahora para encontrar a la persona que buscas?',
+      'En base a lo que te ha aportado esta plataforma, ¿cómo habrías gestionado tus relaciones anteriores? ¿Ahora te sientes listo/a para compartir tu vida con alguien?',
     ],
     inRelacion:
       'Todo lo que has trabajado antes — aceptación, disciplina, presencia, gratitud — converge aquí. Esta área es el resultado de todas las demás.',
