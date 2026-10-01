@@ -75,7 +75,7 @@ export default function DiscomfortJournalPage() {
         </button>
 
         <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.375rem' }}>
-          📓 {lang === 'en' ? 'Discomfort Journal' : 'Cuaderno del malestar'}
+          📓 {lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad'}
         </h1>
         <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', marginBottom: '2rem', lineHeight: '1.6' }}>
           {lang === 'en'

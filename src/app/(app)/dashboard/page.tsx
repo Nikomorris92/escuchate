@@ -172,6 +172,18 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
           <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff' }}>Escúchate</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Quaderno dell'incomodità */}
+            <a href="/discomfort-journal" style={{
+              background: 'rgba(255,255,255,0.12)',
+              border: '1.5px solid rgba(255,255,255,0.3)',
+              borderRadius: '9999px',
+              width: '2.5rem', height: '2.5rem', display: 'flex',
+              alignItems: 'center', justifyContent: 'center',
+              fontSize: '1.1rem', textDecoration: 'none',
+              title: lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad',
+            }}>
+              📓
+            </a>
             {/* Campanella notifiche */}
             <button
               onClick={() => {
@@ -339,18 +351,6 @@ export default function DashboardPage() {
           <div>
             <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{t(lang, 'dash_wall')}</p>
             <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>{t(lang, 'dash_wall_sub')}</p>
-          </div>
-          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
-        </Link>
-
-        <Link href="/discomfort-journal" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
-          <div>
-            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
-              {lang === 'en' ? '📓 Discomfort Journal' : '📓 Cuaderno del malestar'}
-            </p>
-            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
-              {lang === 'en' ? 'What did you face today?' : '¿Qué afrontaste hoy?'}
-            </p>
           </div>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
         </Link>
