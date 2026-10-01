@@ -10,7 +10,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/lib/LangContext'
 import VisionSlide from '@/components/VisionSlide'
 
-const MIN_WORDS = 30
+const MIN_WORDS = 15
 const MAX_SCORE_WORDS = 150
 
 function countWords(text: string) {
