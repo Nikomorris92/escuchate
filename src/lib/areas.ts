@@ -86,6 +86,7 @@ export const AREAS: AreaDefinition[] = [
       'La queja es el placer momentáneo del pensamiento: te da alivio inmediato, pero te deja exactamente donde estabas — o peor. Cada minuto que pasas quejándote es un minuto que no estás buscando la solución.',
       'Quejarse no está mal en sí mismo. El problema es cuando se convierte en un hábito — cuando la queja sustituye a la acción y el malestar se vuelve cómodo. Porque al menos así no tienes que moverte.',
       'Hay una pregunta que cambia todo: "¿qué depende de mí aquí?" No para culparte — sino para recuperar el timón. La queja te pone en el asiento de atrás. Esa pregunta te devuelve al volante.',
+      'El problema no desaparece porque lo nombras — desaparece porque actúas. La mente que busca soluciones y la mente que se queja no pueden funcionar al mismo tiempo. Tienes que elegir una.',
     ],
     reflection:
       'Piensa en el último momento en que elegiste el alivio inmediato. ¿Qué estabas evitando realmente? ¿Qué habrías hecho si ese escape no hubiera existido?',
@@ -128,6 +129,11 @@ export const AREAS: AreaDefinition[] = [
       description:
         'Elige un área en la que te sientas inseguro o carente. Toma clases, busca ayuda, y ve afrontando el miedo poco a poco. Como puede ser conducir un coche: haz las primeras prácticas con amigos que te den confianza, hasta que la práctica te dé la seguridad de poder ir solo y disfrutar esa sensación de libertad.\n\nEsfuérzate por interactuar con una persona diferente cada día. Sin presión — no tienes que encontrar al chico o a la chica de tu vida en esa ocasión. Poco a poco tendrás conversaciones cada vez más largas y agradables con personas que nunca habrías imaginado conocer.',
       prompt: '¿Qué miedo pequeño puedes afrontar esta semana? ¿Cuál sería el primer paso concreto?',
+    },
+    secondExercise: {
+      description:
+        'El malestar es un músculo. Si nunca lo entrenas, la más pequeña incomodidad te paraliza. Si lo entrenas cada día, te vuelves alguien que puede con casi todo.\n\nEl ejercicio es simple: cada mañana, oblígate a vivir una situación incómoda antes de que empiece el día.\n\nEl ejemplo más concreto: la ducha fría. Empieza con 10 segundos de agua completamente helada al final de tu ducha normal. Cada día, aumenta unos segundos. No vale hacerlo en verano si para ti el agua fría es agradable — el punto es el malestar real, no el ritual.\n\nPero no se limita a la ducha. La idea es enfrentarte cada día a algo que te dé pereza, vergüenza o miedo:\n— Habla con un desconocido.\n— Di lo que piensas cuando normalmente te callas.\n— Haz algo en público que normalmente evitarías.\n— Pide algo aunque creas que te dirán que no.\n\nAl final del día, apunta en tu cuaderno del malestar lo que afrontaste. No tiene que ser grande — tiene que ser real.',
+      prompt: '¿Qué momento incómodo elegiste afrontar hoy? ¿Qué notaste en ti antes, durante y después?',
     },
   },
   {

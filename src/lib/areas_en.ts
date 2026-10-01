@@ -86,6 +86,7 @@ export const AREAS_EN: AreaDefinition[] = [
       'Complaining is the momentary pleasure of thought: it gives you immediate relief but leaves you exactly where you were — or worse. Every minute spent complaining is a minute not spent looking for a solution.',
       'Complaining isn\'t bad in itself. The problem is when it becomes a habit — when complaining replaces action and discomfort becomes comfortable. Because at least that way you don\'t have to move.',
       'There\'s one question that changes everything: "What depends on me here?" Not to blame yourself — but to take back the wheel. Complaining puts you in the back seat. That question puts you back in control.',
+      'The problem doesn\'t disappear because you name it — it disappears because you act. The mind that looks for solutions and the mind that complains cannot work at the same time. You have to choose one.',
     ],
     reflection:
       'Think about the last moment you chose immediate relief. What were you really avoiding? What would you have done if that escape hadn\'t existed?',
@@ -127,6 +128,11 @@ export const AREAS_EN: AreaDefinition[] = [
       description:
         'Choose an area where you feel insecure or lacking. Take classes, seek help, and face the fear little by little. Like learning to drive a car: do the first practice runs with friends who give you confidence, until practice gives you the security to go alone and enjoy that feeling of freedom.\n\nMake an effort to interact with one different person every day. No pressure — you don\'t have to find the love of your life in that moment. Little by little you will have increasingly longer and more pleasant conversations with people you would never have imagined meeting.',
       prompt: 'What small fear can you face this week? What would be the first concrete step?',
+    },
+    secondExercise: {
+      description:
+        'Discomfort is a muscle. If you never train it, the smallest inconvenience paralyses you. If you train it every day, you become someone who can handle almost anything.\n\nThe exercise is simple: every morning, force yourself to experience one uncomfortable situation before the day begins.\n\nThe most concrete example: a cold shower. End your normal shower with 10 seconds of completely cold water. Each day, add a few seconds. Don\'t do this in summer if cold water feels pleasant to you — the point is real discomfort, not a ritual.\n\nBut it goes beyond the shower. The idea is to face something every day that makes you feel lazy, embarrassed, or afraid:\n— Talk to a stranger.\n— Say what you think when you normally stay quiet.\n— Do something in public that you would normally avoid.\n— Ask for something even if you think they\'ll say no.\n\nAt the end of the day, write in your discomfort journal what you faced. It doesn\'t have to be big — it has to be real.',
+      prompt: 'What uncomfortable moment did you choose to face today? What did you notice in yourself before, during, and after?',
     },
   },
   {

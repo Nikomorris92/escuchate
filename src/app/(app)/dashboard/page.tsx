@@ -343,6 +343,18 @@ export default function DashboardPage() {
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
         </Link>
 
+        <Link href="/discomfort-journal" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
+          <div>
+            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
+              {lang === 'en' ? '📓 Discomfort Journal' : '📓 Cuaderno del malestar'}
+            </p>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
+              {lang === 'en' ? 'What did you face today?' : '¿Qué afrontaste hoy?'}
+            </p>
+          </div>
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
+        </Link>
+
         {profile.is_coaching_client && (
           <Link href="/coaching" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(196,120,58,0.08)', border: '1px solid rgba(196,120,58,0.2)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
             <div>
