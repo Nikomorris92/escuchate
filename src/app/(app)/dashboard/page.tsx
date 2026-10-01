@@ -180,8 +180,9 @@ export default function DashboardPage() {
               width: '2.5rem', height: '2.5rem', display: 'flex',
               alignItems: 'center', justifyContent: 'center',
               fontSize: '1.1rem', textDecoration: 'none',
-              title: lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad',
-            }}>
+            }}
+            title={lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad'}
+            >
               📓
             </a>
             {/* Campanella notifiche */}
