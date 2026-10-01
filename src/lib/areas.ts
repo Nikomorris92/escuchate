@@ -83,6 +83,9 @@ export const AREAS: AreaDefinition[] = [
       'La persona que va al gimnasio no disfruta del dolor — aprende a tolerar el malestar porque sabe lo que hay al otro lado. Esa misma habilidad, aplicada a tu vida, lo cambia todo.',
       'No se trata de eliminar el placer. Se trata de aprender a elegir placeres que te dejen algo después. Una cena con amigos de verdad, un libro que te cambia, un proyecto que te da miedo — todos activan dopamina. Pero la dejan crecer, no la queman.',
       'Cada mañana suena el despertador a las 5:40. No hay motivación, no hay ganas — solo la promesa que me hice a mí mismo el día anterior. Me levanto de todos modos. No porque sea fácil, sino porque sé lo que hay al otro lado: no una recompensa inmediata, sino algo mucho más valioso — una sensación constante de bienestar que se acumula día tras día. El placer momentáneo te promete todo ahora y no te deja nada. El esfuerzo repetido no te promete nada ahora — pero lo construye todo después.',
+      'La queja es el placer momentáneo del pensamiento: te da alivio inmediato, pero te deja exactamente donde estabas — o peor. Cada minuto que pasas quejándote es un minuto que no estás buscando la solución.',
+      'Quejarse no está mal en sí mismo. El problema es cuando se convierte en un hábito — cuando la queja sustituye a la acción y el malestar se vuelve cómodo. Porque al menos así no tienes que moverte.',
+      'Hay una pregunta que cambia todo: "¿qué depende de mí aquí?" No para culparte — sino para recuperar el timón. La queja te pone en el asiento de atrás. Esa pregunta te devuelve al volante.',
     ],
     reflection:
       'Piensa en el último momento en que elegiste el alivio inmediato. ¿Qué estabas evitando realmente? ¿Qué habrías hecho si ese escape no hubiera existido?',
@@ -92,6 +95,11 @@ export const AREAS: AreaDefinition[] = [
       description:
         'Instagram, TikTok, YouTube Shorts — no son culpa tuya. Están diseñados por equipos de ingenieros para que no puedas parar. Entonces necesitas un sistema, no voluntad.\n\n1. Cambia la contraseña sin mirarla.\nVe a la configuración de Instagram, cambia la contraseña con una combinación aleatoria que teclees rápido sin memorizarla. Cierra sesión. Ahora para entrar necesitas un esfuerzo real — y ese esfuerzo rompe el automatismo.\n\n2. El teléfono fuera de la habitación donde trabajas o estudias.\nNo en silencio. No boca abajo. Fuera. En otra habitación. Cada vez que lo quieras, tendrás que levantarte — y ese momento de fricción te da tiempo para decidir si realmente lo necesitas.\n\n3. Sustitución inmediata.\nCuando sientas el impulso, no lo resistas — redirigelo. Ten a mano algo concreto: un cuaderno, un proyecto a medio hacer, un libro. El cerebro no tolera el vacío — dale algo mejor.\n\n4. El castigo que entrena.\nCada vez que cedes a un placer momentáneo que habías decidido evitar — 100 flexiones. No como castigo moral. Como sistema: tu cuerpo aprende que ceder tiene un coste físico real. Y muy pronto, el cerebro empieza a calcular si el scroll de dos minutos vale el esfuerzo. Spoiler: casi nunca vale.',
       prompt: '¿Cuántas veces cogiste el teléfono hoy de forma automática, sin haberlo decidido conscientemente? ¿Qué hiciste en su lugar?',
+    },
+    secondExercise: {
+      description:
+        'Durante las próximas 24 horas, cada vez que notes que estás a punto de quejarte — en voz alta o en tu cabeza — para un momento.\n\nNo te juzgues. Solo observa.\n\nLuego hazte una sola pregunta: "¿Qué depende de mí aquí?"\n\nNo tienes que resolver nada grande. Puede ser algo pequeño: cambiar el tono, hacer una llamada, tomar una decisión que has estado aplazando. O simplemente dejar ir algo que no puedes cambiar.\n\nAl final del día, escribe una cosa concreta que hiciste en lugar de quejarte.',
+      prompt: '¿Cuántas veces te sorprendiste quejándote hoy? ¿Qué encontraste cuando preguntaste "¿qué depende de mí aquí?"',
     },
   },
 

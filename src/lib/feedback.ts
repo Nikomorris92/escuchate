@@ -32,7 +32,7 @@ export const AREA_COMPLETION_FEEDBACK: Record<Area, string> = {
   discipline:
     'Una promesa cumplida a ti mismo, por pequeña que sea, vale más que diez grandes intenciones. Acabas de demostrar que puedes.',
   no_complaining:
-    'Cada vez que transformas una queja en una pregunta — "¿qué depende de mí aquí?" — recuperas un poco del control que creías no tener.',
+    'Has elegido algo difícil sobre algo fácil. Eso es exactamente lo contrario del placer momentáneo — y es exactamente lo que te cambia. Cada vez que transformas una queja en "¿qué depende de mí aquí?", recuperas el control.',
   obstacle:
     'Has mirado el obstáculo de frente en lugar de rodearlo. Eso ya es más de lo que hace la mayoría.',
   leap:

@@ -83,6 +83,9 @@ export const AREAS_EN: AreaDefinition[] = [
       'The person who goes to the gym doesn\'t enjoy the pain — they learn to tolerate discomfort because they know what\'s on the other side. That same skill, applied to your life, changes everything.',
       'It\'s not about eliminating pleasure. It\'s about learning to choose pleasures that leave you something afterwards. A real dinner with friends, a book that changes you, a project that scares you — they all activate dopamine. But they let it grow, not burn it out.',
       'Every morning my alarm goes off at 5:40. No motivation, no desire — just the promise I made to myself the day before. I get up anyway. Not because it\'s easy, but because I know what\'s on the other side: not an immediate reward, but something far more valuable — a steady, lasting sense of wellbeing that builds day after day. Momentary pleasure promises you everything now and leaves you nothing. Repeated effort promises you nothing now — and builds everything later.',
+      'Complaining is the momentary pleasure of thought: it gives you immediate relief but leaves you exactly where you were — or worse. Every minute spent complaining is a minute not spent looking for a solution.',
+      'Complaining isn\'t bad in itself. The problem is when it becomes a habit — when complaining replaces action and discomfort becomes comfortable. Because at least that way you don\'t have to move.',
+      'There\'s one question that changes everything: "What depends on me here?" Not to blame yourself — but to take back the wheel. Complaining puts you in the back seat. That question puts you back in control.',
     ],
     reflection:
       'Think about the last moment you chose immediate relief. What were you really avoiding? What would you have done if that escape hadn\'t existed?',
@@ -92,6 +95,11 @@ export const AREAS_EN: AreaDefinition[] = [
       description:
         'Instagram, TikTok, YouTube Shorts — it\'s not your fault. They\'re built by teams of engineers specifically so you can\'t stop. So you need a system, not willpower.\n\n1. Change your password without looking at it.\nGo to Instagram settings, type a random combination fast without memorising it. Log out. Now getting back in requires real effort — and that friction breaks the automatic habit.\n\n2. Phone out of the room where you work or study.\nNot on silent. Not face down. Out. In another room. Every time you want it, you\'ll have to get up — and that moment of friction gives you time to decide if you actually need it.\n\n3. Immediate substitution.\nWhen you feel the impulse, don\'t resist it — redirect it. Have something concrete nearby: a notebook, a half-finished project, a book. The brain doesn\'t tolerate emptiness — give it something better.\n\n4. The punishment that trains.\nEvery time you give in to a momentary pleasure you\'d decided to avoid — 100 push-ups. Not as moral punishment. As a system: your body learns that giving in has a real physical cost. And very soon, your brain starts calculating whether two minutes of scrolling is worth the effort. Spoiler: it almost never is.',
       prompt: 'How many times did you pick up your phone today automatically, without consciously deciding to? What did you do instead?',
+    },
+    secondExercise: {
+      description:
+        'For the next 24 hours, every time you notice you\'re about to complain — out loud or in your head — pause for a moment.\n\nDon\'t judge yourself. Just observe.\n\nThen ask yourself one question: "What depends on me here?"\n\nYou don\'t have to solve anything big. It can be something small: changing your tone, making a call, making a decision you\'ve been putting off. Or simply letting go of something you can\'t change.\n\nAt the end of the day, write down one concrete thing you did instead of complaining.',
+      prompt: 'How many times did you catch yourself complaining today? What did you find when you asked "what depends on me here?"',
     },
   },
   {
