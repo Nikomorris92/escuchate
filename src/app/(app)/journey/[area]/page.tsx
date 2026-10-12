@@ -33,14 +33,7 @@ export default function JourneyAreaPage() {
   const areaId = params.area as string
   const { lang } = useLang()
   const area = useMemo(() => lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId], [lang, areaId])
-  const [phase, setPhase] = useState<Phase>(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(`reflection_draft_${params.area}`) ?? '{}')
-      if (saved.phase && saved.phase !== 'done') return saved.phase as Phase
-      if (saved.answers?.some((a: string) => a.trim())) return 'reflection'
-    } catch {}
-    return 'teachings'
-  })
+  const [phase, setPhase] = useState<Phase>('teachings')
   const [reflection, setReflection] = useState('')
   const [practiceNote, setPracticeNote] = useState('')
   const [checked, setChecked] = useState<Record<number, boolean>>({})
@@ -70,12 +63,8 @@ export default function JourneyAreaPage() {
   const [journalSaved, setJournalSaved] = useState(false)
 
   const storageKey = `reflection_draft_${areaId}`
-  const [reflectionStep, setReflectionStep] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(storageKey) ?? '{}').step ?? 0 } catch { return 0 }
-  })
-  const [reflectionAnswers, setReflectionAnswers] = useState<string[]>(() => {
-    try { return JSON.parse(localStorage.getItem(storageKey) ?? '{}').answers ?? ['', '', ''] } catch { return ['', '', ''] }
-  })
+  const [reflectionStep, setReflectionStep] = useState(0)
+  const [reflectionAnswers, setReflectionAnswers] = useState<string[]>(['', '', ''])
 
   const allQuestions = useMemo(() => {
     const qs = [area?.reflection ?? '']
@@ -83,6 +72,18 @@ export default function JourneyAreaPage() {
     return qs
   }, [area])
 
+  // Restore draft from localStorage after mount (runs only on client)
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) ?? '{}')
+      if (saved.answers) setReflectionAnswers(saved.answers)
+      if (saved.step) setReflectionStep(saved.step)
+      if (saved.phase && saved.phase !== 'done') setPhase(saved.phase as Phase)
+    } catch {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey])
+
+  // Persist draft to localStorage on every change
   useEffect(() => {
     try { localStorage.setItem(storageKey, JSON.stringify({ phase, step: reflectionStep, answers: reflectionAnswers })) } catch {}
   }, [phase, reflectionStep, reflectionAnswers, storageKey])
