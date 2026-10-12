@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AREA_MAP } from '@/lib/areas'
@@ -72,19 +72,25 @@ export default function JourneyAreaPage() {
     return qs
   }, [area])
 
-  // Restore draft from localStorage after mount (runs only on client)
+  const didRestore = useRef(false)
+
+  // Restore draft from localStorage after mount (client-only, runs once)
   useEffect(() => {
+    if (didRestore.current) return
+    didRestore.current = true
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) ?? '{}')
       if (saved.answers) setReflectionAnswers(saved.answers)
-      if (saved.step) setReflectionStep(saved.step)
+      if (typeof saved.step === 'number') setReflectionStep(saved.step)
       if (saved.phase && saved.phase !== 'done') setPhase(saved.phase as Phase)
     } catch {}
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storageKey])
+  }, [])
 
-  // Persist draft to localStorage on every change
+  // Persist draft — skip first render so we don't overwrite before restore runs
+  const isFirstSave = useRef(true)
   useEffect(() => {
+    if (isFirstSave.current) { isFirstSave.current = false; return }
     try { localStorage.setItem(storageKey, JSON.stringify({ phase, step: reflectionStep, answers: reflectionAnswers })) } catch {}
   }, [phase, reflectionStep, reflectionAnswers, storageKey])
 
