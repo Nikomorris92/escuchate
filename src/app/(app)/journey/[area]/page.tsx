@@ -36,6 +36,7 @@ export default function JourneyAreaPage() {
   const [phase, setPhase] = useState<Phase>(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(`reflection_draft_${params.area}`) ?? '{}')
+      if (saved.phase && saved.phase !== 'done') return saved.phase as Phase
       if (saved.answers?.some((a: string) => a.trim())) return 'reflection'
     } catch {}
     return 'teachings'
@@ -83,8 +84,8 @@ export default function JourneyAreaPage() {
   }, [area])
 
   useEffect(() => {
-    try { localStorage.setItem(storageKey, JSON.stringify({ step: reflectionStep, answers: reflectionAnswers })) } catch {}
-  }, [reflectionStep, reflectionAnswers, storageKey])
+    try { localStorage.setItem(storageKey, JSON.stringify({ phase, step: reflectionStep, answers: reflectionAnswers })) } catch {}
+  }, [phase, reflectionStep, reflectionAnswers, storageKey])
 
   const currentAnswer = reflectionAnswers[reflectionStep] ?? ''
   const currentWordCount = countWords(currentAnswer)
@@ -696,7 +697,7 @@ export default function JourneyAreaPage() {
         </div>
 
         <button className="btn-primary" onClick={() => {
-          if (areaId === 'discipline' || areaId === 'disciplina') {
+          if (areaId === 'discipline' || areaId === 'disciplina' || areaId === 'no_complaining') {
             setPhase('vision_slide')
           } else {
             setPhase(area.practicalExercise ? 'exercise' : 'reflection')
