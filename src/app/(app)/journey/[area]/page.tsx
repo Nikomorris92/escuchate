@@ -33,7 +33,13 @@ export default function JourneyAreaPage() {
   const areaId = params.area as string
   const { lang } = useLang()
   const area = useMemo(() => lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId], [lang, areaId])
-  const [phase, setPhase] = useState<Phase>('teachings')
+  const [phase, setPhase] = useState<Phase>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(`reflection_draft_${params.area}`) ?? '{}')
+      if (saved.answers?.some((a: string) => a.trim())) return 'reflection'
+    } catch {}
+    return 'teachings'
+  })
   const [reflection, setReflection] = useState('')
   const [practiceNote, setPracticeNote] = useState('')
   const [checked, setChecked] = useState<Record<number, boolean>>({})
@@ -62,14 +68,23 @@ export default function JourneyAreaPage() {
   const [savingJournal, setSavingJournal] = useState(false)
   const [journalSaved, setJournalSaved] = useState(false)
 
-  const [reflectionStep, setReflectionStep] = useState(0)
-  const [reflectionAnswers, setReflectionAnswers] = useState<string[]>(['', '', ''])
+  const storageKey = `reflection_draft_${areaId}`
+  const [reflectionStep, setReflectionStep] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(storageKey) ?? '{}').step ?? 0 } catch { return 0 }
+  })
+  const [reflectionAnswers, setReflectionAnswers] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem(storageKey) ?? '{}').answers ?? ['', '', ''] } catch { return ['', '', ''] }
+  })
 
   const allQuestions = useMemo(() => {
     const qs = [area?.reflection ?? '']
     if (area?.extraReflections) qs.push(...area.extraReflections)
     return qs
   }, [area])
+
+  useEffect(() => {
+    try { localStorage.setItem(storageKey, JSON.stringify({ step: reflectionStep, answers: reflectionAnswers })) } catch {}
+  }, [reflectionStep, reflectionAnswers, storageKey])
 
   const currentAnswer = reflectionAnswers[reflectionStep] ?? ''
   const currentWordCount = countWords(currentAnswer)
@@ -165,6 +180,7 @@ export default function JourneyAreaPage() {
         await supabase.rpc('increment_score', { user_id_param: user.id, amount: score })
       }
 
+      try { localStorage.removeItem(storageKey) } catch {}
       setEarnedScore(score)
       setPhase('done')
     } catch (err) {
@@ -378,7 +394,7 @@ export default function JourneyAreaPage() {
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }}
             onClick={() => {
-              if (reflectionStep > 0) setReflectionStep(s => s - 1)
+              if (reflectionStep > 0) setReflectionStep((s: number) => s - 1)
               else setPhase(area.practicalExercise ? 'exercise' : 'teachings')
             }}>
             ← {lang === 'en' ? 'Back' : 'Volver'}
@@ -443,7 +459,7 @@ export default function JourneyAreaPage() {
             <button
               className="btn-primary"
               style={{ marginTop: '1.5rem' }}
-              onClick={() => setReflectionStep(s => s + 1)}
+              onClick={() => setReflectionStep((s: number) => s + 1)}
               disabled={!currentSufficient}
             >
               {lang === 'en' ? 'Next →' : 'Siguiente →'}
