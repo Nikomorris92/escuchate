@@ -9,6 +9,7 @@ import { AREA_MAP_EN } from '@/lib/areas_en'
 import { useLang } from '@/lib/LangContext'
 import { t } from '@/lib/i18n'
 import type { Area } from '@/types'
+import BgSelector from '@/components/BgSelector'
 
 const ADMIN_EMAIL = 'nicola.morea92@gmail.com'
 
@@ -172,6 +173,8 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
           <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff' }}>Escúchate</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Selettore sfondo */}
+            <BgSelector />
             {/* Quaderno dell'incomodità */}
             <a href="/discomfort-journal" style={{
               background: 'rgba(255,255,255,0.12)',

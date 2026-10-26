@@ -3,6 +3,8 @@ import Image from 'next/image'
 import './globals.css'
 import AdminButton from '@/components/AdminButton'
 import { LangProvider } from '@/lib/LangContext'
+import { BgProvider } from '@/lib/BgContext'
+import VantaBackground from '@/components/VantaBackground'
 
 export const metadata: Metadata = {
   title: 'Escúchate',
@@ -20,10 +22,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div style={{ position: 'fixed', top: '0.75rem', right: '0.75rem', zIndex: 50 }}>
           <Image src="/logo-v4.png" alt="Escúchate" width={90} height={90} style={{ objectFit: 'contain', display: 'block' }} />
         </div>
-        <LangProvider>
-          {children}
-          <AdminButton />
-        </LangProvider>
+        <BgProvider>
+          <VantaBackground />
+          <LangProvider>
+            {children}
+            <AdminButton />
+          </LangProvider>
+        </BgProvider>
       </body>
     </html>
   )
