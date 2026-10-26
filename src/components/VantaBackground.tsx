@@ -25,9 +25,9 @@ export default function VantaBackground() {
 
     if (bg === 'none') return
 
-    if (bg === 'waves') {
+    if (bg === 'waves' || bg === 'forest') {
       const video = document.createElement('video')
-      video.src = '/bg-waves.mp4'
+      video.src = bg === 'waves' ? '/bg-waves.mp4' : '/bg-forest.mp4'
       video.autoplay = true
       video.loop = true
       video.muted = true
