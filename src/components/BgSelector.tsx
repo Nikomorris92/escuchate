@@ -24,17 +24,20 @@ export default function BgSelector() {
     <div style={{ position: 'relative' }}>
       <button
         onClick={() => setOpen(o => !o)}
-        title="Background"
         style={{
-          background: open ? 'rgba(196,120,58,0.2)' : 'rgba(255,255,255,0.12)',
-          border: `1.5px solid ${open ? 'rgba(196,120,58,0.6)' : 'rgba(255,255,255,0.3)'}`,
+          background: open ? 'rgba(196,120,58,0.2)' : 'rgba(255,255,255,0.1)',
+          border: `1.5px solid ${open ? 'rgba(196,120,58,0.6)' : 'rgba(255,255,255,0.25)'}`,
           borderRadius: '9999px',
-          width: '2.5rem', height: '2.5rem',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '1.1rem', cursor: 'pointer',
+          height: '2.5rem',
+          padding: '0 1rem',
+          display: 'flex', alignItems: 'center', gap: '0.5rem',
+          cursor: 'pointer',
         }}
       >
-        {current.emoji}
+        <span style={{ fontSize: '1rem' }}>{current.emoji}</span>
+        <span style={{ fontSize: '0.75rem', color: open ? '#c4783a' : 'rgba(255,255,255,0.7)', fontWeight: 500, letterSpacing: '0.04em' }}>
+          {lang === 'en' ? 'Theme' : 'Tema'}
+        </span>
       </button>
 
       {open && (
