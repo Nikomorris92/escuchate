@@ -5,11 +5,12 @@ import { useBg, BgEffect } from '@/lib/BgContext'
 import { useLang } from '@/lib/LangContext'
 
 const OPTIONS: { id: BgEffect; es: string; en: string; emoji: string }[] = [
-  { id: 'none',   es: 'Apagado', en: 'Off',    emoji: '⬛' },
-  { id: 'waves',  es: 'Mar',     en: 'Ocean',  emoji: '🌊' },
-  { id: 'forest', es: 'Bosque',  en: 'Forest', emoji: '🌿' },
-  { id: 'birds',  es: 'Pájaros', en: 'Birds',  emoji: '🐦' },
-  { id: 'fog',    es: 'Niebla',  en: 'Fog',    emoji: '🌫️' },
+  { id: 'none',     es: 'Apagado',  en: 'Off',      emoji: '⬛' },
+  { id: 'waves',    es: 'Mar',      en: 'Ocean',    emoji: '🌊' },
+  { id: 'forest',   es: 'Bosque',   en: 'Forest',   emoji: '🌿' },
+  { id: 'universe', es: 'Universo', en: 'Universe', emoji: '🌌' },
+  { id: 'birds',    es: 'Pájaros',  en: 'Birds',    emoji: '🐦' },
+  { id: 'fog',      es: 'Niebla',   en: 'Fog',      emoji: '🌫️' },
 ]
 
 export default function BgSelector() {
