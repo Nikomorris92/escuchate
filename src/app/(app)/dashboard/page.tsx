@@ -295,7 +295,7 @@ export default function DashboardPage() {
               <h2 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
                 {areaTitle(currentArea)}
               </h2>
-              <p style={{ fontSize: '0.9375rem', color: '#c4783a', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.9375rem', color: '#ffffff', fontWeight: '600', fontStyle: 'italic', marginBottom: '1.5rem' }}>
                 "{areaSubtitle(currentArea)}"
               </p>
               <Link href={`/journey/${currentArea}`} className="btn-primary">
