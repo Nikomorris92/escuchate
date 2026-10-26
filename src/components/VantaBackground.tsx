@@ -28,31 +28,42 @@ export default function VantaBackground() {
         const WAVES = resolve(await import('vanta/dist/vanta.waves.min' as any))
         effectRef.current = WAVES({
           el: containerRef.current, THREE,
-          mouseControls: true, touchControls: true,
-          color: 0x0d5c8f,
-          backgroundColor: 0x061628,
-          shininess: 60, waveHeight: 22, waveSpeed: 0.85, zoom: 0.9,
+          mouseControls: false, touchControls: false,
+          color: 0x004e70,
+          backgroundColor: 0x00111d,
+          shininess: 20,
+          waveHeight: 18,
+          waveSpeed: 0.8,
+          zoom: 0.75,
         })
       } else if (bg === 'birds') {
         const BIRDS = resolve(await import('vanta/dist/vanta.birds.min' as any))
         effectRef.current = BIRDS({
           el: containerRef.current, THREE,
-          mouseControls: true, touchControls: true,
-          backgroundColor: 0x07111f,
-          color1: 0xc4783a, color2: 0x3a5fc4,
-          birdSize: 1.2, wingSpan: 28, speedLimit: 4,
-          separation: 60, alignment: 40, cohesion: 40, quantity: 3,
+          mouseControls: false, touchControls: false,
+          backgroundColor: 0x0a0f1a,
+          color1: 0xffffff,
+          color2: 0xaaccee,
+          birdSize: 0.9,
+          wingSpan: 22,
+          speedLimit: 3,
+          separation: 80,
+          alignment: 50,
+          cohesion: 50,
+          quantity: 4,
         })
       } else if (bg === 'fog') {
         const FOG = resolve(await import('vanta/dist/vanta.fog.min' as any))
         effectRef.current = FOG({
           el: containerRef.current, THREE,
-          mouseControls: true, touchControls: true,
-          highlightColor: 0xc4783a,
-          midtoneColor: 0x1a2a4a,
-          lowlightColor: 0x050a14,
-          baseColor: 0x070d1a,
-          blurFactor: 0.6, speed: 1.2, zoom: 0.8,
+          mouseControls: false, touchControls: false,
+          highlightColor: 0x3a6fa8,
+          midtoneColor: 0x1a3a5a,
+          lowlightColor: 0x060e1a,
+          baseColor: 0x050c18,
+          blurFactor: 0.65,
+          speed: 0.8,
+          zoom: 0.9,
         })
       }
     }
