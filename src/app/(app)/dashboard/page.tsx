@@ -225,9 +225,6 @@ export default function DashboardPage() {
                 </span>
               )}
             </button>
-            <span style={{ display: 'inline-flex', alignItems: 'center', padding: '0.375rem 0.875rem', background: 'rgba(196,120,58,0.2)', border: '1px solid #c4783a', color: '#c4783a', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: '600' }}>
-              {profile.total_score ?? 0} pts
-            </span>
           </div>
         </div>
 
@@ -376,15 +373,18 @@ export default function DashboardPage() {
           </Link>
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-          <form action="/api/auth/signout" method="post">
-            <button type="submit" className="btn-ghost" style={{ padding: 0 }}>
-              {t(lang, 'dash_signout')}
-            </button>
-          </form>
-          {!isAdmin && profile.paid && (
-            <CancelSubscriptionButton lang={lang} />
-          )}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.375rem 0.875rem', background: 'rgba(196,120,58,0.15)', border: '1px solid rgba(196,120,58,0.4)', color: '#c4783a', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: '600' }}>
+            ✦ {profile.total_score ?? 0} pts
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {!isAdmin && profile.paid && <CancelSubscriptionButton lang={lang} />}
+            <form action="/api/auth/signout" method="post">
+              <button type="submit" className="btn-ghost" style={{ padding: 0 }}>
+                {t(lang, 'dash_signout')}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
