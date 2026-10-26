@@ -2,20 +2,23 @@
 
 import { useState } from 'react'
 import { useBg, BgEffect } from '@/lib/BgContext'
+import { useLang } from '@/lib/LangContext'
 
-const OPTIONS: { id: BgEffect; label: string; emoji: string }[] = [
-  { id: 'none',  label: 'Off',    emoji: '⬛' },
-  { id: 'waves', label: 'Waves',  emoji: '🌊' },
-  { id: 'stars', label: 'Halo',   emoji: '🌀' },
-  { id: 'birds', label: 'Birds',  emoji: '🐦' },
-  { id: 'fog',   label: 'Fog',    emoji: '🌫️' },
+const OPTIONS: { id: BgEffect; es: string; en: string; emoji: string }[] = [
+  { id: 'none',  es: 'Apagado', en: 'Off',   emoji: '⬛' },
+  { id: 'waves', es: 'Olas',    en: 'Waves', emoji: '🌊' },
+  { id: 'stars', es: 'Halo',    en: 'Halo',  emoji: '🌀' },
+  { id: 'birds', es: 'Pájaros', en: 'Birds', emoji: '🐦' },
+  { id: 'fog',   es: 'Niebla',  en: 'Fog',   emoji: '🌫️' },
 ]
 
 export default function BgSelector() {
   const { bg, setBg } = useBg()
+  const { lang } = useLang()
   const [open, setOpen] = useState(false)
 
   const current = OPTIONS.find(o => o.id === bg) ?? OPTIONS[0]
+  const label = (o: typeof OPTIONS[0]) => lang === 'en' ? o.en : o.es
 
   return (
     <div style={{ position: 'relative' }}>
@@ -62,7 +65,7 @@ export default function BgSelector() {
               }}
             >
               <span style={{ fontSize: '1rem' }}>{opt.emoji}</span>
-              {opt.label}
+              {label(opt)}
               {bg === opt.id && <span style={{ marginLeft: 'auto', fontSize: '0.75rem' }}>✓</span>}
             </button>
           ))}

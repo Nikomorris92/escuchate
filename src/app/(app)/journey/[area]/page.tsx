@@ -34,6 +34,7 @@ export default function JourneyAreaPage() {
   const { lang } = useLang()
   const area = useMemo(() => lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId], [lang, areaId])
   const [phase, setPhase] = useState<Phase>('teachings')
+  const [teachingIndex, setTeachingIndex] = useState(0)
   const [reflection, setReflection] = useState('')
   const [practiceNote, setPracticeNote] = useState('')
   const [checked, setChecked] = useState<Record<number, boolean>>({})
@@ -82,6 +83,7 @@ export default function JourneyAreaPage() {
       const saved = JSON.parse(localStorage.getItem(storageKey) ?? '{}')
       if (saved.answers) setReflectionAnswers(saved.answers)
       if (typeof saved.step === 'number') setReflectionStep(saved.step)
+      if (typeof saved.teachingIndex === 'number') setTeachingIndex(saved.teachingIndex)
       if (saved.phase && saved.phase !== 'done') setPhase(saved.phase as Phase)
     } catch {}
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,8 +93,8 @@ export default function JourneyAreaPage() {
   const isFirstSave = useRef(true)
   useEffect(() => {
     if (isFirstSave.current) { isFirstSave.current = false; return }
-    try { localStorage.setItem(storageKey, JSON.stringify({ phase, step: reflectionStep, answers: reflectionAnswers })) } catch {}
-  }, [phase, reflectionStep, reflectionAnswers, storageKey])
+    try { localStorage.setItem(storageKey, JSON.stringify({ phase, step: reflectionStep, answers: reflectionAnswers, teachingIndex })) } catch {}
+  }, [phase, reflectionStep, reflectionAnswers, teachingIndex, storageKey])
 
   const currentAnswer = reflectionAnswers[reflectionStep] ?? ''
   const currentWordCount = countWords(currentAnswer)
@@ -624,15 +626,40 @@ export default function JourneyAreaPage() {
     )
   }
 
-  /* ── FASE: INSEGNAMENTI ── */
+  /* ── FASE: INSEGNAMENTI (carosello) ── */
+  const totalSlides = area.teachings.length + 1 // +1 per la slide inRelacion
+  const isLastSlide = teachingIndex === totalSlides - 1
+  const isTeachingSlide = teachingIndex < area.teachings.length
+
   return (
     <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2.5rem' }}>
       <div style={{ width: '100%', maxWidth: '480px' }}>
-        <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }} onClick={() => router.push('/dashboard')}>
-          ← Dashboard
-        </button>
 
-        <div style={{ marginBottom: '2rem' }}>
+        {/* Header con titolo e contatore */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+          <button className="btn-ghost" style={{ paddingLeft: 0 }} onClick={() => {
+            if (teachingIndex === 0) router.push('/dashboard')
+            else setTeachingIndex(i => i - 1)
+          }}>
+            ← {teachingIndex === 0 ? 'Dashboard' : (lang === 'en' ? 'Back' : 'Atrás')}
+          </button>
+          <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums' }}>
+            {teachingIndex + 1} / {totalSlides}
+          </span>
+        </div>
+
+        {/* Barra di avanzamento */}
+        <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '2rem' }}>
+          {Array.from({ length: totalSlides }).map((_, i) => (
+            <div key={i} style={{
+              flex: 1, height: '3px', borderRadius: '9999px',
+              background: i <= teachingIndex ? '#c4783a' : 'rgba(255,255,255,0.12)',
+              transition: 'background 0.3s',
+            }} />
+          ))}
+        </div>
+
+        <div style={{ marginBottom: '1.5rem' }}>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.375rem' }}>
             {area.title}
           </p>
@@ -641,7 +668,7 @@ export default function JourneyAreaPage() {
           </h1>
         </div>
 
-        {alreadyDone && (
+        {alreadyDone && teachingIndex === 0 && (
           <div style={{
             display: 'flex', alignItems: 'center', gap: '0.625rem',
             padding: '0.75rem 1rem',
@@ -657,7 +684,7 @@ export default function JourneyAreaPage() {
           </div>
         )}
 
-        {area.unlockNotice && (
+        {area.unlockNotice && teachingIndex === 0 && (
           <div style={{
             padding: '1.25rem',
             background: 'rgba(255,255,255,0.06)',
@@ -671,49 +698,63 @@ export default function JourneyAreaPage() {
           </div>
         )}
 
-        <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', marginBottom: '0.75rem', fontStyle: 'italic' }}>
-          {lang === 'en' ? 'Mark with ✕ once you have read each sentence.' : 'Marca con una ✕ el cuadrado al lado de la frase una vez leída.'}
-        </p>
-        <div style={{ marginBottom: '2rem' }}>
-          {area.teachings.map((teaching, i) => (
-            <div key={i} className="teaching-item">
-              <button
-                className={`teaching-check${checked[i] ? ' checked' : ''}`}
-                onClick={() => setChecked(p => ({ ...p, [i]: !p[i] }))}
-              >
-                {checked[i] ? '✕' : ''}
-              </button>
-              <span className={`teaching-text${checked[i] ? ' checked' : ''}`}>{teaching}</span>
-            </div>
-          ))}
-        </div>
+        {/* Contenuto slide: teaching o inRelacion */}
+        {isTeachingSlide ? (
+          <div style={{
+            padding: '1.75rem',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '1rem',
+            marginBottom: '2rem',
+            minHeight: '140px',
+            display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+          }}>
+            <p style={{ fontSize: '1.0625rem', color: 'rgba(255,255,255,0.9)', lineHeight: '1.75', margin: 0 }}>
+              {area.teachings[teachingIndex]}
+            </p>
+            <button
+              className={`teaching-check${checked[teachingIndex] ? ' checked' : ''}`}
+              onClick={() => setChecked(p => ({ ...p, [teachingIndex]: !p[teachingIndex] }))}
+              style={{ marginTop: '1.25rem', alignSelf: 'flex-start' }}
+            >
+              {checked[teachingIndex] ? '✕' : ''}
+            </button>
+          </div>
+        ) : (
+          <div style={{
+            padding: '1.25rem',
+            background: 'rgba(196,120,58,0.1)',
+            border: '1px solid rgba(196,120,58,0.3)',
+            borderRadius: '0.75rem',
+            marginBottom: '2rem',
+          }}>
+            <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+              {lang === 'en' ? 'In relationships' : 'En las relaciones'}
+            </p>
+            <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.65', margin: 0 }}>
+              {area.inRelacion}
+            </p>
+          </div>
+        )}
 
-        <div style={{
-          padding: '1.25rem',
-          background: 'rgba(196,120,58,0.1)',
-          border: '1px solid rgba(196,120,58,0.3)',
-          borderRadius: '0.75rem',
-          marginBottom: '2rem',
-        }}>
-          <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            {lang === 'en' ? 'In relationships' : 'En las relaciones'}
-          </p>
-          <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.65', margin: 0 }}>
-            {area.inRelacion}
-          </p>
-        </div>
-
-        <button className="btn-primary" onClick={() => {
-          if (areaId === 'discipline' || areaId === 'disciplina' || areaId === 'no_complaining') {
-            setPhase('vision_slide')
-          } else {
-            setPhase(area.practicalExercise ? 'exercise' : 'reflection')
-          }
-        }}>
-          {area.practicalExercise
-            ? (lang === 'en' ? 'Go to exercises →' : 'Ir a los ejercicios →')
-            : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
-        </button>
+        {/* Pulsante avanti / completa */}
+        {isLastSlide ? (
+          <button className="btn-primary" onClick={() => {
+            if (areaId === 'discipline' || areaId === 'disciplina' || areaId === 'no_complaining') {
+              setPhase('vision_slide')
+            } else {
+              setPhase(area.practicalExercise ? 'exercise' : 'reflection')
+            }
+          }}>
+            {area.practicalExercise
+              ? (lang === 'en' ? 'Go to exercises →' : 'Ir a los ejercicios →')
+              : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
+          </button>
+        ) : (
+          <button className="btn-primary" onClick={() => setTeachingIndex(i => i + 1)}>
+            {lang === 'en' ? 'Next →' : 'Siguiente →'}
+          </button>
+        )}
 
         {/* Riflessioni passate per quest'area — sempre visibili */}
         <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
