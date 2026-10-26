@@ -21,20 +21,21 @@ export default function VantaBackground() {
       if (bg === 'none') return
 
       const THREE = await import('three' as any)
-      let VANTA: any
+
+      function resolve(mod: any) { return mod?.default ?? mod }
 
       if (bg === 'waves') {
-        VANTA = (await import('vanta/dist/vanta.waves.min' as any)).default
-        effectRef.current = VANTA({
+        const WAVES = resolve(await import('vanta/dist/vanta.waves.min' as any))
+        effectRef.current = WAVES({
           el: containerRef.current, THREE,
           mouseControls: true, touchControls: true,
-          color: 0x1a5080,
-          backgroundColor: 0x0a1f3d,
-          shininess: 50, waveHeight: 20, waveSpeed: 0.75, zoom: 0.9,
+          color: 0x0d5c8f,
+          backgroundColor: 0x061628,
+          shininess: 60, waveHeight: 22, waveSpeed: 0.85, zoom: 0.9,
         })
       } else if (bg === 'birds') {
-        VANTA = (await import('vanta/dist/vanta.birds.min' as any)).default
-        effectRef.current = VANTA({
+        const BIRDS = resolve(await import('vanta/dist/vanta.birds.min' as any))
+        effectRef.current = BIRDS({
           el: containerRef.current, THREE,
           mouseControls: true, touchControls: true,
           backgroundColor: 0x07111f,
@@ -43,8 +44,8 @@ export default function VantaBackground() {
           separation: 60, alignment: 40, cohesion: 40, quantity: 3,
         })
       } else if (bg === 'fog') {
-        VANTA = (await import('vanta/dist/vanta.fog.min' as any)).default
-        effectRef.current = VANTA({
+        const FOG = resolve(await import('vanta/dist/vanta.fog.min' as any))
+        effectRef.current = FOG({
           el: containerRef.current, THREE,
           mouseControls: true, touchControls: true,
           highlightColor: 0xc4783a,
