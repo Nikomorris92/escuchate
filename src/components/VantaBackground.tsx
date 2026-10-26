@@ -29,16 +29,8 @@ export default function VantaBackground() {
           el: containerRef.current, THREE,
           mouseControls: true, touchControls: true,
           color: 0x1a5080,
+          backgroundColor: 0x0a1f3d,
           shininess: 50, waveHeight: 20, waveSpeed: 0.75, zoom: 0.9,
-        })
-      } else if (bg === 'stars') {
-        VANTA = (await import('vanta/dist/vanta.halo.min' as any)).default
-        effectRef.current = VANTA({
-          el: containerRef.current, THREE,
-          mouseControls: true, touchControls: true,
-          backgroundColor: 0x050a14,
-          baseColor: 0xc4783a,
-          size: 1.5, amplitudeFactor: 1.2,
         })
       } else if (bg === 'birds') {
         VANTA = (await import('vanta/dist/vanta.birds.min' as any)).default
@@ -74,7 +66,7 @@ export default function VantaBackground() {
   return (
     <div
       ref={containerRef}
-      style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}
     />
   )
 }

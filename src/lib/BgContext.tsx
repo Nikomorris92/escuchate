@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
-export type BgEffect = 'none' | 'waves' | 'stars' | 'birds' | 'fog'
+export type BgEffect = 'none' | 'waves' | 'birds' | 'fog'
 
 const BG_KEY = 'escuchate_bg'
 
