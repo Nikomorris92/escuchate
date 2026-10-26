@@ -28,8 +28,8 @@ export default function VantaBackground() {
         effectRef.current = VANTA({
           el: containerRef.current, THREE,
           mouseControls: true, touchControls: true,
-          color: 0x0a1628,
-          shininess: 35, waveHeight: 18, waveSpeed: 0.6, zoom: 0.85,
+          color: 0x1a5080,
+          shininess: 50, waveHeight: 20, waveSpeed: 0.75, zoom: 0.9,
         })
       } else if (bg === 'stars') {
         VANTA = (await import('vanta/dist/vanta.halo.min' as any)).default
@@ -74,7 +74,7 @@ export default function VantaBackground() {
   return (
     <div
       ref={containerRef}
-      style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}
+      style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}
     />
   )
 }
