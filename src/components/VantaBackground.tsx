@@ -13,30 +13,40 @@ export default function VantaBackground() {
   useEffect(() => {
     if (!containerRef.current) return
 
-    async function init() {
-      if (effectRef.current) {
-        effectRef.current.destroy()
-        effectRef.current = null
-      }
-      if (bg === 'none') return
+    // Distruggi eventuale effetto Vanta precedente
+    if (effectRef.current) {
+      effectRef.current.destroy()
+      effectRef.current = null
+    }
 
+    // Rimuovi eventuale video precedente
+    const existing = containerRef.current.querySelector('video')
+    if (existing) existing.remove()
+
+    if (bg === 'none') return
+
+    if (bg === 'waves') {
+      const video = document.createElement('video')
+      video.src = '/bg-waves.mp4'
+      video.autoplay = true
+      video.loop = true
+      video.muted = true
+      video.playsInline = true
+      Object.assign(video.style, {
+        position: 'absolute', inset: '0',
+        width: '100%', height: '100%',
+        objectFit: 'cover',
+        opacity: '0.55',
+      })
+      containerRef.current!.appendChild(video)
+      return
+    }
+
+    async function initVanta() {
       const THREE = await import('three' as any)
-
       function resolve(mod: any) { return mod?.default ?? mod }
 
-      if (bg === 'waves') {
-        const WAVES = resolve(await import('vanta/dist/vanta.waves.min' as any))
-        effectRef.current = WAVES({
-          el: containerRef.current, THREE,
-          mouseControls: false, touchControls: false,
-          color: 0x005f7a,
-          backgroundColor: 0x001e2d,
-          shininess: 30,
-          waveHeight: 16,
-          waveSpeed: 1.0,
-          zoom: 0.7,
-        })
-      } else if (bg === 'birds') {
+      if (bg === 'birds') {
         const BIRDS = resolve(await import('vanta/dist/vanta.birds.min' as any))
         effectRef.current = BIRDS({
           el: containerRef.current, THREE,
@@ -44,13 +54,8 @@ export default function VantaBackground() {
           backgroundColor: 0x1a3a5c,
           color1: 0x111111,
           color2: 0x222222,
-          birdSize: 1.0,
-          wingSpan: 25,
-          speedLimit: 4,
-          separation: 70,
-          alignment: 60,
-          cohesion: 50,
-          quantity: 5,
+          birdSize: 1.0, wingSpan: 25, speedLimit: 4,
+          separation: 70, alignment: 60, cohesion: 50, quantity: 5,
         })
       } else if (bg === 'fog') {
         const FOG = resolve(await import('vanta/dist/vanta.fog.min' as any))
@@ -61,14 +66,12 @@ export default function VantaBackground() {
           midtoneColor: 0x1a2a4a,
           lowlightColor: 0x050a14,
           baseColor: 0x070d1a,
-          blurFactor: 0.6,
-          speed: 1.2,
-          zoom: 0.8,
+          blurFactor: 0.6, speed: 1.2, zoom: 0.8,
         })
       }
     }
 
-    init()
+    initVanta()
 
     return () => {
       if (effectRef.current) { effectRef.current.destroy(); effectRef.current = null }
