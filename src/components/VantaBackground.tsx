@@ -43,37 +43,6 @@ export default function VantaBackground() {
       return
     }
 
-    async function initVanta() {
-      const THREE = await import('three' as any)
-      function resolve(mod: any) { return mod?.default ?? mod }
-
-      if (bg === 'birds') {
-        const BIRDS = resolve(await import('vanta/dist/vanta.birds.min' as any))
-        effectRef.current = BIRDS({
-          el: containerRef.current, THREE,
-          mouseControls: false, touchControls: false,
-          backgroundColor: 0x1a3a5c,
-          color1: 0x111111,
-          color2: 0x222222,
-          birdSize: 1.0, wingSpan: 25, speedLimit: 4,
-          separation: 70, alignment: 60, cohesion: 50, quantity: 5,
-        })
-      } else if (bg === 'fog') {
-        const FOG = resolve(await import('vanta/dist/vanta.fog.min' as any))
-        effectRef.current = FOG({
-          el: containerRef.current, THREE,
-          mouseControls: false, touchControls: false,
-          highlightColor: 0xc4783a,
-          midtoneColor: 0x1a2a4a,
-          lowlightColor: 0x050a14,
-          baseColor: 0x070d1a,
-          blurFactor: 0.6, speed: 1.2, zoom: 0.8,
-        })
-      }
-    }
-
-    initVanta()
-
     return () => {
       if (effectRef.current) { effectRef.current.destroy(); effectRef.current = null }
     }
