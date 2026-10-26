@@ -9,6 +9,7 @@ const OPTIONS: { id: BgEffect; es: string; en: string; emoji: string }[] = [
   { id: 'waves',    es: 'Mar',      en: 'Ocean',    emoji: '🌊' },
   { id: 'forest',   es: 'Bosque',   en: 'Forest',   emoji: '🌿' },
   { id: 'universe', es: 'Universo', en: 'Universe', emoji: '🌌' },
+  { id: 'sunset',   es: 'Atardecer',en: 'Sunset',   emoji: '🌅' },
 ]
 
 export default function BgSelector() {
