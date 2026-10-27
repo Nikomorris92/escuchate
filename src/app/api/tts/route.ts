@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const VOICE_ID = '21m00Tcm4TlvDq8ikWAM' // Rachel — voce femminile naturale
+const VOICE_ID = 'Ir1QNHvhaJXbAGhT50w3'
 
 export async function POST(req: NextRequest) {
   const apiKey = process.env.ELEVENLABS_API_KEY
