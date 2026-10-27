@@ -37,7 +37,10 @@ export default function VantaBackground() {
         position: 'absolute', inset: '0',
         width: '100%', height: '100%',
         objectFit: 'cover',
+        opacity: '0',
+        transition: 'opacity 0.6s ease',
       })
+      video.addEventListener('canplay', () => { video.style.opacity = '1' }, { once: true })
       containerRef.current!.appendChild(video)
       return
     }
