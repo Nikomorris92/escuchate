@@ -9,6 +9,7 @@ import { AREA_COMPLETION_FEEDBACK } from '@/lib/feedback'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/lib/LangContext'
 import VisionSlide from '@/components/VisionSlide'
+import SpeakButton from '@/components/SpeakButton'
 
 const MIN_WORDS = 15
 const MAX_SCORE_WORDS = 150
@@ -425,9 +426,12 @@ export default function JourneyAreaPage() {
             {lang === 'en' ? 'Reflection' : 'Reflexión'} · {reflectionStep + 1}/{totalSteps}
           </p>
 
-          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', lineHeight: '1.6', marginBottom: '1.5rem' }}>
-            {allQuestions[reflectionStep]}
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#ffffff', lineHeight: '1.6', margin: 0, flex: 1 }}>
+              {allQuestions[reflectionStep]}
+            </h2>
+            <SpeakButton text={allQuestions[reflectionStep]} />
+          </div>
 
           {reflectionStep === 0 && (
             <p style={{ fontSize: '0.8125rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.6', marginBottom: '0.875rem' }}>
@@ -719,6 +723,7 @@ export default function JourneyAreaPage() {
             >
               {checked[teachingIndex] ? '✕' : ''}
             </button>
+            <SpeakButton text={area.teachings[teachingIndex]} />
           </div>
         ) : (
           <div style={{
