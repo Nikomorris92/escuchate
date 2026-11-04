@@ -33,6 +33,17 @@ export default function HomePage() {
         >
           🇬🇧
         </button>
+        <button
+          onClick={() => setLang('it')}
+          title="Italiano"
+          style={{
+            fontSize: '1.375rem', background: 'none', border: 'none', cursor: 'pointer',
+            opacity: lang === 'it' ? 1 : 0.35, transition: 'opacity 0.2s',
+            padding: '0.125rem',
+          }}
+        >
+          🇮🇹
+        </button>
       </div>
 
       <div style={{ width: '100%', maxWidth: '480px', textAlign: 'center' }}>

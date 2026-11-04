@@ -58,6 +58,28 @@ const copy = {
     locked_sub: 'This section is exclusive to students of the 1:1 coaching program with Nicola.',
     locked_contact: 'Contact Nicola',
   },
+  it: {
+    title: 'Il mio progresso',
+    subtitle: 'Come ti senti oggi?',
+    moodLabel: 'Il tuo stato oggi',
+    moodSub: 'Da 1 (male) a 10 (formidabile)',
+    save: 'Salva',
+    saving: 'Salvataggio…',
+    saved: '✓ Salvato',
+    history: 'Storico',
+    avg: 'Media',
+    journal_title: 'Il tuo quaderno · Follow up 1:1',
+    journal_sub: 'Annota i tuoi progressi e le cose formidabili che ti sono successe questa settimana.',
+    journal_placeholder: 'Che cose formidabili ti sono successe questa settimana?',
+    journal_save: 'Salva voce',
+    journal_saving: 'Salvataggio…',
+    journal_saved: '✓ Salvato',
+    journal_history: 'Voci precedenti',
+    back: '← Dashboard',
+    locked_title: 'Accesso riservato',
+    locked_sub: 'Questa sezione è esclusiva per gli allievi del programma di coaching 1:1 con Nicola.',
+    locked_contact: 'Contatta Nicola',
+  },
 }
 
 export default function CoachingPage() {

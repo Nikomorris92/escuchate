@@ -4,12 +4,12 @@ import { useState } from 'react'
 import { useBg, BgEffect } from '@/lib/BgContext'
 import { useLang } from '@/lib/LangContext'
 
-const OPTIONS: { id: BgEffect; es: string; en: string; emoji: string }[] = [
-  { id: 'none',     es: 'Apagado',  en: 'Off',      emoji: '⬛' },
-  { id: 'waves',    es: 'Mar',      en: 'Ocean',    emoji: '🌊' },
-  { id: 'forest',   es: 'Bosque',   en: 'Forest',   emoji: '🌿' },
-  { id: 'universe', es: 'Universo', en: 'Universe', emoji: '🌌' },
-  { id: 'sunset',   es: 'Atardecer',en: 'Sunset',   emoji: '🌅' },
+const OPTIONS: { id: BgEffect; es: string; en: string; it: string; emoji: string }[] = [
+  { id: 'none',     es: 'Apagado',  en: 'Off',      it: 'Spento',    emoji: '⬛' },
+  { id: 'waves',    es: 'Mar',      en: 'Ocean',    it: 'Oceano',    emoji: '🌊' },
+  { id: 'forest',   es: 'Bosque',   en: 'Forest',   it: 'Foresta',   emoji: '🌿' },
+  { id: 'universe', es: 'Universo', en: 'Universe', it: 'Universo',  emoji: '🌌' },
+  { id: 'sunset',   es: 'Atardecer',en: 'Sunset',   it: 'Tramonto',  emoji: '🌅' },
 ]
 
 export default function BgSelector() {
@@ -18,7 +18,7 @@ export default function BgSelector() {
   const [open, setOpen] = useState(false)
 
   const current = OPTIONS.find(o => o.id === bg) ?? OPTIONS[0]
-  const label = (o: typeof OPTIONS[0]) => lang === 'en' ? o.en : o.es
+  const label = (o: typeof OPTIONS[0]) => lang === 'it' ? o.it : lang === 'en' ? o.en : o.es
 
   return (
     <div style={{ position: 'relative' }}>
@@ -36,7 +36,7 @@ export default function BgSelector() {
       >
         <span style={{ fontSize: '1rem' }}>{current.emoji}</span>
         <span style={{ fontSize: '0.75rem', color: open ? '#c4783a' : 'rgba(255,255,255,0.7)', fontWeight: 500, letterSpacing: '0.04em' }}>
-          {lang === 'en' ? 'Theme' : 'Tema'}
+          {lang === 'it' ? 'Tema' : lang === 'en' ? 'Theme' : 'Tema'}
         </span>
       </button>
 

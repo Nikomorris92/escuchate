@@ -5,17 +5,24 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { AREA_MAP, AREA_TITLES_EN } from '@/lib/areas'
+import { AREA_TITLES_IT } from '@/lib/areas_it'
 import { AREA_FEEDBACK } from '@/lib/feedback'
 import { useLang } from '@/lib/LangContext'
 import { t } from '@/lib/i18n'
 
 type Reflection = { id: string; content: string; created_at: string }
 
-function areaTitle(areaId: string, lang: 'es' | 'en') {
-  return lang === 'en' ? (AREA_TITLES_EN[areaId] ?? AREA_MAP[areaId]?.title) : AREA_MAP[areaId]?.title
+function areaTitle(areaId: string, lang: string) {
+  if (lang === 'it') return AREA_TITLES_IT[areaId] ?? AREA_MAP[areaId]?.title
+  if (lang === 'en') return AREA_TITLES_EN[areaId] ?? AREA_MAP[areaId]?.title
+  return AREA_MAP[areaId]?.title
 }
 
-function areaFeedback(areaId: string, lang: 'es' | 'en') {
+function areaFeedback(areaId: string, lang: string) {
+  if (lang === 'it') {
+    const key = `quiz_feedback_${areaId}` as Parameters<typeof t>[1]
+    return t('it', key)
+  }
   if (lang === 'en') {
     const key = `quiz_feedback_${areaId}` as Parameters<typeof t>[1]
     return t('en', key)
@@ -89,10 +96,10 @@ export default function InicioPage() {
 
   function formatDate(iso: string) {
     const d = new Date(iso)
-    const date = d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', {
+    const date = d.toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'en' ? 'en-GB' : 'es-ES', {
       day: 'numeric', month: 'long', year: 'numeric',
     })
-    const time = d.toLocaleTimeString(lang === 'en' ? 'en-GB' : 'es-ES', {
+    const time = d.toLocaleTimeString(lang === 'it' ? 'it-IT' : lang === 'en' ? 'en-GB' : 'es-ES', {
       hour: '2-digit', minute: '2-digit',
     })
     return `${date} · ${time}`
@@ -102,7 +109,7 @@ export default function InicioPage() {
     return (
       <div className="page-container">
         <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9375rem' }}>
-          {lang === 'en' ? 'Loading…' : 'Cargando…'}
+          {lang === 'it' ? 'Caricamento…' : lang === 'en' ? 'Loading…' : 'Cargando…'}
         </p>
       </div>
     )
@@ -115,10 +122,10 @@ export default function InicioPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
           <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff' }}>
-            {lang === 'en' ? 'My starting point' : 'Mi punto de partida'}
+            {lang === 'it' ? 'Il mio punto di partenza' : lang === 'en' ? 'My starting point' : 'Mi punto de partida'}
           </h1>
           <Link href="/dashboard" style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
-            {lang === 'en' ? '← Journey' : '← Recorrido'}
+            {lang === 'it' ? '← Percorso' : lang === 'en' ? '← Journey' : '← Recorrido'}
           </Link>
         </div>
 
@@ -126,7 +133,7 @@ export default function InicioPage() {
         {topAreas.length > 0 && (
           <div style={{ marginBottom: '2.5rem' }}>
             <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
-              {lang === 'en' ? 'What we saw in you' : 'Lo que vimos en ti'}
+              {lang === 'it' ? 'Quello che abbiamo visto in te' : lang === 'en' ? 'What we saw in you' : 'Lo que vimos en ti'}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
               {topAreas.map((areaId, i) => (
@@ -137,7 +144,7 @@ export default function InicioPage() {
                   borderRadius: '0.875rem',
                 }}>
                   <p style={{ fontSize: '0.6875rem', fontWeight: '700', color: i === 0 ? '#c4783a' : 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.375rem' }}>
-                    {i === 0 ? (lang === 'en' ? 'Priority 1' : 'Prioridad 1') : `${lang === 'en' ? 'Priority' : 'Prioridad'} ${i + 1}`}
+                    {i === 0 ? (lang === 'it' ? 'Priorità 1' : lang === 'en' ? 'Priority 1' : 'Prioridad 1') : `${lang === 'it' ? 'Priorità' : lang === 'en' ? 'Priority' : 'Prioridad'} ${i + 1}`}
                   </p>
                   <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', marginBottom: '0.375rem' }}>
                     {areaTitle(areaId, lang)}
@@ -155,7 +162,7 @@ export default function InicioPage() {
         {introReflection && (
           <div style={{ marginBottom: '2.5rem' }}>
             <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
-              {lang === 'en' ? 'What you wrote at the beginning' : 'Lo que escribiste al principio'}
+              {lang === 'it' ? 'Quello che hai scritto all\'inizio' : lang === 'en' ? 'What you wrote at the beginning' : 'Lo que escribiste al principio'}
             </p>
             <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '0.875rem' }}>
               <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.75', margin: 0, fontStyle: 'italic' }}>
@@ -170,11 +177,11 @@ export default function InicioPage() {
         {/* Nuova riflessione */}
         <div style={{ marginBottom: '2.5rem' }}>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-            {lang === 'en' ? 'Write a reflection' : 'Escribe una reflexión'}
+            {lang === 'it' ? 'Scrivi una riflessione' : lang === 'en' ? 'Write a reflection' : 'Escribe una reflexión'}
           </p>
           <textarea
             className="reflection-textarea"
-            placeholder={lang === 'en' ? 'How are you feeling today? What are you noticing?' : '¿Cómo estás hoy? ¿Qué estás notando?'}
+            placeholder={lang === 'it' ? 'Come stai oggi? Cosa noti?' : lang === 'en' ? 'How are you feeling today? What are you noticing?' : '¿Cómo estás hoy? ¿Qué estás notando?'}
             value={newReflection}
             onChange={(e) => setNewReflection(e.target.value)}
             style={{ minHeight: '120px', marginBottom: '0.75rem' }}
@@ -185,7 +192,7 @@ export default function InicioPage() {
             disabled={saving || !newReflection.trim()}
             style={{ width: '100%' }}
           >
-            {saving ? (lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'en' ? 'Save reflection' : 'Guardar reflexión')}
+            {saving ? (lang === 'it' ? 'Salvataggio…' : lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'it' ? 'Salva riflessione' : lang === 'en' ? 'Save reflection' : 'Guardar reflexión')}
           </button>
         </div>
 
@@ -193,7 +200,7 @@ export default function InicioPage() {
         {reflections.length > 0 && (
           <div style={{ marginBottom: '2.5rem' }}>
             <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
-              {lang === 'en' ? 'My reflections' : 'Mis reflexiones'}
+              {lang === 'it' ? 'Le mie riflessioni' : lang === 'en' ? 'My reflections' : 'Mis reflexiones'}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {reflections.map((r) => (
@@ -234,10 +241,10 @@ export default function InicioPage() {
         }}>
           <div>
             <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>
-              {lang === 'en' ? 'Redo the quiz' : 'Volver a hacer el test'}
+              {lang === 'it' ? 'Rifai il test' : lang === 'en' ? 'Redo the quiz' : 'Volver a hacer el test'}
             </p>
             <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
-              {lang === 'en' ? 'See how you have changed' : 'Descubre cómo has cambiado'}
+              {lang === 'it' ? 'Scopri come sei cambiato' : lang === 'en' ? 'See how you have changed' : 'Descubre cómo has cambiado'}
             </p>
           </div>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>

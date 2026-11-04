@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { AREA_MAP, AREA_TITLES_EN } from '@/lib/areas'
+import { AREA_TITLES_IT } from '@/lib/areas_it'
+import { AREA_MAP_IT } from '@/lib/areas_it'
 import { AREA_MAP_EN } from '@/lib/areas_en'
 import { useLang } from '@/lib/LangContext'
 import { t } from '@/lib/i18n'
@@ -28,7 +30,7 @@ function CancelSubscriptionButton({ lang }: { lang: string }) {
 
   if (done) return (
     <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>
-      {lang === 'en' ? 'Cancellation scheduled' : 'Cancelación programada'}
+      {lang === 'it' ? 'Cancellazione programmata' : lang === 'en' ? 'Cancellation scheduled' : 'Cancelación programada'}
     </span>
   )
 
@@ -38,7 +40,7 @@ function CancelSubscriptionButton({ lang }: { lang: string }) {
         onClick={() => setShowModal(true)}
         style={{ fontSize: '0.75rem', color: '#f87171', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
       >
-        {lang === 'en' ? 'Cancel subscription' : 'Cancelar suscripción'}
+        {lang === 'it' ? 'Cancella abbonamento' : lang === 'en' ? 'Cancel subscription' : 'Cancelar suscripción'}
       </button>
 
       {showModal && (
@@ -51,12 +53,10 @@ function CancelSubscriptionButton({ lang }: { lang: string }) {
           <div className="card" style={{ maxWidth: '360px', width: '100%', textAlign: 'center' }}>
             <p style={{ fontSize: '1.375rem', marginBottom: '0.75rem' }}>⚠️</p>
             <h3 style={{ fontSize: '1rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.625rem' }}>
-              {lang === 'en' ? 'Cancel subscription?' : '¿Cancelar suscripción?'}
+              {lang === 'it' ? 'Cancellare l\'abbonamento?' : lang === 'en' ? 'Cancel subscription?' : '¿Cancelar suscripción?'}
             </h3>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.65', marginBottom: '1.5rem' }}>
-              {lang === 'en'
-                ? 'You will keep access until the end of the current period. After that, you will lose access to the platform.'
-                : 'Mantendrás el acceso hasta el final del período actual. Después perderás el acceso a la plataforma.'}
+              {lang === 'it' ? 'Manterrai l\'accesso fino alla fine del periodo corrente. Dopo perderai l\'accesso alla piattaforma.' : lang === 'en' ? 'You will keep access until the end of the current period. After that, you will lose access to the platform.' : 'Mantendrás el acceso hasta el final del período actual. Después perderás el acceso a la plataforma.'}
             </p>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
@@ -67,7 +67,7 @@ function CancelSubscriptionButton({ lang }: { lang: string }) {
                   color: '#ffffff', cursor: 'pointer', fontSize: '0.9375rem', fontWeight: '500',
                 }}
               >
-                {lang === 'en' ? 'Keep it' : 'Mantener'}
+                {lang === 'it' ? 'Mantieni' : lang === 'en' ? 'Keep it' : 'Mantener'}
               </button>
               <button
                 onClick={handleConfirm}
@@ -79,8 +79,8 @@ function CancelSubscriptionButton({ lang }: { lang: string }) {
                 }}
               >
                 {cancelling
-                  ? (lang === 'en' ? 'Cancelling…' : 'Cancelando…')
-                  : (lang === 'en' ? 'Cancel' : 'Cancelar')}
+                  ? (lang === 'it' ? 'Cancellazione…' : lang === 'en' ? 'Cancelling…' : 'Cancelando…')
+                  : (lang === 'it' ? 'Cancella' : lang === 'en' ? 'Cancel' : 'Cancelar')}
               </button>
             </div>
           </div>
@@ -162,8 +162,8 @@ export default function DashboardPage() {
   const currentArea = currentIndex !== -1 ? areaOrder[currentIndex] : null
   const allCompleted = currentIndex === -1
   const isAdmin = userEmail === ADMIN_EMAIL
-  const areaTitle = (id: string) => lang === 'en' ? (AREA_TITLES_EN[id] ?? AREA_MAP[id]?.title) : AREA_MAP[id]?.title
-  const areaSubtitle = (id: string) => lang === 'en' ? (AREA_MAP_EN[id]?.subtitle ?? AREA_MAP[id]?.subtitle) : AREA_MAP[id]?.subtitle
+  const areaTitle = (id: string) => lang === 'it' ? (AREA_TITLES_IT[id] ?? AREA_MAP[id]?.title) : lang === 'en' ? (AREA_TITLES_EN[id] ?? AREA_MAP[id]?.title) : AREA_MAP[id]?.title
+  const areaSubtitle = (id: string) => lang === 'it' ? (AREA_MAP_IT[id]?.subtitle ?? AREA_MAP[id]?.subtitle) : lang === 'en' ? (AREA_MAP_EN[id]?.subtitle ?? AREA_MAP[id]?.subtitle) : AREA_MAP[id]?.subtitle
 
   return (
     <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}>
@@ -184,7 +184,7 @@ export default function DashboardPage() {
               alignItems: 'center', justifyContent: 'center',
               fontSize: '1.1rem', textDecoration: 'none',
             }}
-            title={lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad'}
+            title={lang === 'it' ? 'Quaderno del Disagio' : lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad'}
             >
               📓
             </a>
@@ -236,17 +236,19 @@ export default function DashboardPage() {
             borderRadius: '0.875rem',
           }}>
             <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem', fontWeight: 600 }}>
-              {lang === 'en' ? 'New updates' : 'Nuevas actualizaciones'}
+              {lang === 'it' ? 'Nuovi aggiornamenti' : lang === 'en' ? 'New updates' : 'Nuevas actualizaciones'}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
               {notifications.map(n => {
-                const areaTitle = lang === 'en'
+                const areaTitle = lang === 'it'
+                  ? (AREA_TITLES_IT[n.area] ?? AREA_MAP[n.area]?.title ?? n.area)
+                  : lang === 'en'
                   ? (AREA_TITLES_EN[n.area] ?? AREA_MAP[n.area]?.title ?? n.area)
                   : (AREA_MAP[n.area]?.title ?? n.area)
                 const areaSlug = AREA_MAP[n.area]?.id ?? n.area
                 return (
                   <div key={n.id} style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.6' }}>
-                    🆕 {lang === 'en' ? n.message_en : n.message_es}{' '}
+                    🆕 {lang === 'it' ? n.message_en : lang === 'en' ? n.message_en : n.message_es}{' '}
                     <Link href={`/journey/${areaSlug}`} style={{
                       color: '#f5c518', fontWeight: 700, textDecoration: 'underline',
                       textUnderlineOffset: '2px',
@@ -342,8 +344,8 @@ export default function DashboardPage() {
 
         <Link href="/reflections" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.875rem', textDecoration: 'none', marginBottom: '1rem' }}>
           <div>
-            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{lang === 'en' ? 'My reflections' : 'Mis reflexiones'}</p>
-            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>{lang === 'en' ? 'Everything you have written' : 'Todo lo que has escrito'}</p>
+            <p style={{ fontSize: '0.9375rem', fontWeight: '600', color: '#ffffff', margin: '0 0 0.2rem' }}>{lang === 'it' ? 'Le mie riflessioni' : lang === 'en' ? 'My reflections' : 'Mis reflexiones'}</p>
+            <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)', margin: 0 }}>{lang === 'it' ? 'Tutto quello che hai scritto' : lang === 'en' ? 'Everything you have written' : 'Todo lo que has escrito'}</p>
           </div>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1rem' }}>→</span>
         </Link>

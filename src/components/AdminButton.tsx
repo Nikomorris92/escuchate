@@ -34,16 +34,16 @@ export default function AdminButton() {
     <>
       {/* Selettore lingua — in alto a sinistra */}
       <div style={{ position: 'fixed', top: '0.875rem', left: '0.875rem', zIndex: 90, display: 'flex', gap: '0.375rem' }}>
-        {(['es', 'en'] as const).map((l) => (
+        {(['es', 'en', 'it'] as const).map((l) => (
           <button
             key={l}
             onClick={() => setLang(l)}
-            title={l === 'es' ? 'Español' : 'English'}
+            title={l === 'es' ? 'Español' : l === 'en' ? 'English' : 'Italiano'}
             onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
             onMouseLeave={e => (e.currentTarget.style.opacity = lang === l ? '1' : '0.35')}
             style={{ fontSize: '1.375rem', background: 'none', border: 'none', cursor: 'pointer', opacity: lang === l ? 1 : 0.35, transition: 'opacity 0.15s', padding: '0.125rem' }}
           >
-            {l === 'es' ? '🇪🇸' : '🇬🇧'}
+            {l === 'es' ? '🇪🇸' : l === 'en' ? '🇬🇧' : '🇮🇹'}
           </button>
         ))}
       </div>

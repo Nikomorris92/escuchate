@@ -61,7 +61,7 @@ export default function DiscomfortJournalPage() {
 
   function formatDate(iso: string) {
     const d = new Date(iso)
-    return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+    return d.toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
   }
 
   if (loading) return null
@@ -71,16 +71,14 @@ export default function DiscomfortJournalPage() {
       <div style={{ width: '100%', maxWidth: '480px' }}>
 
         <button onClick={() => router.back()} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem', cursor: 'pointer', padding: 0, marginBottom: '1.5rem' }}>
-          ← {lang === 'en' ? 'Back' : 'Volver'}
+          ← {lang === 'it' ? 'Indietro' : lang === 'en' ? 'Back' : 'Volver'}
         </button>
 
         <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.375rem' }}>
-          📓 {lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad'}
+          📓 {lang === 'it' ? 'Quaderno del Disagio' : lang === 'en' ? 'Discomfort Journal' : 'Cuaderno de la incomodidad'}
         </h1>
         <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', marginBottom: '2rem', lineHeight: '1.6' }}>
-          {lang === 'en'
-            ? 'Write down every uncomfortable situation you faced today. Big or small — what matters is that it was real.'
-            : 'Apunta cada situación incómoda a la que hiciste frente hoy. Grande o pequeña — lo que importa es que fue real.'}
+          {lang === 'it' ? 'Annota ogni situazione scomoda che hai affrontato oggi. Grande o piccola — ciò che conta è che fosse reale.' : lang === 'en' ? 'Write down every uncomfortable situation you faced today. Big or small — what matters is that it was real.' : 'Apunta cada situación incómoda a la que hiciste frente hoy. Grande o pequeña — lo que importa es que fue real.'}
         </p>
 
         {/* Input */}
@@ -88,7 +86,7 @@ export default function DiscomfortJournalPage() {
           <textarea
             value={text}
             onChange={e => setText(e.target.value)}
-            placeholder={lang === 'en' ? 'What did you face today?' : '¿Qué afrontaste hoy?'}
+            placeholder={lang === 'it' ? 'Cosa hai affrontato oggi?' : lang === 'en' ? 'What did you face today?' : '¿Qué afrontaste hoy?'}
             rows={4}
             style={{
               width: '100%', boxSizing: 'border-box',
@@ -104,14 +102,14 @@ export default function DiscomfortJournalPage() {
             className="btn-primary"
             style={{ marginTop: '0.75rem', width: '100%' }}
           >
-            {saving ? (lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'en' ? 'Save entry' : 'Guardar')}
+            {saving ? (lang === 'it' ? 'Salvataggio…' : lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'it' ? 'Salva' : lang === 'en' ? 'Save entry' : 'Guardar')}
           </button>
         </div>
 
         {/* Entries */}
         {entries.length === 0 ? (
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.3)', textAlign: 'center' }}>
-            {lang === 'en' ? 'No entries yet. Start today.' : 'Ninguna entrada todavía. Empieza hoy.'}
+            {lang === 'it' ? 'Nessuna voce ancora. Inizia oggi.' : lang === 'en' ? 'No entries yet. Start today.' : 'Ninguna entrada todavía. Empieza hoy.'}
           </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
@@ -132,7 +130,7 @@ export default function DiscomfortJournalPage() {
                   onClick={() => handleDelete(entry.id)}
                   style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.2)', fontSize: '0.75rem', cursor: 'pointer', padding: 0, marginTop: '0.75rem' }}
                 >
-                  {lang === 'en' ? 'Delete' : 'Eliminar'}
+                  {lang === 'it' ? 'Elimina' : lang === 'en' ? 'Delete' : 'Eliminar'}
                 </button>
               </div>
             ))}

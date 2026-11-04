@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { AREA_MAP } from '@/lib/areas'
 import { AREA_TITLES_EN } from '@/lib/areas'
+import { AREA_TITLES_IT } from '@/lib/areas_it'
 import { useLang } from '@/lib/LangContext'
 
 interface Reflection {
@@ -49,24 +50,26 @@ export default function ReflectionsPage() {
     <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2.5rem' }}>
       <div style={{ width: '100%', maxWidth: '480px' }}>
         <Link href="/dashboard" className="btn-ghost" style={{ display: 'inline-block', marginBottom: '1.5rem', paddingLeft: 0 }}>
-          ← {lang === 'en' ? 'Dashboard' : 'Dashboard'}
+          ← Dashboard
         </Link>
 
         <h1 style={{ fontSize: '1.375rem', fontWeight: '700', color: '#ffffff', marginBottom: '0.5rem' }}>
-          {lang === 'en' ? 'My reflections' : 'Mis reflexiones'}
+          {lang === 'it' ? 'Le mie riflessioni' : lang === 'en' ? 'My reflections' : 'Mis reflexiones'}
         </h1>
         <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', marginBottom: '2rem' }}>
-          {lang === 'en' ? 'Everything you have written along your journey.' : 'Todo lo que has escrito a lo largo de tu recorrido.'}
+          {lang === 'it' ? 'Tutto quello che hai scritto nel tuo percorso.' : lang === 'en' ? 'Everything you have written along your journey.' : 'Todo lo que has escrito a lo largo de tu recorrido.'}
         </p>
 
         {reflections.length === 0 ? (
           <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>
-            {lang === 'en' ? 'No reflections yet. Complete an area to start.' : 'Aún no hay reflexiones. Completa un área para empezar.'}
+            {lang === 'it' ? 'Nessuna riflessione ancora. Completa un\'area per iniziare.' : lang === 'en' ? 'No reflections yet. Complete an area to start.' : 'Aún no hay reflexiones. Completa un área para empezar.'}
           </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {reflections.map((r) => {
-              const areaTitle = lang === 'en'
+              const areaTitle = lang === 'it'
+                ? (AREA_TITLES_IT[r.area] ?? AREA_MAP[r.area]?.title ?? r.area)
+                : lang === 'en'
                 ? (AREA_TITLES_EN[r.area] ?? AREA_MAP[r.area]?.title ?? r.area)
                 : (AREA_MAP[r.area]?.title ?? r.area)
               return (
@@ -82,7 +85,7 @@ export default function ReflectionsPage() {
                         {areaTitle}
                       </span>
                       <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)' }}>
-                        {new Date(r.completed_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {new Date(r.completed_at).toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </span>
                     </div>
                     {r.reflection_text ? (
@@ -91,7 +94,7 @@ export default function ReflectionsPage() {
                       </p>
                     ) : (
                       <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.25)', margin: 0, fontStyle: 'italic' }}>
-                        {lang === 'en' ? 'Completed — no reflection saved.' : 'Completado — sin reflexión guardada.'}
+                        {lang === 'it' ? 'Completato — nessuna riflessione salvata.' : lang === 'en' ? 'Completed — no reflection saved.' : 'Completado — sin reflexión guardada.'}
                       </p>
                     )}
                   </div>

@@ -30,13 +30,27 @@ const ITEMS_EN = {
   ],
 }
 
+const ITEMS_IT = {
+  largo: [
+    'Attività fisica', 'Meditare', 'Leggere', 'Studiare',
+    'Contatto con la natura', 'Imparare un\'arte', 'Cibo sano',
+    'Conoscere persone nuove', 'Ampliare la cerchia sociale',
+    'Affrontare momenti scomodi', 'Affrontare le tue paure',
+  ],
+  placer: [
+    'Social media', 'Telefono', 'Cibo spazzatura', 'Feste',
+    'Droghe', 'Alcol', 'Relazioni sporadiche',
+    'Pornografia', 'Masturbazione', 'Reels', 'Lamentele', 'Insulti',
+  ],
+}
+
 interface Props {
   lang: string
   onContinue: () => void
 }
 
 export default function VisionSlide({ lang, onContinue }: Props) {
-  const items = lang === 'en' ? ITEMS_EN : ITEMS_ES
+  const items = lang === 'it' ? ITEMS_IT : lang === 'en' ? ITEMS_EN : ITEMS_ES
   const [largoChecked, setLargoChecked] = useState<Record<number, boolean>>({})
   const [placerChecked, setPlacerChecked] = useState<Record<number, boolean>>({})
 
@@ -52,12 +66,10 @@ export default function VisionSlide({ lang, onContinue }: Props) {
 
       {/* Header */}
       <h2 style={{ fontSize: '1.375rem', fontWeight: 700, color: '#fff', marginBottom: '0.25rem' }}>
-        {lang === 'en' ? '¿What do you invest your time in?' : '¿En qué inviertes tu tiempo?'}
+        {lang === 'it' ? 'In cosa investi il tuo tempo?' : lang === 'en' ? '¿What do you invest your time in?' : '¿En qué inviertes tu tiempo?'}
       </h2>
       <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.45)', fontStyle: 'italic', marginBottom: '1.5rem' }}>
-        {lang === 'en'
-          ? 'Mark with ✕ what you do most often.'
-          : 'Marca con ✕ lo que haces con más frecuencia.'}
+        {lang === 'it' ? 'Segna con ✕ quello che fai più spesso.' : lang === 'en' ? 'Mark with ✕ what you do most often.' : 'Marca con ✕ lo que haces con más frecuencia.'}
       </p>
 
       {/* Columns */}
@@ -71,7 +83,7 @@ export default function VisionSlide({ lang, onContinue }: Props) {
             textAlign: 'center', fontSize: '0.75rem', fontWeight: 700,
             color: '#fff', letterSpacing: '0.08em', textTransform: 'uppercase',
           }}>
-            {lang === 'en' ? 'Long-term vision' : 'Visión a largo plazo'}
+            {lang === 'it' ? 'Visione a lungo termine' : lang === 'en' ? 'Long-term vision' : 'Visión a largo plazo'}
             {largoCount > 0 && <span style={{ marginLeft: '0.5rem', background: 'rgba(0,0,0,0.2)', borderRadius: '1rem', padding: '0.1rem 0.5rem' }}>{largoCount}</span>}
           </div>
           {items.largo.map((item, i) => (
@@ -112,7 +124,7 @@ export default function VisionSlide({ lang, onContinue }: Props) {
             textAlign: 'center', fontSize: '0.75rem', fontWeight: 700,
             color: '#fff', letterSpacing: '0.08em', textTransform: 'uppercase',
           }}>
-            {lang === 'en' ? 'Momentary pleasure' : 'Placer momentáneo'}
+            {lang === 'it' ? 'Piacere momentaneo' : lang === 'en' ? 'Momentary pleasure' : 'Placer momentáneo'}
             {placerCount > 0 && <span style={{ marginLeft: '0.5rem', background: 'rgba(0,0,0,0.2)', borderRadius: '1rem', padding: '0.1rem 0.5rem' }}>{placerCount}</span>}
           </div>
           {items.placer.map((item, i) => (
@@ -151,10 +163,10 @@ export default function VisionSlide({ lang, onContinue }: Props) {
         <div style={{ marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.375rem' }}>
             <span style={{ fontSize: '0.75rem', color: '#4caf70', fontWeight: 600 }}>
-              {lang === 'en' ? 'Long-term' : 'Largo plazo'} {largoPercent}%
+              {lang === 'it' ? 'Lungo termine' : lang === 'en' ? 'Long-term' : 'Largo plazo'} {largoPercent}%
             </span>
             <span style={{ fontSize: '0.75rem', color: '#e05c4b', fontWeight: 600 }}>
-              {placerPercent}% {lang === 'en' ? 'Momentary' : 'Momentáneo'}
+              {placerPercent}% {lang === 'it' ? 'Momentaneo' : lang === 'en' ? 'Momentary' : 'Momentáneo'}
             </span>
           </div>
           <div style={{ height: '0.625rem', borderRadius: '1rem', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
@@ -169,18 +181,14 @@ export default function VisionSlide({ lang, onContinue }: Props) {
             color: largoPercent >= 50 ? '#4caf70' : '#e05c4b',
           }}>
             {largoPercent >= 50
-              ? (lang === 'en'
-                ? 'Most of your time goes to growth. Keep it up.'
-                : 'La mayoría de tu tiempo va al crecimiento. Sigue así.')
-              : (lang === 'en'
-                ? 'Most of your time goes to momentary pleasure. Is that what you want?'
-                : 'La mayoría de tu tiempo va al placer momentáneo. ¿Es eso lo que quieres?')}
+              ? (lang === 'it' ? 'La maggior parte del tuo tempo va alla crescita. Continua così.' : lang === 'en' ? 'Most of your time goes to growth. Keep it up.' : 'La mayoría de tu tiempo va al crecimiento. Sigue así.')
+              : (lang === 'it' ? 'La maggior parte del tuo tempo va al piacere momentaneo. È quello che vuoi?' : lang === 'en' ? 'Most of your time goes to momentary pleasure. Is that what you want?' : 'La mayoría de tu tiempo va al placer momentáneo. ¿Es eso lo que quieres?')}
           </p>
         </div>
       )}
 
       <button className="btn-primary" style={{ width: '100%' }} onClick={onContinue}>
-        {lang === 'en' ? 'Continue →' : 'Continuar →'}
+        {lang === 'it' ? 'Continua →' : lang === 'en' ? 'Continue →' : 'Continuar →'}
       </button>
     </div>
   )

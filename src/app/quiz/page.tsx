@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { QUIZ_QUESTIONS, computeAreaOrder } from '@/lib/quiz'
 import { AREA_MAP, AREA_TITLES_EN } from '@/lib/areas'
+import { AREA_TITLES_IT } from '@/lib/areas_it'
 import { useLang } from '@/lib/LangContext'
 import { t } from '@/lib/i18n'
 import type { Area } from '@/types'
@@ -10,6 +11,7 @@ import type { Area } from '@/types'
 type Phase = 'intro' | 'quiz' | 'result'
 
 function areaTitle(areaId: string, lang: ReturnType<typeof useLang>['lang']) {
+  if (lang === 'it') return AREA_TITLES_IT[areaId] ?? AREA_MAP[areaId]?.title
   return lang === 'en' ? (AREA_TITLES_EN[areaId] ?? AREA_MAP[areaId]?.title) : AREA_MAP[areaId]?.title
 }
 

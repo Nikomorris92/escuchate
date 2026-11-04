@@ -5,7 +5,8 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AREA_MAP } from '@/lib/areas'
 import { AREA_MAP_EN } from '@/lib/areas_en'
-import { AREA_COMPLETION_FEEDBACK } from '@/lib/feedback'
+import { AREA_MAP_IT } from '@/lib/areas_it'
+import { AREA_COMPLETION_FEEDBACK, AREA_COMPLETION_FEEDBACK_IT } from '@/lib/feedback'
 import { createClient } from '@/lib/supabase/client'
 import { useLang } from '@/lib/LangContext'
 import VisionSlide from '@/components/VisionSlide'
@@ -28,12 +29,22 @@ type Phase = 'teachings' | 'vision_slide' | 'exercise' | 'exercise2' | 'reflecti
 
 type JournalEntry = { id: string; content: string; entry_date: string; created_at: string }
 
+function tl(lang: string, it: string, en: string, es: string): string {
+  if (lang === 'it') return it
+  if (lang === 'en') return en
+  return es
+}
+
 export default function JourneyAreaPage() {
   const params = useParams()
   const router = useRouter()
   const areaId = params.area as string
   const { lang } = useLang()
-  const area = useMemo(() => lang === 'en' ? (AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]) : AREA_MAP[areaId], [lang, areaId])
+  const area = useMemo(() => {
+    if (lang === 'en') return AREA_MAP_EN[areaId] ?? AREA_MAP[areaId]
+    if (lang === 'it') return AREA_MAP_IT[areaId] ?? AREA_MAP[areaId]
+    return AREA_MAP[areaId]
+  }, [lang, areaId])
   const [phase, setPhase] = useState<Phase>('teachings')
   const [teachingIndex, setTeachingIndex] = useState(0)
   const [reflection, setReflection] = useState('')
@@ -162,7 +173,7 @@ export default function JourneyAreaPage() {
 
   async function handleSubmit() {
     if (!sufficient) {
-      setError(lang === 'en' ? 'Not enough yet to really stop and think. Try going a little deeper.' : 'Todavía no es suficiente para detenerte a pensar de verdad. Intenta ir un poco más a fondo.')
+      setError(tl(lang, 'Non è ancora abbastanza per fermarti a pensare davvero. Prova ad andare un po\' più in profondità.', 'Not enough yet to really stop and think. Try going a little deeper.', 'Todavía no es suficiente para detenerte a pensar de verdad. Intenta ir un poco más a fondo.'))
       return
     }
     setError('')
@@ -196,7 +207,7 @@ export default function JourneyAreaPage() {
       setPhase('done')
     } catch (err) {
       console.error('handleSubmit error:', err)
-      setError(lang === 'en' ? 'There was an error saving. Please try again.' : 'Hubo un error al guardar. Inténtalo de nuevo.')
+      setError(tl(lang, 'Si è verificato un errore nel salvataggio. Riprova.', 'There was an error saving. Please try again.', 'Hubo un error al guardar. Inténtalo de nuevo.'))
     } finally {
       setSaving(false)
     }
@@ -241,14 +252,16 @@ export default function JourneyAreaPage() {
 
   /* ── FASE: COMPLETATO ── */
   if (phase === 'done') {
-    const completionFeedback = AREA_COMPLETION_FEEDBACK[area.id as keyof typeof AREA_COMPLETION_FEEDBACK]
+    const completionFeedback = lang === 'it'
+      ? AREA_COMPLETION_FEEDBACK_IT[area.id as keyof typeof AREA_COMPLETION_FEEDBACK_IT]
+      : AREA_COMPLETION_FEEDBACK[area.id as keyof typeof AREA_COMPLETION_FEEDBACK]
     return (
       <div className="page-container">
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <p style={{ fontSize: '2rem', marginBottom: '1rem' }}>✦</p>
             <h2 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '0.375rem', color: '#ffffff' }}>
-              {lang === 'en' ? 'Level complete' : 'Nivel completado'}
+              {tl(lang, 'Livello completato', 'Level complete', 'Nivel completado')}
             </h2>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', marginBottom: '1.25rem' }}>
               {area.title}
@@ -290,7 +303,7 @@ export default function JourneyAreaPage() {
                   textAlign: 'center',
                 }}>
                   <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-                    ✓ {lang === 'en' ? 'Reflection shared on the wall. Thank you.' : 'Reflexión compartida en el muro. Gracias.'}
+                    ✓ {tl(lang, 'Riflessione condivisa sul muro. Grazie.', 'Reflection shared on the wall. Thank you.', 'Reflexión compartida en el muro. Gracias.')}
                   </p>
                 </div>
               )}
@@ -304,18 +317,18 @@ export default function JourneyAreaPage() {
                 marginBottom: '1rem',
               }}>
                 <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem' }}>
-                  {lang === 'en' ? 'What would you improve?' : '¿Qué mejorarías?'}
+                  {tl(lang, 'Cosa miglioreresti?', 'What would you improve?', '¿Qué mejorarías?')}
                 </p>
                 {feedbackSent ? (
                   <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
-                    {lang === 'en' ? 'Thank you for your feedback ✓' : 'Gracias por tu opinión ✓'}
+                    {tl(lang, 'Grazie per il tuo feedback ✓', 'Thank you for your feedback ✓', 'Gracias por tu opinión ✓')}
                   </p>
                 ) : (
                   <>
                     <textarea
                       className="input-field"
                       style={{ width: '100%', minHeight: '80px', resize: 'vertical', marginBottom: '0.75rem', fontSize: '0.875rem' }}
-                      placeholder={lang === 'en' ? 'Any suggestion to improve this area…' : 'Alguna sugerencia para mejorar esta área…'}
+                      placeholder={tl(lang, 'Un suggerimento per migliorare quest\'area…', 'Any suggestion to improve this area…', 'Alguna sugerencia para mejorar esta área…')}
                       value={feedbackText}
                       onChange={(e) => setFeedbackText(e.target.value)}
                     />
@@ -325,14 +338,14 @@ export default function JourneyAreaPage() {
                       onClick={handleFeedback}
                       disabled={sendingFeedback || !feedbackText.trim()}
                     >
-                      {sendingFeedback ? '…' : (lang === 'en' ? 'Send feedback' : 'Enviar opinión')}
+                      {sendingFeedback ? '…' : (tl(lang, 'Invia feedback', 'Send feedback', 'Enviar opinión'))}
                     </button>
                   </>
                 )}
               </div>
 
               <button className="btn-primary" onClick={() => router.push('/dashboard')}>
-                {lang === 'en' ? 'Back to journey' : 'Volver al recorrido'}
+                {tl(lang, 'Torna al percorso', 'Back to journey', 'Volver al recorrido')}
               </button>
             </div>
           ) : (
@@ -345,16 +358,16 @@ export default function JourneyAreaPage() {
                 borderRadius: '0.875rem',
               }}>
                 <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-                  {lang === 'en' ? 'Share' : 'Compartir'}
+                  {tl(lang, 'Condividi', 'Share', 'Compartir')}
                 </p>
                 <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.6', marginBottom: '1rem' }}>
-                  {lang === 'en' ? 'Your reflection can inspire other people on their journey.' : 'Tu reflexión puede inspirar a otras personas en su recorrido.'}
+                  {tl(lang, 'La tua riflessione può ispirare altre persone nel loro percorso.', 'Your reflection can inspire other people on their journey.', 'Tu reflexión puede inspirar a otras personas en su recorrido.')}
                 </p>
                 <input
                   className="input-field"
                   style={{ marginBottom: '0.75rem', fontSize: '0.875rem' }}
                   type="text"
-                  placeholder={lang === 'en' ? 'Your name (optional — anonymous if blank)' : 'Tu nombre (opcional — anónimo si está vacío)'}
+                  placeholder={tl(lang, 'Il tuo nome (opzionale — anonimo se vuoto)', 'Your name (optional — anonymous if blank)', 'Tu nombre (opcional — anónimo si está vacío)')}
                   value={sharedName}
                   onChange={(e) => setSharedName(e.target.value)}
                   maxLength={40}
@@ -366,8 +379,8 @@ export default function JourneyAreaPage() {
                   disabled={sharing}
                 >
                   {sharing
-                    ? (lang === 'en' ? 'Sharing…' : 'Compartiendo…')
-                    : (lang === 'en' ? 'Share on the wall' : 'Compartir en el muro')}
+                    ? (tl(lang, 'Condivisione…', 'Sharing…', 'Compartiendo…'))
+                    : (tl(lang, 'Condividi sul muro', 'Share on the wall', 'Compartir en el muro'))}
                 </button>
               </div>
 
@@ -379,13 +392,13 @@ export default function JourneyAreaPage() {
                 borderRadius: '0.875rem',
               }}>
                 <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-                  {lang === 'en' ? 'Keep it for yourself' : 'Guardar en tu área'}
+                  {tl(lang, 'Tienila per te', 'Keep it for yourself', 'Guardar en tu área')}
                 </p>
                 <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: '1.6', marginBottom: '1rem' }}>
-                  {lang === 'en' ? 'Your reflection stays private. You will be able to re-read it when you redo this level.' : 'Tu reflexión queda privada. Podrás releerla cuando vuelvas a hacer este nivel.'}
+                  {tl(lang, 'La tua riflessione rimane privata. Potrai rileggerla quando rifarai questo livello.', 'Your reflection stays private. You will be able to re-read it when you redo this level.', 'Tu reflexión queda privada. Podrás releerla cuando vuelvas a hacer este nivel.')}
                 </p>
                 <button className="btn-primary" onClick={() => setSavedPrivately(true)}>
-                  {lang === 'en' ? 'Save to my area' : 'Guardar en mi área'}
+                  {tl(lang, 'Salva nella mia area', 'Save to my area', 'Guardar en mi área')}
                 </button>
               </div>
             </div>
@@ -408,7 +421,7 @@ export default function JourneyAreaPage() {
               if (reflectionStep > 0) setReflectionStep((s: number) => s - 1)
               else setPhase(area.practicalExercise ? 'exercise' : 'teachings')
             }}>
-            ← {lang === 'en' ? 'Back' : 'Volver'}
+            ← {tl(lang, 'Indietro', 'Back', 'Volver')}
           </button>
 
           {/* Step indicator */}
@@ -423,7 +436,7 @@ export default function JourneyAreaPage() {
           </div>
 
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            {lang === 'en' ? 'Reflection' : 'Reflexión'} · {reflectionStep + 1}/{totalSteps}
+            {tl(lang, 'Riflessione', 'Reflection', 'Reflexión')} · {reflectionStep + 1}/{totalSteps}
           </p>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1.5rem' }}>
@@ -435,14 +448,14 @@ export default function JourneyAreaPage() {
 
           {reflectionStep === 0 && (
             <p style={{ fontSize: '0.8125rem', color: '#ffffff', fontWeight: '600', lineHeight: '1.6', marginBottom: '0.875rem' }}>
-              {lang === 'en' ? 'Take this seriously. Reflections are for you — not to tick a box. There is no point in deceiving yourself: writing what you think you should write, or asking an AI to do it for you. The only one who wins or loses here is you.' : 'Tómate este trabajo en serio. Las reflexiones son para ti — no para cumplir. A nada sirve engañarte: escribir lo que crees que hay que escribir, o pedirle a una IA que lo haga por ti. El único que gana o pierde aquí eres tú.'}
+              {tl(lang, 'Prendilo sul serio. Le riflessioni sono per te — non per spuntare una casella. Non ha senso ingannarti: scrivere quello che pensi di dover scrivere, o chiedere a un\'AI di farlo per te. L\'unico che vince o perde qui sei tu.', 'Take this seriously. Reflections are for you — not to tick a box. There is no point in deceiving yourself: writing what you think you should write, or asking an AI to do it for you. The only one who wins or loses here is you.', 'Tómate este trabajo en serio. Las reflexiones son para ti — no para cumplir. A nada sirve engañarte: escribir lo que crees que hay que escribir, o pedirle a una IA que lo haga por ti. El único que gana o pierde aquí eres tú.')}
             </p>
           )}
 
           <textarea
             key={reflectionStep}
             className="reflection-textarea"
-            placeholder={lang === 'en' ? 'Write your reflection here…' : 'Escribe aquí tu reflexión…'}
+            placeholder={tl(lang, 'Scrivi qui la tua riflessione…', 'Write your reflection here…', 'Escribe aquí tu reflexión…')}
             value={currentAnswer}
             onChange={(e) => {
               const val = e.target.value
@@ -451,7 +464,7 @@ export default function JourneyAreaPage() {
           />
 
           <p className={`word-count${currentSufficient ? ' sufficient' : ''}`}>
-            {currentWordCount} / {MIN_WORDS} {lang === 'en' ? 'minimum words' : 'palabras mínimas'}
+            {currentWordCount} / {MIN_WORDS} {tl(lang, 'parole minime', 'minimum words', 'palabras mínimas')}
           </p>
 
           {error && (
@@ -467,7 +480,7 @@ export default function JourneyAreaPage() {
               onClick={handleSubmit}
               disabled={saving || !currentSufficient}
             >
-              {saving ? (lang === 'en' ? 'Saving…' : 'Guardando…') : (lang === 'en' ? 'Complete level' : 'Completar nivel')}
+              {saving ? (tl(lang, 'Salvataggio…', 'Saving…', 'Guardando…')) : (tl(lang, 'Completa livello', 'Complete level', 'Completar nivel'))}
             </button>
           ) : (
             <button
@@ -476,19 +489,19 @@ export default function JourneyAreaPage() {
               onClick={() => setReflectionStep((s: number) => s + 1)}
               disabled={!currentSufficient}
             >
-              {lang === 'en' ? 'Next →' : 'Siguiente →'}
+              {tl(lang, 'Avanti →', 'Next →', 'Siguiente →')}
             </button>
           )}
 
           <p className="disclaimer">
-            {lang === 'en' ? 'Your reflections are private — only you can see them.' : 'Tus reflexiones son privadas y solo tú puedes verlas.'}
+            {tl(lang, 'Le tue riflessioni sono private — solo tu puoi vederle.', 'Your reflections are private — only you can see them.', 'Tus reflexiones son privadas y solo tú puedes verlas.')}
           </p>
 
           {/* Riflessioni passate */}
           {pastReflections.length > 0 && (
             <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
               <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
-                {lang === 'en' ? 'Your previous reflections' : 'Tus reflexiones anteriores'}
+                {tl(lang, 'Le tue riflessioni precedenti', 'Your previous reflections', 'Tus reflexiones anteriores')}
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {pastReflections.map((r) => (
@@ -499,7 +512,7 @@ export default function JourneyAreaPage() {
                     borderRadius: '0.75rem',
                   }}>
                     <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.625rem' }}>
-                      {new Date(r.completed_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      {new Date(r.completed_at).toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
                     {r.reflection_text ? (
                       <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
@@ -507,7 +520,7 @@ export default function JourneyAreaPage() {
                       </p>
                     ) : (
                       <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.3)', margin: 0, fontStyle: 'italic' }}>
-                        {lang === 'en' ? 'Completed — no reflection saved.' : 'Completado — sin reflexión guardada.'}
+                        {tl(lang, 'Completato — nessuna riflessione salvata.', 'Completed — no reflection saved.', 'Completado — sin reflexión guardada.')}
                       </p>
                     )}
                   </div>
@@ -538,14 +551,14 @@ export default function JourneyAreaPage() {
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2.5rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }} onClick={() => setPhase('teachings')}>
-            ← {lang === 'en' ? 'Back' : 'Volver'}
+            ← {tl(lang, 'Indietro', 'Back', 'Volver')}
           </button>
 
           <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            {lang === 'en' ? 'Practical exercise' : 'Ejercicio práctico'} · {area.title}
+            {tl(lang, 'Esercizio pratico', 'Practical exercise', 'Ejercicio práctico')} · {area.title}
           </p>
           <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ffffff', lineHeight: '1.4', marginBottom: '1.5rem' }}>
-            {lang === 'en' ? 'Put it into practice' : 'Ponlo en práctica'}
+            {tl(lang, 'Mettilo in pratica', 'Put it into practice', 'Ponlo en práctica')}
           </h2>
 
           <div style={{ marginBottom: '1.5rem' }}>
@@ -563,7 +576,7 @@ export default function JourneyAreaPage() {
           <textarea
             className="reflection-textarea"
             style={{ minHeight: '100px' }}
-            placeholder={lang === 'en' ? '(Optional) Write how it went…' : '(Opcional) Escribe cómo fue…'}
+            placeholder={tl(lang, '(Opzionale) Scrivi com\'è andata…', '(Optional) Write how it went…', '(Opcional) Escribe cómo fue…')}
             value={practiceNote}
             onChange={(e) => setPracticeNote(e.target.value)}
           />
@@ -574,8 +587,8 @@ export default function JourneyAreaPage() {
             onClick={() => setPhase(area.secondExercise ? 'exercise2' : 'reflection')}
           >
             {area.secondExercise
-              ? (lang === 'en' ? 'Next exercise →' : 'Siguiente ejercicio →')
-              : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
+              ? (tl(lang, 'Prossimo esercizio →', 'Next exercise →', 'Siguiente ejercicio →'))
+              : (tl(lang, 'Vai alla riflessione →', 'Go to reflection →', 'Ir a la reflexión →'))}
           </button>
         </div>
       </div>
@@ -588,14 +601,14 @@ export default function JourneyAreaPage() {
       <div className="page-container" style={{ justifyContent: 'flex-start', paddingTop: '2.5rem' }}>
         <div style={{ width: '100%', maxWidth: '480px' }}>
           <button className="btn-ghost" style={{ marginBottom: '1.5rem', paddingLeft: 0 }} onClick={() => setPhase('exercise')}>
-            ← {lang === 'en' ? 'Back' : 'Volver'}
+            ← {tl(lang, 'Indietro', 'Back', 'Volver')}
           </button>
 
           <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-            {lang === 'en' ? 'Second exercise' : 'Segundo ejercicio'} · {area.title}
+            {tl(lang, 'Secondo esercizio', 'Second exercise', 'Segundo ejercicio')} · {area.title}
           </p>
           <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ffffff', lineHeight: '1.4', marginBottom: '1.5rem' }}>
-            {lang === 'en' ? 'The letter you will not send' : 'La carta que no enviarás'}
+            {tl(lang, 'La lettera che non invierai', 'The letter you will not send', 'La carta que no enviarás')}
           </h2>
 
           <div style={{ marginBottom: '1.5rem' }}>
@@ -613,7 +626,7 @@ export default function JourneyAreaPage() {
           <textarea
             className="reflection-textarea"
             style={{ minHeight: '140px' }}
-            placeholder={lang === 'en' ? 'Write your letter here…' : 'Escribe aquí tu carta…'}
+            placeholder={tl(lang, 'Scrivi qui la tua lettera…', 'Write your letter here…', 'Escribe aquí tu carta…')}
             value={practiceNote}
             onChange={(e) => setPracticeNote(e.target.value)}
           />
@@ -623,7 +636,7 @@ export default function JourneyAreaPage() {
             style={{ marginTop: '1.5rem' }}
             onClick={() => setPhase('reflection')}
           >
-            {lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →'}
+            {tl(lang, 'Vai alla riflessione →', 'Go to reflection →', 'Ir a la reflexión →')}
           </button>
         </div>
       </div>
@@ -645,7 +658,7 @@ export default function JourneyAreaPage() {
             if (teachingIndex === 0) router.push('/dashboard')
             else setTeachingIndex(i => i - 1)
           }}>
-            ← {teachingIndex === 0 ? 'Dashboard' : (lang === 'en' ? 'Back' : 'Atrás')}
+            ← {teachingIndex === 0 ? 'Dashboard' : (tl(lang, 'Indietro', 'Back', 'Atrás'))}
           </button>
           <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums' }}>
             {teachingIndex + 1} / {totalSlides}
@@ -683,7 +696,7 @@ export default function JourneyAreaPage() {
           }}>
             <span style={{ fontSize: '0.875rem', color: '#c4783a' }}>✓</span>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-              {lang === 'en' ? 'You already completed this level. You can redo it — each time you re-read it, you do so from a different place.' : 'Ya completaste este nivel. Puedes volver a hacerlo — cada vez que lo relees, lo haces desde un lugar diferente.'}
+              {tl(lang, 'Hai già completato questo livello. Puoi rifarlo — ogni volta che lo rileggi, lo fai da un posto diverso.', 'You already completed this level. You can redo it — each time you re-read it, you do so from a different place.', 'Ya completaste este nivel. Puedes volver a hacerlo — cada vez que lo relees, lo haces desde un lugar diferente.')}
             </p>
           </div>
         )}
@@ -734,7 +747,7 @@ export default function JourneyAreaPage() {
             marginBottom: '2rem',
           }}>
             <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
-              {lang === 'en' ? 'In relationships' : 'En las relaciones'}
+              {tl(lang, 'Nelle relazioni', 'In relationships', 'En las relaciones')}
             </p>
             <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.8)', lineHeight: '1.65', margin: 0 }}>
               {area.inRelacion}
@@ -752,23 +765,23 @@ export default function JourneyAreaPage() {
             }
           }}>
             {area.practicalExercise
-              ? (lang === 'en' ? 'Go to exercises →' : 'Ir a los ejercicios →')
-              : (lang === 'en' ? 'Go to reflection →' : 'Ir a la reflexión →')}
+              ? (tl(lang, 'Vai agli esercizi →', 'Go to exercises →', 'Ir a los ejercicios →'))
+              : (tl(lang, 'Vai alla riflessione →', 'Go to reflection →', 'Ir a la reflexión →'))}
           </button>
         ) : (
           <button className="btn-primary" onClick={() => setTeachingIndex(i => i + 1)}>
-            {lang === 'en' ? 'Next →' : 'Siguiente →'}
+            {tl(lang, 'Avanti →', 'Next →', 'Siguiente →')}
           </button>
         )}
 
         {/* Riflessioni passate per quest'area — sempre visibili */}
         <div style={{ marginTop: '2.5rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
-            {lang === 'en' ? 'My reflections on this area' : 'Mis reflexiones sobre esta área'}
+            {tl(lang, 'Le mie riflessioni su quest\'area', 'My reflections on this area', 'Mis reflexiones sobre esta área')}
           </p>
           {pastReflections.length === 0 ? (
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>
-              {lang === 'en' ? 'Complete this area to see your reflections here.' : 'Completa esta área para ver tus reflexiones aquí.'}
+              {tl(lang, 'Completa quest\'area per vedere le tue riflessioni qui.', 'Complete this area to see your reflections here.', 'Completa esta área para ver tus reflexiones aquí.')}
             </p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -780,7 +793,7 @@ export default function JourneyAreaPage() {
                   borderRadius: '0.75rem',
                 }}>
                   <p style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.3)', marginBottom: '0.625rem' }}>
-                    {new Date(r.completed_at).toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    {new Date(r.completed_at).toLocaleDateString(lang === 'it' ? 'it-IT' : lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                   {r.reflection_text ? (
                     <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.7', margin: 0, fontStyle: 'italic' }}>
@@ -788,7 +801,7 @@ export default function JourneyAreaPage() {
                     </p>
                   ) : (
                     <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.25)', margin: 0, fontStyle: 'italic' }}>
-                      {lang === 'en' ? 'Completed — no reflection saved.' : 'Completado — sin reflexión guardada.'}
+                      {tl(lang, 'Completato — nessuna riflessione salvata.', 'Completed — no reflection saved.', 'Completado — sin reflexión guardada.')}
                     </p>
                   )}
                 </div>
@@ -803,20 +816,16 @@ export default function JourneyAreaPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <span style={{ fontSize: '1rem' }}>📓</span>
               <p style={{ fontSize: '0.75rem', color: '#c4783a', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600', margin: 0 }}>
-                {lang === 'en' ? 'Your journal · Follow up 1:1' : 'Tu cuaderno · Follow up 1:1'}
+                {tl(lang, 'Il tuo quaderno · Follow up 1:1', 'Your journal · Follow up 1:1', 'Tu cuaderno · Follow up 1:1')}
               </p>
             </div>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.45)', marginBottom: '1rem', lineHeight: '1.6' }}>
-              {lang === 'en'
-                ? 'Write how you are working on this area. Nicola will read it before your session.'
-                : 'Escribe cómo estás trabajando en esta área. Nicola lo leerá antes de tu sesión.'}
+              {tl(lang, 'Scrivi come stai lavorando su quest\'area. Nicola lo leggerà prima della tua sessione.', 'Write how you are working on this area. Nicola will read it before your session.', 'Escribe cómo estás trabajando en esta área. Nicola lo leerá antes de tu sesión.')}
             </p>
             <textarea
               className="reflection-textarea"
               style={{ minHeight: '100px', marginBottom: '0.75rem' }}
-              placeholder={lang === 'en'
-                ? `How are you working on ${area.title} this week?`
-                : `¿Cómo estás trabajando en ${area.title} esta semana?`}
+              placeholder={lang === 'it' ? `Come stai lavorando su ${area.title} questa settimana?` : lang === 'en' ? `How are you working on ${area.title} this week?` : `¿Cómo estás trabajando en ${area.title} esta semana?`}
               value={journalText}
               onChange={(e) => setJournalText(e.target.value)}
             />
@@ -827,14 +836,14 @@ export default function JourneyAreaPage() {
               style={{ width: '100%', marginBottom: journalEntries.length > 0 ? '1.5rem' : 0 }}
             >
               {journalSaved ? '✓ Guardado' : savingJournal
-                ? (lang === 'en' ? 'Saving…' : 'Guardando…')
-                : (lang === 'en' ? 'Save entry' : 'Guardar entrada')}
+                ? (tl(lang, 'Salvataggio…', 'Saving…', 'Guardando…'))
+                : (tl(lang, 'Salva voce', 'Save entry', 'Guardar entrada'))}
             </button>
 
             {journalEntries.length > 0 && (
               <div>
                 <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
-                  {lang === 'en' ? 'Previous entries' : 'Entradas anteriores'}
+                  {tl(lang, 'Voci precedenti', 'Previous entries', 'Entradas anteriores')}
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {journalEntries.map((e) => (

@@ -1,4 +1,4 @@
-export type Lang = 'es' | 'en'
+export type Lang = 'es' | 'en' | 'it'
 
 export const translations = {
   es: {
@@ -251,8 +251,134 @@ export const translations = {
     quiz_feedback_mirror: 'You are carrying something toward someone — resentment, irritation, an unresolved score. That weighs on you, and it almost always says more about you than about the other person.',
     quiz_feedback_healthy_relationships: 'You don\'t have much space for yourself within your relationships. Without that space, it is hard to know who you are — outside of what others expect from you.',
   },
+
+  it: {
+    // Home
+    home_quote: '"Il genio è colui che ha il coraggio e il cuore di ascoltare sé stesso."',
+    home_author: 'John Demartini',
+    home_start: 'Crea account',
+    home_login: 'Ho già un account',
+    home_disclaimer: 'Questa app non è un servizio medico né terapeutico.\nSe stai seguendo una terapia o un trattamento, continua a farlo.',
+    home_contact: 'Contatto',
+
+    // Dashboard
+    dash_level_current: 'Livello attuale',
+    dash_level_of: 'di',
+    dash_go_level: 'Vai al livello',
+    dash_journey: 'Il tuo percorso',
+    dash_completed: 'Hai completato il tuo percorso',
+    dash_completed_sub: 'Torna quando vuoi. La piattaforma è in costante aggiornamento con nuovi punti di riflessione.',
+    dash_advanced: 'Continua al percorso avanzato',
+    dash_advanced_soon: 'Continua a riflettere per sbloccare il percorso avanzato.',
+    dash_start: 'Il mio punto di partenza',
+    dash_start_sub: 'Feedback iniziale · Le mie riflessioni',
+    dash_wall: 'Muro delle riflessioni',
+    dash_wall_sub: 'Leggi cosa stanno scoprendo gli altri',
+    dash_coaching: 'Il mio progresso — Coaching',
+    dash_coaching_sub: 'Come mi sento · Il mio quaderno',
+    dash_admin: 'Pannello Admin',
+    dash_signout: 'Esci',
+
+    // Login
+    login_title: 'Bentornato',
+    login_subtitle: 'La tua riflessione ti aspetta.',
+    login_email: 'La tua email',
+    login_password: 'Password',
+    login_submit: 'Entra',
+    login_loading: 'Accesso in corso…',
+    login_error: 'Email o password errati.',
+    login_no_account: 'Non hai un account?',
+    login_create: 'Creane uno',
+    login_forgot: 'Hai dimenticato la password?',
+    login_reset: 'Recuperala qui',
+
+    // Signup
+    signup_title: 'Crea il tuo account',
+    signup_subtitle: 'Inizia con 11 domande. Dura 2 minuti.',
+    signup_email: 'La tua email',
+    signup_password: 'Password (min. 8 caratteri)',
+    signup_submit: 'Crea account',
+    signup_loading: 'Creazione account…',
+    signup_error: 'Qualcosa è andato storto. Riprova.',
+    signup_error_short: 'La password deve avere almeno 8 caratteri.',
+    signup_have_account: 'Hai già un account?',
+    signup_login: 'Entra',
+    signup_disclaimer: 'Questa app non è un servizio medico né terapeutico.\nSe stai seguendo una terapia o un trattamento, continua a farlo.',
+    signup_success: 'Abbonamento completato con successo!',
+    signup_success_sub: 'Crea il tuo account per accedere al tuo percorso.',
+
+    // Reset password
+    reset_title: 'Nuova password',
+    reset_subtitle: 'Scegli una password sicura.',
+    reset_placeholder: 'Nuova password',
+    reset_submit: 'Salva password',
+    reset_loading: 'Salvataggio…',
+    reset_success: 'Password aggiornata. Reindirizzamento…',
+    reset_error: 'Qualcosa è andato storto. Riprova.',
+
+    // Quiz - intro
+    quiz_intro_label: 'Prima di iniziare',
+    quiz_intro_title: 'Come ti parli?',
+    quiz_intro_text: "Le parole che usi con te stesso, in silenzio, ogni giorno — sono quelle di un amico, o di un giudice? Tutto quello che troverai qui parte da questa relazione: quella che hai con te stesso.",
+    quiz_intro_placeholder_label: 'Scrivi, con le tue parole, come ti parli quando qualcosa va storto.',
+    quiz_intro_placeholder: 'Nessun limite di parole. Questo è solo tuo.',
+    quiz_intro_btn: 'Continua al questionario →',
+    quiz_intro_disclaimer: 'Questa riflessione verrà salvata e potrai rileggerla più avanti per vedere come sei cambiato.',
+
+    // Quiz - result
+    quiz_result_label: 'Quello che vediamo in te',
+    quiz_result_title: 'Queste sono le aree in cui puoi crescere di più',
+    quiz_result_priority1: 'Priorità 1',
+    quiz_result_priority: 'Priorità',
+    quiz_result_journey_label: 'Il tuo percorso completo',
+    quiz_result_cta_title: 'Pronto a lavorare su te stesso?',
+    quiz_result_cta_text: 'Accedi al tuo percorso personalizzato per €50/anno — meno di €4,20 al mese.',
+    quiz_result_cta_btn: 'Inizia il mio percorso →',
+    quiz_result_cta_loading: 'Preparazione pagamento…',
+    quiz_result_cta_secure: 'Pagamento sicuro con Stripe · Annulla quando vuoi',
+    quiz_result_error: 'Qualcosa è andato storto nel calcolo del risultato. Riprova.',
+    quiz_result_retry: 'Riprova',
+
+    // Quiz - questions
+    quiz_q1: 'Quando c\'è qualcosa di te che non ti piace, quanto tempo passi cercando di cambiarlo a forza?',
+    quiz_q2: 'Con che frequenza inizi qualcosa che poi abbandoni perché "non hai più voglia"?',
+    quiz_q3: 'Quante volte al giorno ti sorprendi a lamentarti — ad alta voce o nella testa — di qualcosa?',
+    quiz_q4: 'Con che frequenza rimani bloccato a pensare a una decisione senza prenderla?',
+    quiz_q5: 'Quanto spazio dai ogni giorno al riconoscere ciò che già va bene nella tua vita?',
+    quiz_q6: 'Con che frequenza prendi decisioni importanti quando sei emotivamente alterato?',
+    quiz_q7: 'Quando appare un ostacolo nella tua vita, quanto tendi a evitarlo o aggirarlo invece di affrontarlo?',
+    quiz_q8: 'Con che frequenza la tua mente è altrove mentre fai qualcosa o stai con qualcuno?',
+    quiz_q9: 'Quanto peso dai alla voce interiore che ti dice che non sei abbastanza?',
+    quiz_q10: 'Quanto rancore o irritazione persistente porti verso qualcuno nella tua vita?',
+    quiz_q11: 'Quanto spazio hai per te stesso nelle tue relazioni più importanti?',
+    quiz_opt_almost_never: 'Quasi mai',
+    quiz_opt_sometimes: 'A volte',
+    quiz_opt_often: 'Spesso',
+    quiz_opt_almost_always: 'Quasi sempre',
+    quiz_opt_nothing: 'Per niente',
+    quiz_opt_almost_nothing: 'Quasi niente',
+    quiz_opt_something: 'Un po\'',
+    quiz_opt_a_lot: 'Molto',
+    quiz_opt_little: 'Poco',
+    quiz_opt_quite: 'Abbastanza',
+    quiz_opt_enough: 'Sufficiente',
+    quiz_prev: '← Precedente',
+
+    // Quiz - feedback aree
+    quiz_feedback_acceptance: "C'è qualcosa in te che stai ancora combattendo. Una parte che giudichi, che vorresti fosse diversa. Quello sforzo stanca — ed è di solito il primo da lasciare andare.",
+    quiz_feedback_discipline: 'Inizi, ma qualcosa ti ferma a metà. Non è mancanza di volontà: non hai ancora trovato il sistema che ti sostiene quando la voglia finisce.',
+    quiz_feedback_no_complaining: 'Il sollievo immediato ti allontana da quello che vuoi davvero. Ogni volta che cedi al piacere facile, addestri il cervello a evitare lo sforzo — e col tempo questo ha un prezzo.',
+    quiz_feedback_obstacle: "Di fronte a una difficoltà, la tua prima mossa è di solito evitarla. Quello che non affronti oggi torna domani — quasi sempre più grande.",
+    quiz_feedback_leap: 'Pensi, analizzi, pensi ancora — e il tempo passa senza che tu prenda la decisione. La chiarezza che aspetti quasi mai arriva prima di agire.',
+    quiz_feedback_gratitude: 'Fai fatica a fermarti a vedere quello che già funziona. Vivi più in quello che manca che in quello che hai — e questo ti esaurisce senza che te ne accorga.',
+    quiz_feedback_observe: "Quando un'emozione sale, tendi ad agire da lì. Decidi, parli, reagisci — e a volte, con la testa più fredda, l'avresti fatto diversamente.",
+    quiz_feedback_here_now: 'La tua mente viaggia molto: al passato che è già accaduto, al futuro che non esiste ancora. La vita che hai davanti, nel frattempo, passa un po\' di lato.',
+    quiz_feedback_voices: 'C\'è una voce dentro di te che dice che non sei abbastanza, e le dai parecchia credibilità. Quella voce non è la verità — ma è la prima cosa da imparare a vedere.',
+    quiz_feedback_mirror: 'Porti qualcosa verso qualcuno — rancore, irritazione, un conto in sospeso. Questo pesa, e dice quasi sempre più di te che dell\'altra persona.',
+    quiz_feedback_healthy_relationships: 'Non hai molto spazio per te stesso nelle tue relazioni. Senza quello spazio, è difficile sapere chi sei — al di fuori di quello che gli altri si aspettano da te.',
+  },
 }
 
 export function t(lang: Lang, key: keyof typeof translations['es']): string {
-  return translations[lang][key] ?? translations['es'][key]
+  return (translations[lang] as Record<string, string>)?.[key] ?? translations['es'][key]
 }

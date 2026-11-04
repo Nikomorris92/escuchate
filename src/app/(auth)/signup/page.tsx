@@ -22,7 +22,7 @@ export default function SignupPage() {
     setError('')
 
     if (!fullName.trim()) {
-      setError(lang === 'en' ? 'Please enter your name.' : 'Por favor, escribe tu nombre.')
+      setError(lang === 'it' ? 'Per favore, inserisci il tuo nome.' : lang === 'en' ? 'Please enter your name.' : 'Por favor, escribe tu nombre.')
       return
     }
     if (password.length < 8) {
@@ -61,14 +61,14 @@ export default function SignupPage() {
           {t(lang, 'signup_title')}
         </h1>
         <p style={{ fontSize: '0.9375rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.75rem' }}>
-          {lang === 'en' ? 'Create your profile. The quiz comes next.' : 'Crea tu perfil. El test viene después.'}
+          {lang === 'it' ? 'Crea il tuo profilo. Il test viene dopo.' : lang === 'en' ? 'Create your profile. The quiz comes next.' : 'Crea tu perfil. El test viene después.'}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
           <input
             className="input-field"
             type="text"
-            placeholder={lang === 'en' ? 'First and last name' : 'Nombre y apellido'}
+            placeholder={lang === 'it' ? 'Nome e cognome' : lang === 'en' ? 'First and last name' : 'Nombre y apellido'}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             required
@@ -101,8 +101,8 @@ export default function SignupPage() {
             {done
               ? '¡Empezamos! →'
               : loading
-              ? (lang === 'en' ? 'Creating account…' : 'Creando cuenta…')
-              : (lang === 'en' ? 'Create account →' : 'Crear cuenta →')}
+              ? (lang === 'it' ? 'Creazione account…' : lang === 'en' ? 'Creating account…' : 'Creando cuenta…')
+              : (lang === 'it' ? 'Crea account →' : lang === 'en' ? 'Create account →' : 'Crear cuenta →')}
           </button>
         </form>
 

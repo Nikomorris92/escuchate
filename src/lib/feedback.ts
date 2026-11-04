@@ -1,4 +1,5 @@
 import type { Area } from '@/types'
+import type { Lang } from './i18n'
 
 export const AREA_FEEDBACK: Record<Area, string> = {
   acceptance:
@@ -49,6 +50,31 @@ export const AREA_COMPLETION_FEEDBACK: Record<Area, string> = {
     'Lo que ves en los demás es también una ventana hacia ti. No siempre es cómodo mirarse así — pero es donde empieza el cambio real.',
   healthy_relationships:
     'Dos personas enteras se relacionan mejor que una que se pierde en la otra. Lo que has trabajado hoy es la base de cualquier vínculo que valga la pena.',
+}
+
+export const AREA_COMPLETION_FEEDBACK_IT: Record<Area, string> = {
+  acceptance:
+    "Accettare non significa essere d'accordo con tutto — significa smettere di sprecare energia a lottare contro quello che già è. È il primo spazio che si apre.",
+  discipline:
+    "Una promessa mantenuta a te stesso, per piccola che sia, vale più di dieci grandi intenzioni. Hai appena dimostrato di potercela fare.",
+  no_complaining:
+    "Hai scelto qualcosa di difficile su qualcosa di facile. È esattamente il contrario del piacere momentaneo — ed è esattamente quello che ti cambia. Ogni volta che trasformi un lamento in \"Cosa dipende da me qui?\", riprendi il controllo.",
+  obstacle:
+    "Hai guardato l'ostacolo in faccia invece di aggirarlo. Questo è già più di quello che fa la maggior parte delle persone.",
+  leap:
+    "Non avevi bisogno di essere pronto. Non lo sarai mai del tutto. Quello che hai appena fatto è esattamente quello che serve: fare il passo lo stesso.",
+  gratitude:
+    "Quello che riconosci cresce. Quello che ignori si rimpicciolisce. Oggi hai allenato l'attenzione verso quello che già funziona — e questo si accumula.",
+  observe:
+    "Nominare quello che senti prima di agire è uno degli atti più difficili e più utili. Oggi l'hai praticato.",
+  here_now:
+    "Sei qui. Non nel passato, non nel futuro — qui. È più raro di quanto sembri, e più prezioso di quanto credi.",
+  voices:
+    "Hai guardato passare la voce senza salirci. Non la silenzia, ma le toglie potere. Col tempo imparerai a riconoscerla prima che parli.",
+  mirror:
+    "Quello che vedi negli altri è anche una finestra verso di te. Non è sempre comodo guardarsi così — ma è da lì che inizia il cambiamento reale.",
+  healthy_relationships:
+    "Due persone intere si relazionano meglio di una che si perde nell'altra. Quello che hai lavorato oggi è la base di qualsiasi legame che vale la pena.",
 }
 
 export function generateFeedback(
