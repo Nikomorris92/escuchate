@@ -6,8 +6,8 @@ export async function register() {
     const { AREAS } = await import('@/lib/areas')
 
     const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://bghvkdenhdbnkztbvxgy.supabase.co',
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ''
     )
 
     // Leggi i count attuali dal DB
