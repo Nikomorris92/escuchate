@@ -363,8 +363,8 @@ export default function AdminPage() {
         }).sort((a, b) => {
           const uA = users.find(u => u.id === a.uid)
           const uB = users.find(u => u.id === b.uid)
-          const tA = uA?.created_at ? new Date(uA.created_at).getTime() : 0
-          const tB = uB?.created_at ? new Date(uB.created_at).getTime() : 0
+          const tA = uA?.last_sign_in_at ? new Date(uA.last_sign_in_at).getTime() : (a.lastAct ? new Date(a.lastAct).getTime() : 0)
+          const tB = uB?.last_sign_in_at ? new Date(uB.last_sign_in_at).getTime() : (b.lastAct ? new Date(b.lastAct).getTime() : 0)
           return tB - tA
         })
 
@@ -996,8 +996,8 @@ export default function AdminPage() {
         }).sort((a, b) => {
           const uA = users.find(u => u.id === a.uid)
           const uB = users.find(u => u.id === b.uid)
-          const tA = uA?.created_at ? new Date(uA.created_at).getTime() : 0
-          const tB = uB?.created_at ? new Date(uB.created_at).getTime() : 0
+          const tA = uA?.last_sign_in_at ? new Date(uA.last_sign_in_at).getTime() : (a.lastAct ? new Date(a.lastAct).getTime() : 0)
+          const tB = uB?.last_sign_in_at ? new Date(uB.last_sign_in_at).getTime() : (b.lastAct ? new Date(b.lastAct).getTime() : 0)
           return tB - tA
         })
 
