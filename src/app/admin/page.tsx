@@ -16,6 +16,8 @@ interface UserRow {
   total_score: number
   advanced_unlocked: boolean
   created_at: string
+  last_sign_in_at: string | null
+  areas_completed: number
 }
 
 interface Charge {
@@ -159,8 +161,8 @@ export default function AdminPage() {
         setUsers(data)
         setStats({
           total: data.length,
-          quizDone: data.filter((u) => u.quiz_completed).length,
-          advanced: data.filter((u) => u.advanced_unlocked).length,
+          quizDone: data.filter((u: Record<string, unknown>) => u.quiz_completed).length,
+          advanced: data.filter((u: Record<string, unknown>) => u.advanced_unlocked).length,
         })
       }
 
@@ -176,7 +178,7 @@ export default function AdminPage() {
         .eq('is_shared', true)
         .order('completed_at', { ascending: false })
         .limit(100)
-      setMuroReflections((muroData ?? []).map(r => ({ ...r, comments: [], showComments: false })))
+      setMuroReflections((muroData ?? []).map((r: MuroReflection) => ({ ...r, comments: [], showComments: false })))
 
       const { data: coachingData } = await supabase.rpc('get_all_coaching_ratings')
       setCoachingRatings(coachingData ?? [])
@@ -405,6 +407,7 @@ export default function AdminPage() {
                         ) : null })()}
                         <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>{r.completedAreas.length}/{ALL_AREAS.length} aree</span>
                         <span style={{ fontSize: '0.6875rem', fontWeight: '600', padding: '0.15rem 0.5rem', borderRadius: '9999px', background: `${color}18`, color }}>{label}</span>
+                        {(() => { const u = users.find(u => u.id === r.uid); if (!u?.last_sign_in_at) return null; const days = Math.floor((Date.now() - new Date(u.last_sign_in_at).getTime()) / 86400000); return <span style={{ fontSize: '0.6875rem', color: 'rgba(255,255,255,0.35)' }}>entrato {days === 0 ? 'oggi' : `${days}g fa`}</span> })()}
                       </div>
                     </button>
                     {expandedActivity === r.uid && (
