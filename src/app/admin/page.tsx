@@ -339,7 +339,7 @@ export default function AdminPage() {
   if (!authorized) return null
 
   return (
-    <div style={{ minHeight: '100dvh', padding: '2rem 1.5rem', maxWidth: '900px', margin: '0 auto' }}>
+    <div style={{ minHeight: '100dvh', padding: '2rem 1.5rem', maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 1, background: '#0d1a2e' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ffffff' }}>Panel Admin</h1>
         <button onClick={() => router.push('/')} style={{ color: 'rgba(255,255,255,0.5)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem' }}>
