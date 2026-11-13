@@ -355,7 +355,7 @@ export default function AdminPage() {
 
         const rows = userIds.map(uid => {
           const acts = userActivity.filter(a => a.user_id === uid)
-          const lastAct = acts[0]?.completed_at ?? null
+          const lastAct = acts.length > 0 ? acts.reduce((max, a) => a.completed_at > max ? a.completed_at : max, acts[0].completed_at) : null
           const daysSince = lastAct ? Math.floor((Date.now() - new Date(lastAct).getTime()) / 86400000) : null
           const email = users.find(u => u.id === uid)?.email ?? uid.slice(0,8) + '…'
           const completedAreas = [...new Set(acts.map(a => a.area))]
@@ -415,7 +415,7 @@ export default function AdminPage() {
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
                           {ALL_AREAS.map(areaId => {
                             const done = r.completedAreas.includes(areaId)
-                            const lastDone = userActivity.filter(a => a.user_id === r.uid && a.area === areaId)[0]
+                            const areaActs = userActivity.filter(a => a.user_id === r.uid && a.area === areaId); const lastDone = areaActs.length > 0 ? areaActs.reduce((max, a) => a.completed_at > max.completed_at ? a : max, areaActs[0]) : null
                             return (
                               <span key={areaId} style={{ fontSize: '0.6875rem', padding: '0.2rem 0.5rem', borderRadius: '9999px', background: done ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)', color: done ? '#4ade80' : 'rgba(255,255,255,0.25)', border: `1px solid ${done ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.06)'}` }}>
                                 {AREA_MAP[areaId]?.title ?? areaId}
@@ -988,7 +988,7 @@ export default function AdminPage() {
 
         const rows = userIds.map(uid => {
           const acts = userActivity.filter(a => a.user_id === uid)
-          const lastAct = acts[0]?.completed_at ?? null
+          const lastAct = acts.length > 0 ? acts.reduce((max, a) => a.completed_at > max ? a.completed_at : max, acts[0].completed_at) : null
           const daysSince = lastAct ? Math.floor((Date.now() - new Date(lastAct).getTime()) / 86400000) : null
           const email = users.find(u => u.id === uid)?.email ?? uid.slice(0,8) + '…'
           const completedAreas = [...new Set(acts.map(a => a.area))]
@@ -1047,7 +1047,7 @@ export default function AdminPage() {
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
                           {ALL_AREAS.map(areaId => {
                             const done = r.completedAreas.includes(areaId)
-                            const lastDone = userActivity.filter(a => a.user_id === r.uid && a.area === areaId)[0]
+                            const areaActs = userActivity.filter(a => a.user_id === r.uid && a.area === areaId); const lastDone = areaActs.length > 0 ? areaActs.reduce((max, a) => a.completed_at > max.completed_at ? a : max, areaActs[0]) : null
                             return (
                               <span key={areaId} style={{ fontSize: '0.6875rem', padding: '0.2rem 0.5rem', borderRadius: '9999px', background: done ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)', color: done ? '#4ade80' : 'rgba(255,255,255,0.25)', border: `1px solid ${done ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.06)'}` }}>
                                 {AREA_MAP[areaId]?.title ?? areaId}
